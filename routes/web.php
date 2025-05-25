@@ -23,6 +23,8 @@ Route::get('/', function(){
    return redirect()->route('login');
 });
 
+Route::get('forgotPassword', 'UserController@forgotPassword')->name('forgotPassword');
+Route::get('resetPassword', 'UserController@resetPassword')->name('resetPassword');
 
 Route::group([
         'middleware' => 'auth',
