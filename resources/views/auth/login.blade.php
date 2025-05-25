@@ -45,7 +45,7 @@
                     </button>
                 </div>
                 <div class="text-center text-black">
-                    <p>Don't have an account?</p><a href="http://clinica.onehealthnetwork.com.ph/register" class="text-blue-400 hover:underline hover:text-black-200"">Register Here</a>
+                    <p>Don't have an account?</p><a href="{{ route('register') }}" class="text-blue-400 hover:underline hover:text-black-200"">Register Here</a>
                 </div>
 
             </form>
