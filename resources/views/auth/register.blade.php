@@ -21,11 +21,15 @@
         }
 
         .wrap-login100{
-            width: 1200px;
+            width: 1300px;
         }
 
         .login100-form {
-            width: 400px;
+            width: 500px;
+        }
+
+        select{
+            border: none;
         }
     </style>
 </head>
@@ -44,7 +48,7 @@
                     </span>
 
                     <div class="wrap-input100">
-                        <input class="input100" type="text" name="clinic_name" placeholder="Clinic Name" :value="old('clinic_name')'">
+                        <input class="input100" type="text" name="clinic_name" placeholder="Clinic Name">
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="far fa-id-card"></i>
@@ -52,10 +56,10 @@
                     </div>
 
                     <div class="wrap-input100">
-                        <input class="input100" type="text" name="location" placeholder="Location" :value="old('location')'">
+                        <input class="input100" type="text" name="location" placeholder="Location">
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
-                            <i class="far fa-id-card"></i>
+                            <i class="far fa-location-pin"></i>
                         </span>
                     </div>
 
@@ -94,39 +98,48 @@
                         </select>
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
-                            <i class="far fa-id-card"></i>
+                            <i class="far fa-map-location-dot"></i>
                         </span>
                     </div>
 
                     <div class="wrap-input100">
-                        <input class="input100" type="password" name="password" placeholder="Password">
+                        <input class="input100" type="text" name="contact" placeholder="Contact">
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
+                            <i class="far fa-phone"></i>
+                        </span>
+                    </div>
+
+                    <div class="wrap-input100">
+                        <input class="input100" type="text" name="pf" placeholder="Prof. Fee">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+                            <i class="far fa-dollar"></i>
                         </span>
                     </div>
                     
                     <div class="container-register100-form-btn">
-                        <button class="register100-form-btn">
-                            Register
-                        </button>
+                        <a class="register100-form-btn">
+                            Next
+                        </a>
+
+                        <div class="text-center p-t-136">
+                            <a class="txt2" href="{{ route('login') }}">
+                                Already have an account?
+                            </a>
+                        </div>
                     </div>
                     
                     {{-- <div class="container-register100-form-btn">
                     </div> --}}
 
-                    <div class="text-center p-t-12">
+                    {{-- <div class="text-center p-t-12">
                         <span class="txt1">
                         </span>
                         <a class="txt2" href="#">
                         </a>
-                    </div>
+                    </div> --}}
 
-                    <div class="text-center p-t-136">
-                        <a class="txt2" href="{{ route('login') }}">
-                            Already have an account?
-                        </a>
-                    </div>
                 </form>
             </div>
         </div>
