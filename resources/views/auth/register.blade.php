@@ -22,6 +22,8 @@
 
         .wrap-login100{
             width: 1300px;
+            padding-top: 50px;
+            height: 80vh;
         }
 
         .login100-form {
@@ -30,6 +32,20 @@
 
         select{
             border: none;
+            max-height: 50px;
+            overflow: scroll;
+        }
+
+        .login100-pic{
+            padding-top: 80px;
+        }
+
+        img{
+            border-radius: 20px;
+        }
+
+        .no-icon{
+            padding-left: 20px;
         }
     </style>
 </head>
@@ -37,91 +53,178 @@
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
-                <div class="login100-pic js-tilt" data-tilt>
+
+                <div class="login100-pic js-tilt" data-tilt id="pic1">
                     <img src="{{ asset("images/ohn/clinic_reg.png"); }}" alt="IMG">
+                </div>
+
+                <div class="login100-pic js-tilt" data-tilt id="pic2" style="display: none;">
+                    <img src="{{ asset("images/ohn/clinic_reg2.png"); }}" alt="IMG">
                 </div>
 
                 <form class="login100-form validate-form" method="POST" action="{{ route('register'); }}">
                     @csrf
-                    <span class="login100-form-title">
-                        Registration
-                    </span>
-
-                    <div class="wrap-input100">
-                        <input class="input100" type="text" name="clinic_name" placeholder="Clinic Name">
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="far fa-id-card"></i>
+                    <div id="first-form">
+                        <span class="login100-form-title">
+                            Clinic Information
                         </span>
+
+                        <div class="wrap-input100">
+                            <input class="input100" type="text" name="clinic_name" placeholder="Clinic Name">
+                            <span class="focus-input100"></span>
+                            <span class="symbol-input100">
+                                <i class="far fa-id-card"></i>
+                            </span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <input class="input100" type="text" name="location" placeholder="Location">
+                            <span class="focus-input100"></span>
+                            <span class="symbol-input100">
+                                <i class="far fa-location-pin"></i>
+                            </span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <select class="input100" type="text" name="region">
+                                <option value="" selected="" disabled="">Select Region</option>
+                                <option value="Ilocos Region (Region I) ">Ilocos Region (Region I)</option>
+                                <option value="Cagayan Valley (Region II) ">Cagayan Valley (Region II)</option>
+                                <option value="Central Luzon (Region III) ">Central Luzon (Region III)</option>
+                                <option value="CALABARZON (Region IV-A) ">CALABARZON (Region IV-A)</option>
+                                <option value="MIMAROPA (Region IV-B) ">MIMAROPA (Region IV-B)</option>
+                                <option value="Bicol Region (Region V) ">Bicol Region (Region V)</option>
+                                <option value="Cordillera Administrative Region (CAR) ">Cordillera
+                                    Administrative
+                                    Region (CAR)
+                                </option>
+                                <option value="National Capital Region (NCR) (Metro Manila) ">National Capital
+                                    Region (NCR) (Metro Manila)
+                                </option>
+                                <option value="Western Visayas (Region VI) ">Western Visayas (Region VI)
+                                </option>
+                                <option value="Central Visayas (Region VII) ">Central Visayas (Region VII)
+                                </option>
+                                <option value="Eastern Visayas (Region VIII) ">Eastern Visayas (Region VIII)
+                                </option>
+                                <option value="Zamboanga Peninsula (Region IX) ">Zamboanga Peninsula (Region IX)
+                                </option>
+                                <option value="Northern Mindanao (Region X) ">Northern Mindanao (Region X)
+                                </option>
+                                <option value="Davao Region (Region XI) ">Davao Region (Region XI)</option>
+                                <option value="SOCSARGEN (Region XII) ">SOCSARGEN (Region XII)</option>
+                                <option value="Caraga (Region XIII) ">Caraga (Region XIII)</option>
+                                <option value="Autonomous Region in Muslim Mindanao (ARMM)">Autonomous Region in
+                                    Muslim Mindanao (ARMM)
+                                </option>
+                            </select>
+                            <span class="focus-input100"></span>
+                            <span class="symbol-input100">
+                                <i class="far fa-map-location-dot"></i>
+                            </span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <input class="input100" type="text" name="contact" placeholder="Contact">
+                            <span class="focus-input100"></span>
+                            <span class="symbol-input100">
+                                <i class="far fa-phone"></i>
+                            </span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <input class="input100" type="number" min="0" name="pf" placeholder="Prof. Fee">
+                            <span class="focus-input100"></span>
+                            <span class="symbol-input100">
+                                <i class="far fa-dollar"></i>
+                            </span>
+                        </div>
                     </div>
 
-                    <div class="wrap-input100">
-                        <input class="input100" type="text" name="location" placeholder="Location">
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="far fa-location-pin"></i>
+                    <div id="second-form" style="display: none;">
+                        <span class="login100-form-title">
+                            Doctor's Information
                         </span>
-                    </div>
 
-                    <div class="wrap-input100">
-                        <select class="input100" type="text" name="region">
-                            <option value="" selected="" disabled="">Select Region</option>
-                            <option value="Ilocos Region (Region I) ">Ilocos Region (Region I)</option>
-                            <option value="Cagayan Valley (Region II) ">Cagayan Valley (Region II)</option>
-                            <option value="Central Luzon (Region III) ">Central Luzon (Region III)</option>
-                            <option value="CALABARZON (Region IV-A) ">CALABARZON (Region IV-A)</option>
-                            <option value="MIMAROPA (Region IV-B) ">MIMAROPA (Region IV-B)</option>
-                            <option value="Bicol Region (Region V) ">Bicol Region (Region V)</option>
-                            <option value="Cordillera Administrative Region (CAR) ">Cordillera
-                                Administrative
-                                Region (CAR)
-                            </option>
-                            <option value="National Capital Region (NCR) (Metro Manila) ">National Capital
-                                Region (NCR) (Metro Manila)
-                            </option>
-                            <option value="Western Visayas (Region VI) ">Western Visayas (Region VI)
-                            </option>
-                            <option value="Central Visayas (Region VII) ">Central Visayas (Region VII)
-                            </option>
-                            <option value="Eastern Visayas (Region VIII) ">Eastern Visayas (Region VIII)
-                            </option>
-                            <option value="Zamboanga Peninsula (Region IX) ">Zamboanga Peninsula (Region IX)
-                            </option>
-                            <option value="Northern Mindanao (Region X) ">Northern Mindanao (Region X)
-                            </option>
-                            <option value="Davao Region (Region XI) ">Davao Region (Region XI)</option>
-                            <option value="SOCSARGEN (Region XII) ">SOCSARGEN (Region XII)</option>
-                            <option value="Caraga (Region XIII) ">Caraga (Region XIII)</option>
-                            <option value="Autonomous Region in Muslim Mindanao (ARMM)">Autonomous Region in
-                                Muslim Mindanao (ARMM)
-                            </option>
-                        </select>
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="far fa-map-location-dot"></i>
-                        </span>
-                    </div>
+                        <div style="display: flex; width: 66%;">
+                            <div class="wrap-input100">
+                                <input class="input100 no-icon" type="text" name="title" placeholder="Title (ex. MD)">
+                                <span class="focus-input100"></span>
+                            </div>&nbsp;
 
-                    <div class="wrap-input100">
-                        <input class="input100" type="text" name="contact" placeholder="Contact">
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="far fa-phone"></i>
-                        </span>
-                    </div>
+                            <div class="wrap-input100">
+                                <input class="input100 no-icon" type="text" name="suffix" placeholder="Suffix">
+                                <span class="focus-input100"></span>
+                            </div>&nbsp;
+                        </div>
 
-                    <div class="wrap-input100">
-                        <input class="input100" type="text" name="pf" placeholder="Prof. Fee">
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="far fa-dollar"></i>
-                        </span>
+                        <div style="display: flex;">
+                            <div class="wrap-input100">
+                                <input class="input100 no-icon" type="text" name="fname" placeholder="First Name">
+                                <span class="focus-input100"></span>
+                            </div>&nbsp;
+
+                            <div class="wrap-input100">
+                                <input class="input100 no-icon" type="text" name="mname" placeholder="Middle Name">
+                                <span class="focus-input100"></span>
+                            </div>&nbsp;
+
+                            <div class="wrap-input100">
+                                <input class="input100 no-icon" type="text" name="lname" placeholder="Last Name">
+                                <span class="focus-input100"></span>
+                            </div>&nbsp;
+                        </div>
+
+                        <div class="wrap-input100">
+                            <input class="input100 no-icon" type="text" name="specialization" placeholder="Specialization">
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <input class="input100 no-icon" type="text" name="license_number" placeholder="License Number">
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div style="display: flex;">
+                            <div class="wrap-input100" style="width: 55%;">
+                                <input class="input100 no-icon" type="text" name="contact" placeholder="Contact Number">
+                                <span class="focus-input100"></span>
+                            </div>&nbsp;
+
+                            <div class="wrap-input100">
+                                <input class="input100 no-icon" type="text" name="email" placeholder="Email">
+                                <span class="focus-input100"></span>
+                            </div>&nbsp;
+                        </div>
+
+                        <div class="wrap-input100">
+                            <label for="e-signature">E-Signature</label>
+                            <input class="input100 no-icon" type="file" name="e-signature" placeholder="E-Signature" style="line-height: 50px;">
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <br>
+                        <div class="wrap-input100">
+                            <input class="input100 no-icon" type="password" name="password" placeholder="Password">
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <input class="input100 no-icon" type="password" name="confirm_password" placeholder="Confirm Password">
+                            <span class="focus-input100"></span>
+                        </div>
                     </div>
-                    
+                        
                     <div class="container-register100-form-btn">
-                        <a class="register100-form-btn">
-                            Next
-                        </a>
+                        <div class="row" style="width: 100%; display: flex; justify-content: end;">
+                            <a class="register100-form-btn" id="prv-btn" style="width: 120px; background: #5accf8; display: none;">
+                                Previous
+                            </a>
+                            &nbsp;
+                            <a class="register100-form-btn" id="nxt-btn" style="width: 80px; background: #90e691;">
+                                Next
+                            </a>
+                        </div>
 
                         <div class="text-center p-t-136">
                             <a class="txt2" href="{{ route('login') }}">
@@ -165,6 +268,30 @@
                 `,
             });
         @endif
+
+        $('#nxt-btn').on('click', e => {
+            if($('#first-form').is(':visible')){
+                $('#first-form').slideUp();
+                $('#pic1').hide();
+
+                $('#second-form').slideDown();
+                $('#prv-btn').show();
+                $('#pic2').show();
+
+                setTimeout(() => {})
+            }
+        });
+
+        $('#prv-btn').on('click', e => {
+            if($('#second-form').is(':visible')){
+                $('#second-form').slideUp();
+                $('#prv-btn').slideUp();
+                $('#pic2').hide();
+
+                $('#first-form').slideDown();
+                $('#pic1').show();
+            }
+        });
     </script>
 </body>
 </html>
