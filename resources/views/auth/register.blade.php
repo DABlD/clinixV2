@@ -22,8 +22,8 @@
 
         .wrap-login100{
             width: 1300px;
-            padding-top: 50px;
-            height: 80vh;
+            padding-top: 100px;
+            justify-content: space-evenly;
         }
 
         .login100-form {
@@ -146,42 +146,28 @@
                             Doctor's Information
                         </span>
 
-                        <div style="display: flex; width: 66%;">
-                            <div class="wrap-input100">
-                                <input class="input100 no-icon" type="text" name="title" placeholder="Title (ex. MD)">
-                                <span class="focus-input100"></span>
-                            </div>&nbsp;
-
-                            <div class="wrap-input100">
-                                <input class="input100 no-icon" type="text" name="suffix" placeholder="Suffix">
-                                <span class="focus-input100"></span>
-                            </div>&nbsp;
-                        </div>
-
-                        <div style="display: flex;">
-                            <div class="wrap-input100">
-                                <input class="input100 no-icon" type="text" name="fname" placeholder="First Name">
-                                <span class="focus-input100"></span>
-                            </div>&nbsp;
-
-                            <div class="wrap-input100">
-                                <input class="input100 no-icon" type="text" name="mname" placeholder="Middle Name">
-                                <span class="focus-input100"></span>
-                            </div>&nbsp;
-
-                            <div class="wrap-input100">
-                                <input class="input100 no-icon" type="text" name="lname" placeholder="Last Name">
-                                <span class="focus-input100"></span>
-                            </div>&nbsp;
-                        </div>
-
                         <div class="wrap-input100">
-                            <input class="input100 no-icon" type="text" name="specialization" placeholder="Specialization">
+                            <input class="input100 no-icon" type="text" name="title" placeholder="Title (ex. MD)">
                             <span class="focus-input100"></span>
                         </div>
 
                         <div class="wrap-input100">
-                            <input class="input100 no-icon" type="text" name="license_number" placeholder="License Number">
+                            <input class="input100 no-icon" type="text" name="fname" placeholder="First Name">
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <input class="input100 no-icon" type="text" name="mname" placeholder="Middle Name">
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <input class="input100 no-icon" type="text" name="lname" placeholder="Last Name">
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <input class="input100 no-icon" type="text" name="suffix" placeholder="Suffix">
                             <span class="focus-input100"></span>
                         </div>
 
@@ -194,11 +180,27 @@
                             <div class="wrap-input100">
                                 <input class="input100 no-icon" type="text" name="email" placeholder="Email">
                                 <span class="focus-input100"></span>
-                            </div>&nbsp;
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="third-form" style="display: none;">
+                        <span class="login100-form-title">
+                            Account Information
+                        </span>
+
+                        <div class="wrap-input100">
+                            <input class="input100 no-icon" type="text" name="specialization" placeholder="Specialization">
+                            <span class="focus-input100"></span>
                         </div>
 
                         <div class="wrap-input100">
-                            <label for="e-signature">E-Signature</label>
+                            <input class="input100 no-icon" type="text" name="license_number" placeholder="License Number">
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="wrap-input100">
+                            <label for="e-signature" style="text-align: left;">E-Signature</label>
                             <input class="input100 no-icon" type="file" name="e-signature" placeholder="E-Signature" style="line-height: 50px;">
                             <span class="focus-input100"></span>
                         </div>
@@ -213,6 +215,12 @@
                             <input class="input100 no-icon" type="password" name="confirm_password" placeholder="Confirm Password">
                             <span class="focus-input100"></span>
                         </div>
+
+                        <br>
+
+                        <input type="checkbox" name="terms-and-condition"> I accept the terms and condition
+                        <br>
+                        * Your License Number will serve as your Username
                     </div>
                         
                     <div class="container-register100-form-btn">
@@ -224,9 +232,13 @@
                             <a class="register100-form-btn" id="nxt-btn" style="width: 80px; background: #90e691;">
                                 Next
                             </a>
+                            &nbsp;
+                            <a class="register100-form-btn" id="save-btn" style="width: 80px; background: #90e691; display: none;">
+                                Save
+                            </a>
                         </div>
 
-                        <div class="text-center p-t-136">
+                        <div class="text-center p-t-136" style="padding-top: 50px;">
                             <a class="txt2" href="{{ route('login') }}">
                                 Already have an account?
                             </a>
@@ -277,21 +289,113 @@
                 $('#second-form').slideDown();
                 $('#prv-btn').show();
                 $('#pic2').show();
+            }
+            else if($('#second-form').is(':visible')){
+                $('#second-form').slideUp();
 
-                setTimeout(() => {})
+                $('#third-form').slideDown();
+                $('#nxt-btn').hide();
+
+                $('#save-btn').show();
             }
         });
 
         $('#prv-btn').on('click', e => {
             if($('#second-form').is(':visible')){
                 $('#second-form').slideUp();
-                $('#prv-btn').slideUp();
+                $('#prv-btn').hide();
                 $('#pic2').hide();
 
                 $('#first-form').slideDown();
                 $('#pic1').show();
             }
+            else if($('#third-form').is(':visible')){
+                $('#third-form').slideUp();
+
+                $('#second-form').slideDown();
+                $('#nxt-btn').show();
+                $('#save-btn').hide();
+            }
         });
+
+        $('#save-btn').on('click', e => {
+            let flag = checkIfAnyIsEmpty(['clinic_name','location','region','contact','pf']);
+            let flag2 = checkIfAnyIsEmpty(['title','fname','mname','lname','contact','email']);
+            let flag3 = checkIfAnyIsEmpty(['specialization','license_number','e-signature','password','confirm_password']);
+
+            let pass = $(`[name="password"]`).val();
+            let cpass = $(`[name="confirm_password"]`).val();
+
+            if(flag){
+                $('#third-form').slideUp();
+                $('#prv-btn').hide();
+                $('#pic2').hide();
+
+                $('#first-form').slideDown();
+                $('#pic1').show();
+                $('#nxt-btn').show();
+                $('#save-btn').hide();
+
+                Swal.fire({
+                    icon: 'info',
+                    title: "All Clinic Information is required"
+                });
+            }
+            else if(flag2){
+                $('#third-form').slideUp();
+
+                $('#second-form').slideDown();
+                $('#nxt-btn').show();
+                $('#save-btn').hide();
+
+                Swal.fire({
+                    icon: 'info',
+                    title: "Title, name, and contact details is required."
+                });
+            }
+            else if(flag3){
+                Swal.fire({
+                    icon: 'info',
+                    title: "All account information is required."
+                });
+            }
+            else if(pass != cpass){
+                Swal.fire({
+                    icon: 'info',
+                    title: "Password mismatch. Please try again."
+                });
+            }
+            else if(pass.length < 6){
+                Swal.fire({
+                    icon: 'info',
+                    title: "Password must at least be 6 characters long."
+                });
+            }
+            else if(pass.length < 6){
+                Swal.fire({
+                    icon: 'info',
+                    title: "Password must at least be 6 characters long."
+                });
+            }
+            else if(!$('[name="terms-and-condition"]').is(':checked')){
+                Swal.fire({
+                    icon: 'info',
+                    title: "You must accept the terms and conditios"
+                });
+            }
+        });
+
+        function checkIfAnyIsEmpty(columns){
+            let bool = false;
+
+            columns.forEach(column => {
+                if($(`[name="${column}"]`).val() == ""){
+                    bool =true;
+                }
+            })
+
+            return bool;
+        }
     </script>
 </body>
 </html>
