@@ -15,21 +15,28 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username')->unique();
             
+            $table->enum('role', ['Super Admin', 'Admin'])->nullable();
+            $table->string('clinic')->nullable();
+
             $table->string('fname')->nullable();
             $table->string('mname')->nullable();
             $table->string('lname')->nullable();
-            $table->string('avatar')->default('images/default_avatar.png');
-            $table->enum('role', ['Super Admin', 'Admin'])->nullable();
+            $table->string('suffix')->nullable();
             
-            $table->string('email')->unique()->nullable();
-            $table->date('birthday')->nullable();
-            $table->string('gender')->nullable();
-            $table->text('address')->nullable();
+            $table->string('email')->nullable();
             $table->string('contact')->nullable();
 
+            $table->date('birthday')->nullable();
+            $table->string('gender')->nullable();
+
+            $table->text('address')->nullable();
+
+            $table->timestamp('tnc-agreement')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('avatar')->default('images/default_avatar.png');
+            
+            $table->string('username')->unique();
             $table->string('password');
 
             $table->timestamps();

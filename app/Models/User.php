@@ -18,11 +18,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'role', 'fname', 'mname', 
+        'role', 'fname', 'mname', 'suffix',
         'lname', 'email', 'birthday', 
         'gender', 'address', 'contact', 
         'password', 'email_verified_at',
-        'username'
+        'username',
+        'clinic','tnc-agreement',
     ];
 
     /**
@@ -42,13 +43,16 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-    ];
-
-    protected $dates = [
-        'created_at', 'updated_at', 'deleted_at', 'birthday', 'email_verified_at'
+        'tnc-agreement' => 'datetime',
+        'deleted_at' => 'datetime',
+        'birthday' => 'datetime:Y-m-d',
     ];
 
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = Hash::make($value);
+    }
+
+    public function doctor(){
+        return $this->belongsTo('App\Models\Doctor');
     }
 }
