@@ -394,26 +394,32 @@
                     data: {
                         userData: userData,
                         clinicData: clinicData,
-                        doctorData: doctorData
+                        doctorData: doctorData,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+
                     },
                     success: result => {
                         if(result => "Success"){
-                            let formData = new FormData();
-
-                            formData.append('e_signature', $('[name="e-signature"]').prop('files')[0]);
-                            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
-
-                            await fetch('{{ route('doctor.update') }}', {
-                                method: "POST", 
-                                body: formData
-                            });
-
-                            ss('Successfully Saved');
+                            uploadSignature($('[name="e-signature"]').prop('files')[0]);
                         }
                     }
                 })
             }
         });
+
+        async function uploadSignature(sig){
+            let formData = new FormData();
+
+            formData.append('e_signature', sig);
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+            await fetch('{{ route('doctor.update') }}', {
+                method: "POST", 
+                body: formData
+            });
+
+            ss('Successfully Saved');
+        }
 
         function infoError(title){
             Swal.fire({
