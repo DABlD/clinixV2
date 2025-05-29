@@ -125,7 +125,7 @@
                         </div>
 
                         <div class="wrap-input100">
-                            <input class="input100" type="text" name="contact" placeholder="Contact">
+                            <input class="input100" type="text" name="clinic_contact" placeholder="Contact">
                             <span class="focus-input100"></span>
                             <span class="symbol-input100">
                                 <i class="far fa-phone"></i>
@@ -319,7 +319,7 @@
         });
 
         $('#save-btn').on('click', e => {
-            let flag = checkIfAnyIsEmpty(['clinic_name','location','region','contact','pf']);
+            let flag = checkIfAnyIsEmpty(['clinic_name','location','region','clinic_contact','pf']);
             let flag2 = checkIfAnyIsEmpty(['title','fname','mname','lname','contact','email']);
             let flag3 = checkIfAnyIsEmpty(['specialization','license_number','e-signature','password','confirm_password']);
 
@@ -361,6 +361,56 @@
             }
             else if(!$('[name="terms-and-condition"]').is(':checked')){
                 infoError('You must accept the terms and conditios');
+            }
+            else{
+                let userData = {
+                    fname: $('[name="fname"]').val(),
+                    mname: $('[name="mname"]').val(),
+                    lname: $('[name="lname"]').val(),
+                    suffix: $('[name="suffix"]').val(),
+                    contact: $('[name="contact"]').val(),
+                    email: $('[name="email"]').val(),
+                };
+
+                let clinicData = {
+                    name: $('[name="clinic_name"]').val(),
+                    location: $('[name="location"]').val(),
+                    region: $('[name="region"]').val(),
+                    contact: $('[name="clinic_contact"]').val(),
+                    pf: $('[name="pf"]').val(),
+                };
+
+                let doctorData = {
+                    title: $('[name="title"]').val(),
+                    specialization: $('[name="specialization"]').val(),
+                    license_number: $('[name="license_number"]').val(),
+                };
+
+                Swal.showLoading();
+                $.ajax({
+                    url: "{{ route('clinic.store') }}",
+                    type: "POST",
+                    data: {
+                        userData: userData,
+                        clinicData: clinicData,
+                        doctorData: doctorData
+                    },
+                    success: result => {
+                        if(result => "Success"){
+                            let formData = new FormData();
+
+                            formData.append('e-signature', $('[name="e-signature"]').prop('files')[0]);
+                            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+                            await fetch('{{ route('doctor.update') }}', {
+                                method: "POST", 
+                                body: formData
+                            });
+
+                            ss('Successfully Saved');
+                        }
+                    }
+                })
             }
         });
 
