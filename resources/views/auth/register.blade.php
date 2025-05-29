@@ -336,10 +336,7 @@
                 $('#nxt-btn').show();
                 $('#save-btn').hide();
 
-                Swal.fire({
-                    icon: 'info',
-                    title: "All Clinic Information is required"
-                });
+                infoError('All Clinic Information is required');
             }
             else if(flag2){
                 $('#third-form').slideUp();
@@ -348,42 +345,31 @@
                 $('#nxt-btn').show();
                 $('#save-btn').hide();
 
-                Swal.fire({
-                    icon: 'info',
-                    title: "Title, name, and contact details is required."
-                });
+                infoError('Title, name, and contact details is required.');
             }
             else if(flag3){
-                Swal.fire({
-                    icon: 'info',
-                    title: "All account information is required."
-                });
+                infoError('All account information is required.');
             }
             else if(pass != cpass){
-                Swal.fire({
-                    icon: 'info',
-                    title: "Password mismatch. Please try again."
-                });
+                infoError('Password mismatch. Please try again.');
             }
             else if(pass.length < 6){
-                Swal.fire({
-                    icon: 'info',
-                    title: "Password must at least be 6 characters long."
-                });
+                infoError('Password must at least be 6 characters long.');
             }
             else if(pass.length < 6){
-                Swal.fire({
-                    icon: 'info',
-                    title: "Password must at least be 6 characters long."
-                });
+                infoError('Password must at least be 6 characters long.');
             }
             else if(!$('[name="terms-and-condition"]').is(':checked')){
-                Swal.fire({
-                    icon: 'info',
-                    title: "You must accept the terms and conditios"
-                });
+                infoError('You must accept the terms and conditios');
             }
         });
+
+        function infoError(title){
+            Swal.fire({
+                icon: 'info',
+                title: title
+            })
+        }
 
         function checkIfAnyIsEmpty(columns){
             let bool = false;
