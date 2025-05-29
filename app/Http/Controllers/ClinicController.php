@@ -57,20 +57,43 @@ class ClinicController extends Controller
     }
 
     public function store(Request $req){
-        $nurse = new Nurse();
+        // SAVE CLINIC
+        $clinic = new Clinic();
 
-        $nurse->user_id = $req->user_id;
-        $nurse->doctor_id = $req->doctor_id;
-        $nurse->sss = $req->sss;
-        $nurse->tin = $req->tin;
-        $nurse->philhealth = $req->philhealth;
-        $nurse->pagibig = $req->pagibig;
+        $clinic->name = $req->clinicData->name;
+        $clinic->location = $req->clinicData->location;
+        $clinic->region = $req->clinicData->region;
+        $clinic->contact = $req->clinicData->contact;
+        $clinic->pf = $req->clinicData->pf;
+        $clinic->save();
 
-        $nurse->save();
+        Helper::log(1, 'created clinic', $clinic->id);
 
-        Helper::log(auth()->user()->id, 'created nurse', $user->id);
+        // SAVE USER
+        $user = new user();
 
-        echo "success";
+        $user->fname = $req->userData->fname;
+        $user->mname = $req->userData->mname;
+        $user->lname = $req->userData->lname;
+        $user->suffix = $req->userData->suffix;
+        $user->contact = $req->userData->contact;
+        $user->email = $req->userData->email;
+        $user->tnc_agreement = $req->userData->tnc_agreement;
+
+        $user->clinic_id = $clinic->id;
+        $user->username = $req->doctorData->license_number;
+        $user->save();
+
+        $doctor = new Doctor();
+
+        $doctor->title = $req->doctorData->title;
+        $doctor->specialization = $req->doctorData->specialization;
+        $doctor->license_number = $req->doctorData->license_number;
+        $doctor->save();
+
+        Helper::log(1, 'new register', $user->id);
+
+        echo $doctor->id;
     }
 
     public function update(Request $req){

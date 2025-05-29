@@ -23,7 +23,7 @@ class User extends Authenticatable
         'gender', 'address', 'contact', 
         'password', 'email_verified_at',
         'username',
-        'clinic','tnc-agreement',
+        'clinic_id','tnc_agreement',
     ];
 
     /**

@@ -370,6 +370,7 @@
                     suffix: $('[name="suffix"]').val(),
                     contact: $('[name="contact"]').val(),
                     email: $('[name="email"]').val(),
+                    password: $('[name="password"]').val(),
                 };
 
                 let clinicData = {
@@ -399,7 +400,7 @@
                         if(result => "Success"){
                             let formData = new FormData();
 
-                            formData.append('e-signature', $('[name="e-signature"]').prop('files')[0]);
+                            formData.append('e_signature', $('[name="e-signature"]').prop('files')[0]);
                             formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
                             await fetch('{{ route('doctor.update') }}', {

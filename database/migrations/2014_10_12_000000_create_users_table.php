@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             
             $table->enum('role', ['Super Admin', 'Admin'])->nullable();
-            $table->string('clinic')->nullable();
+            $table->string('clinic_id')->nullable();
 
             $table->string('fname')->nullable();
             $table->string('mname')->nullable();
@@ -32,7 +32,7 @@ class CreateUsersTable extends Migration
 
             $table->text('address')->nullable();
 
-            $table->timestamp('tnc-agreement')->nullable();
+            $table->timestamp('tnc_agreement')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('avatar')->default('images/default_avatar.png');
             

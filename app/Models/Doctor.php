@@ -10,7 +10,7 @@ class Doctor extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'user_id','title','specialization','license_number','e-signature'
+        'user_id','title','specialization','license_number','e_signature'
     ];
 
     public function user(){

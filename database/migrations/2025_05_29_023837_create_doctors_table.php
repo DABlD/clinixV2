@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('specialization')->nullable();
             $table->string('license_number')->nullable();
 
-            $table->string('e-signature')->nullable();
+            $table->string('e_signature')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
