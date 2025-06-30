@@ -29,19 +29,19 @@ class UserSeeder extends Seeder
             'password' => '654321'
         ]);
 
-        User::create([
-            'username' => 'admin',
-            'fname' => 'David',
-            'mname' => 'Roga',
-            'lname' => 'Mendoza',
-            'role' => 'Admin',
-            'email' => 'davidmendozaofficial@gmail.com',
-            'birthday' => null,
-            'gender' => 'Male',
-            'address' => null,
-            'contact' => null,
-            'email_verified_at' => now()->toDateTimeString(),
-            'password' => '123456'
-        ]);
+        // User::create([
+        //     'username' => 'admin',
+        //     'fname' => 'David',
+        //     'mname' => 'Roga',
+        //     'lname' => 'Mendoza',
+        //     'role' => 'Admin',
+        //     'email' => 'davidmendozaofficial@gmail.com',
+        //     'birthday' => null,
+        //     'gender' => 'Male',
+        //     'address' => null,
+        //     'contact' => null,
+        //     'email_verified_at' => now()->toDateTimeString(),
+        //     'password' => '123456'
+        // ]);
     }
 }
