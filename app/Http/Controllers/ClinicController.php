@@ -60,11 +60,11 @@ class ClinicController extends Controller
         // SAVE CLINIC
         $clinic = new Clinic();
 
-        $clinic->name = $req->clinicData->name;
-        $clinic->location = $req->clinicData->location;
-        $clinic->region = $req->clinicData->region;
-        $clinic->contact = $req->clinicData->contact;
-        $clinic->pf = $req->clinicData->pf;
+        $clinic->name = $req->clinicData['name'];
+        $clinic->location = $req->clinicData['location'];
+        $clinic->region = $req->clinicData['region'];
+        $clinic->contact = $req->clinicData['contact'];
+        $clinic->pf = $req->clinicData['pf'];
         $clinic->save();
 
         Helper::log(1, 'created clinic', $clinic->id);
@@ -72,28 +72,26 @@ class ClinicController extends Controller
         // SAVE USER
         $user = new user();
 
-        $user->fname = $req->userData->fname;
-        $user->mname = $req->userData->mname;
-        $user->lname = $req->userData->lname;
-        $user->suffix = $req->userData->suffix;
-        $user->contact = $req->userData->contact;
-        $user->email = $req->userData->email;
-        $user->tnc_agreement = $req->userData->tnc_agreement;
+        $user->fname = $req->userData['fname'];
+        $user->mname = $req->userData['mname'];
+        $user->lname = $req->userData['lname'];
+        $user->suffix = $req->userData['suffix'];
+        $user->contact = $req->userData['contact'];
+        $user->email = $req->userData['email'];
+        $user->role = $req->userDate['role'] ?? "Admin";
+        $user->tnc_agreement = now();
 
         $user->clinic_id = $clinic->id;
-        $user->username = $req->doctorData->license_number;
+        $user->username = $req->userData['username'];
+        $user->password = $req->userData['password'];
         $user->save();
-
-        $doctor = new Doctor();
-
-        $doctor->title = $req->doctorData->title;
-        $doctor->specialization = $req->doctorData->specialization;
-        $doctor->license_number = $req->doctorData->license_number;
-        $doctor->save();
 
         Helper::log(1, 'new register', $user->id);
 
-        echo $doctor->id;
+        $clinic->user_id = $user->id;
+        $clinic->save();
+
+        echo $clinic->id;
     }
 
     public function update(Request $req){

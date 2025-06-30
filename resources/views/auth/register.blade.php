@@ -4,6 +4,7 @@
     <title>{{ env("APP_NAME") . " | " . "Login" }}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <link rel="stylesheet" href="{{ asset('fonts/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/auth/animate.css') }}">
@@ -143,13 +144,8 @@
 
                     <div id="second-form" style="display: none;">
                         <span class="login100-form-title">
-                            Doctor's Information
+                            Personal Information
                         </span>
-
-                        <div class="wrap-input100">
-                            <input class="input100 no-icon" type="text" name="title" placeholder="Title (ex. MD)">
-                            <span class="focus-input100"></span>
-                        </div>
 
                         <div class="wrap-input100">
                             <input class="input100 no-icon" type="text" name="fname" placeholder="First Name">
@@ -189,19 +185,9 @@
                             Account Information
                         </span>
 
+                        <br>
                         <div class="wrap-input100">
-                            <input class="input100 no-icon" type="text" name="specialization" placeholder="Specialization">
-                            <span class="focus-input100"></span>
-                        </div>
-
-                        <div class="wrap-input100">
-                            <input class="input100 no-icon" type="text" name="license_number" placeholder="License Number">
-                            <span class="focus-input100"></span>
-                        </div>
-
-                        <div class="wrap-input100">
-                            <label for="e-signature" style="text-align: left;">E-Signature</label>
-                            <input class="input100 no-icon" type="file" name="e-signature" placeholder="E-Signature" style="line-height: 50px;">
+                            <input class="input100 no-icon" type="text" name="username" placeholder="Username">
                             <span class="focus-input100"></span>
                         </div>
 
@@ -219,8 +205,6 @@
                         <br>
 
                         <input type="checkbox" name="terms-and-condition"> I accept the terms and condition
-                        <br>
-                        * Your License Number will serve as your Username
                     </div>
                         
                     <div class="container-register100-form-btn">
@@ -320,8 +304,8 @@
 
         $('#save-btn').on('click', e => {
             let flag = checkIfAnyIsEmpty(['clinic_name','location','region','clinic_contact','pf']);
-            let flag2 = checkIfAnyIsEmpty(['title','fname','mname','lname','contact','email']);
-            let flag3 = checkIfAnyIsEmpty(['specialization','license_number','e-signature','password','confirm_password']);
+            let flag2 = checkIfAnyIsEmpty(['fname','mname','lname','contact','email']);
+            let flag3 = checkIfAnyIsEmpty(['username','password','confirm_password']);
 
             let pass = $(`[name="password"]`).val();
             let cpass = $(`[name="confirm_password"]`).val();
@@ -370,6 +354,7 @@
                     suffix: $('[name="suffix"]').val(),
                     contact: $('[name="contact"]').val(),
                     email: $('[name="email"]').val(),
+                    username: $('[name="username"]').val(),
                     password: $('[name="password"]').val(),
                 };
 
@@ -381,12 +366,6 @@
                     pf: $('[name="pf"]').val(),
                 };
 
-                let doctorData = {
-                    title: $('[name="title"]').val(),
-                    specialization: $('[name="specialization"]').val(),
-                    license_number: $('[name="license_number"]').val(),
-                };
-
                 Swal.showLoading();
                 $.ajax({
                     url: "{{ route('clinic.store') }}",
@@ -394,32 +373,21 @@
                     data: {
                         userData: userData,
                         clinicData: clinicData,
-                        doctorData: doctorData,
                         _token: $('meta[name="csrf-token"]').attr('content')
-
                     },
                     success: result => {
-                        if(result => "Success"){
-                            uploadSignature($('[name="e-signature"]').prop('files')[0]);
-                        }
+                        Swal.fire({
+                            icon: "success",
+                            title: "Successfully saved",
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = "{{ route('login') }}"
+                        })
                     }
                 })
             }
         });
-
-        async function uploadSignature(sig){
-            let formData = new FormData();
-
-            formData.append('e_signature', sig);
-            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
-
-            await fetch('{{ route('doctor.update') }}', {
-                method: "POST", 
-                body: formData
-            });
-
-            ss('Successfully Saved');
-        }
 
         function infoError(title){
             Swal.fire({
