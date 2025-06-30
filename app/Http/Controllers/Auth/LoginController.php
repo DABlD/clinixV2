@@ -18,6 +18,11 @@ class LoginController extends Controller
         ]);
     
         if (Auth::attempt($credentials)) {
+            if(Auth::user()->role == "Admin" && Auth::user()->email_verified_at == null){
+                Auth::logout();
+                return redirect('login')->withErrors('Your account has not been approved yet.');
+            }
+
             $request->session()->regenerate();
 
             Helper::log(auth()->user()->id, 'logged in.');
