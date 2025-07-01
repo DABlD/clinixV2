@@ -12,12 +12,12 @@ trait ClinicAttribute{
 		// 		    "</a>&nbsp;";
 
 		if($this->status){
-			$action .= 	"<a class='btn btn-danger' data-toggle='tooltip' title='Deactivate' onClick='updateStatus($id, 0)'>" .
+			$action .= 	"<a class='btn btn-danger btn-sm' data-toggle='tooltip' title='Deactivate' onClick='updateStatus($id, 0)'>" .
 					        "<i class='fas fa-circle-xmark'></i>" .
 					    "</a>&nbsp;";
 		}
 		else{
-			$action .= 	"<a class='btn btn-success' data-toggle='tooltip' title='Activate' onClick='updateStatus($id, 1)'>" .
+			$action .= 	"<a class='btn btn-success btn-sm' data-toggle='tooltip' title='Activate' onClick='updateStatus($id, 1)'>" .
 					        "<i class='fas fa-circle-check'></i>" .
 					    "</a>&nbsp;";
 		}
