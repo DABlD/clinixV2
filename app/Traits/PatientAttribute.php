@@ -13,6 +13,9 @@ trait PatientAttribute{
 		$action .= 	"<a class='btn btn-info btn-sm' data-toggle='tooltip' title='Edit' onClick='edit($uid)'>" .
 				        "<i class='fas fa-pencil'></i>" .
 				    "</a>&nbsp;";
+		$action .= 	"<a class='btn btn-primary btn-sm' data-toggle='tooltip' title='SOAP Note' onClick='soap($uid)'>" .
+				        "<i class='fas fa-notes-medical'></i>" .
+				    "</a>&nbsp;";
 
 		// if($this->status){
 		// 	$action .= 	"<a class='btn btn-danger btn-sm' data-toggle='tooltip' title='Deactivate' onClick='updateStatus($id, 0)'>" .

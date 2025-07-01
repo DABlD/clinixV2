@@ -1163,5 +1163,277 @@
 				}
 			});
 		}
+
+		function soap(user){
+
+			Swal.fire({
+    			confirmButtonText: "OK",
+				allowEscapeKey: false,
+				allowOutsideClick: false,
+				showCancelButton: true,
+				cancelButtonColor: errorColor,
+				cancelButtonText: 'Cancel',
+				html: `
+	                <div class="row">
+                    	<section class="col-lg-12">
+                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
+                    		    <li class="nav-item">
+                    		        <a class="nav-link active" href="#charts" data-toggle="tab">
+                    		            Charts
+                    		        </a>
+                    		    </li>
+                    		    &nbsp;
+                    		    <li class="nav-item">
+                    		        <a class="nav-link" href="#soap" data-toggle="tab">
+                    		            SOAP
+                    		        </a>
+                    		    </li>
+                    		</ul>
+
+        					<br>
+
+        					{{-- CONTENT START --}}
+        					<div class="tab-content p-0">
+
+        						{{-- CHARTS START --}}
+        					    <div class="chart tab-pane active" id="charts" style="position: relative;">
+		    	                    <div class="card">
+		    	                        <div class="card-header row">
+		    	                            <div class="col-md-12">
+		    	                                <h3 class="card-title" style="width: 100%; text-align: left;">
+		    	                                    <i class="fas fa-chart-user mr-1"></i>
+
+		    	                                    Charts
+
+		    	                                </h3>
+		    	                            </div>
+		    	                        </div>
+
+		    	                        <div class="card-body">
+				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link active" href="#history" data-toggle="tab">
+				                    		            History
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#clinic_history" data-toggle="tab">
+				                    		            Clinic History
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#vital_signs" data-toggle="tab">
+				                    		            Vital Signs
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#prescriptions" data-toggle="tab">
+				                    		            Prescriptions
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#laboratory" data-toggle="tab">
+				                    		            Prescriptions
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#imaging" data-toggle="tab">
+				                    		            Prescriptions
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#files" data-toggle="tab">
+				                    		            Prescriptions
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#vaccine" data-toggle="tab">
+				                    		            Prescriptions
+				                    		        </a>
+				                    		    </li>
+				                    		</ul>
+
+				        					<br>
+
+				        					<div class="tab-content p-0">
+				        					    <div class="chart tab-pane active" id="history" style="position: relative;">
+				        					    	History
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="clinic_history" style="position: relative;">
+				        					    	Clinic History
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="vital_signs" style="position: relative;">
+				        					    	Vital Signs
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="prescriptions" style="position: relative;">
+				        					    	Prescriptions
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="laboratory" style="position: relative;">
+				        					    	Laboratory
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="imaging" style="position: relative;">
+				        					    	Imaging
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="files" style="position: relative;">
+				        					    	Files
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="vaccine" style="position: relative;">
+				        					    	Vaccine
+				        					    </div>
+				        					</div>
+		    	                        </div>
+		    	                    </div>
+        					    </div>
+        					    {{-- CHARTS END --}}
+
+        					    {{-- SOAP START --}}
+        					    <div class="chart tab-pane" id="soap" style="position: relative;">
+		    	                    <div class="card">
+		    	                        <div class="card-header row">
+		    	                            <div class="col-md-12">
+		    	                                <h3 class="card-title" style="width: 100%; text-align: left;">
+		    	                                    <i class="fas fa-notes-medical mr-1"></i>
+
+		    	                                    SOAP
+
+		    	                                </h3>
+		    	                            </div>
+		    	                        </div>
+
+		    	                        <div class="card-body">
+				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link active" href="#subjective" data-toggle="tab">
+				                    		            Subjective
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#objective" data-toggle="tab">
+				                    		            Objective
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#assessment" data-toggle="tab">
+				                    		            Assessment
+				                    		        </a>
+				                    		    </li>
+				                    		    &nbsp;
+				                    		    <li class="nav-item">
+				                    		        <a class="nav-link" href="#plan" data-toggle="tab">
+				                    		            Plan
+				                    		        </a>
+				                    		    </li>
+				                    		</ul>
+
+				        					<br>
+
+				        					<div class="tab-content p-0">
+				        					    <div class="chart tab-pane active" id="subjective" style="position: relative;">
+				        					    	Subjective
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="objective" style="position: relative;">
+				        					    	Objective
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="assessment" style="position: relative;">
+				        					    	Assessment
+				        					    </div>
+
+				        					    <div class="chart tab-pane" id="plan" style="position: relative;">
+				        					    	Plan
+				        					    </div>
+				        					</div>
+		    	                        </div>
+		    	                    </div>
+		    	                    {{-- SOAP END --}}
+        					    </div>
+        					</div>
+    	                </section>
+	                </div>
+				`,
+				width: '1200px',
+				didOpen: () => {
+					$('.pInfo').parent().css('text-align', 'left');
+					$('#swal2-html-container .card-header').css('margin', "1px");
+					$('#swal2-html-container .card-header').css('background-color', "#83c8e5");
+					$('#swal2-html-container .card-body').css('border', "1px solid rgba(0,0,0,0.125)");
+
+					$('#birthday').flatpickr({
+						altInput: true,
+						altFormat: "M j, Y",
+						dateFormat: "Y-m-d",
+						maxDate: moment().format("YYYY-MM-DD")
+					});
+				},
+				preConfirm: () => {
+				    swal.showLoading();
+				    return new Promise(resolve => {
+				    	let bool = true;
+
+				    	let check = ["fname","lname","gender","contact"];
+				    	let flag = false;
+
+				    	check.forEach(field => {
+				    		$(`#${field}`).removeClass('border-danger');
+				    		if($(`#${field}`).val() == ""){
+				    			$(`#${field}`).addClass('border-danger');
+				    			flag = true;
+				    		}
+				    	});
+
+			            if(flag){
+			                Swal.showValidationMessage('Highlighted fields are required');
+			            }
+			            
+			            bool ? setTimeout(() => {resolve()}, 500) : "";
+				    });
+				},
+			}).then(result => {
+				if(result.value){
+					swal.showLoading();
+					uploadPatient({
+						fname: $("#fname").val(),
+						mname: $("#mname").val(),
+						lname: $("#lname").val(),
+						suffix: $("#suffix").val(),
+						birthday: $("#birthday").val(),
+						birth_place: $("#birth_place").val(),
+						gender: $("#gender").val(),
+						civil_status: $("#civil_status").val(),
+						nationality: $("#nationality").val(),
+						religion: $("#religion").val(),
+						contact: $("#contact").val(),
+						email: $("#email").val(),
+						address: $("#address").val(),
+						hmo_provider: $("#hmo_provider").val(),
+						hmo_number: $("#hmo_number").val(),
+						employment_status: $("#employment_status").val(),
+						company_name: $("#company_name").val(),
+						company_position: $("#company_position").val(),
+						company_contact: $("#company_contact").val(),
+						sss: $("#sss").val(),
+						tin_number: $("#tin_number").val(),
+						_token: $('meta[name="csrf-token"]').attr('content')
+					});
+				}
+			});
+		}
 	</script>
 @endpush
