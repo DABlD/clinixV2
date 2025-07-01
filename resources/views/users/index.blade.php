@@ -96,124 +96,17 @@
 			})
 		}
 
-		function create(){
-			Swal.fire({
-				html: `
-	                ${input("fname", "Name", null, 3, 9)}
-					${input("email", "Email", null, 3, 9, 'email')}
-					<div class="row iRow">
-					    <div class="col-md-3 iLabel">
-					        Role
-					    </div>
-					    <div class="col-md-9 iInput">
-					        <select name="role" class="form-control">
-					        	<option value="Admin">Admin</option>
-					        	<option value="Coast Guard">Coast Guard</option>
-					        </select>
-					    </div>
-					</div>
-
-	                <br>
-	                ${input("username", "Username", null, 3, 9)}
-	                ${input("password", "Password", null, 3, 9, 'password')}
-	                ${input("password_confirmation", "Confirm Password", null, 3, 9, 'password')}
-				`,
-				width: '800px',
-				confirmButtonText: 'Add',
-				showCancelButton: true,
-				cancelButtonColor: errorColor,
-				cancelButtonText: 'Cancel',
-				preConfirm: () => {
-				    swal.showLoading();
-				    return new Promise(resolve => {
-				    	let bool = true;
-
-			            if($('.swal2-container input:placeholder-shown').length){
-			                Swal.showValidationMessage('Fill all fields');
-			            }
-			            else if($("[name='password']").val().length < 8){
-			                Swal.showValidationMessage('Password must at least be 8 characters');
-			            }
-			            else if($("[name='password']").val() != $("[name='password_confirmation']").val()){
-			                Swal.showValidationMessage('Password do not match');
-			            }
-			            else{
-			            	let bool = false;
-            				$.ajax({
-            					url: "{{ route('user.get') }}",
-            					data: {
-            						select: "id",
-            						where: ["email", $("[name='email']").val()]
-            					},
-            					success: result => {
-            						result = JSON.parse(result);
-            						if(result.length){
-            			    			Swal.showValidationMessage('Email already used');
-	            						setTimeout(() => {resolve()}, 500);
-            						}
-            						else{
-			            				$.ajax({
-			            					url: "{{ route('user.get') }}",
-			            					data: {
-			            						select: "id",
-			            						where: ["username", $("[name='username']").val()]
-			            					},
-			            					success: result => {
-			            						result = JSON.parse(result);
-			            						if(result.length){
-			            			    			Swal.showValidationMessage('Username already used');
-				            						setTimeout(() => {resolve()}, 500);
-			            						}
-			            					}
-			            				});
-            						}
-            					}
-            				});
-			            }
-
-			            bool ? setTimeout(() => {resolve()}, 500) : "";
-				    });
-				},
-			}).then(result => {
-				if(result.value){
-					swal.showLoading();
-					$.ajax({
-						url: "{{ route('user.store') }}",
-						type: "POST",
-						data: {
-							fname: $("[name='fname']").val(),
-							email: $("[name='email']").val(),
-							role: $("[name='role']").val(),
-							username: $("[name='username']").val(),
-							password: $("[name='password']").val(),
-							_token: $('meta[name="csrf-token"]').attr('content')
-						},
-						success: () => {
-							ss("Success");
-							reload();
-						}
-					})
-				}
-			});
-		}
-
 		function showDetails(user){
 			Swal.fire({
+				title: "User Details",
 				html: `
 	                ${input("id", "", user.id, 3, 9, 'hidden')}
-	                ${input("fname", "Name", user.fname, 3, 9)}
+	                ${input("fname", "First Name", user.fname, 3, 9)}
+	                ${input("mname", "Middle Name", user.mname, 3, 9)}
+	                ${input("lname", "Last Name", user.lname, 3, 9)}
+	                ${input("suffix", "Suffix", user.suffix, 3, 9)}
 					${input("email", "Email", user.email, 3, 9, 'email')}
-					<div class="row iRow">
-					    <div class="col-md-3 iLabel">
-					        Role
-					    </div>
-					    <div class="col-md-9 iInput">
-					        <select name="role" class="form-control">
-					        	<option value="Admin" ${user.role == "Admin" ? "Selected" : ""}>Admin</option>
-					        	<option value="Coast Guard" ${user.role == "Admin" ? "" : "Selected"}>Coast Guard</option>
-					        </select>
-					    </div>
-					</div>
+					${input("contact", "Contact", user.contact, 3, 9)}
 
 	                <br>
 	                ${input("username", "Username", user.username, 3, 9)}
@@ -228,42 +121,20 @@
 				    return new Promise(resolve => {
 				    	let bool = true;
 
-			            if($('.swal2-container input:placeholder-shown').length){
-			                Swal.showValidationMessage('Fill all fields');
-			            }
-			            else{
-			            	let bool = false;
-            				$.ajax({
-            					url: "{{ route('user.get') }}",
-            					data: {
-            						select: "id",
-            						where: ["email", $("[name='email']").val()]
-            					},
-            					success: result => {
-            						result = JSON.parse(result);
-            						if(result.length && result[0].id != user.id){
-            			    			Swal.showValidationMessage('Email already used');
-	            						setTimeout(() => {resolve()}, 500);
-            						}
-			            			else{
-			            				$.ajax({
-			            					url: "{{ route('user.get') }}",
-			            					data: {
-			            						select: "id",
-			            						where: ["username", $("[name='username']").val()]
-			            					},
-			            					success: result => {
-			            						result = JSON.parse(result);
-			            						if(result.length && result[0].id != user.id){
-			            			    			Swal.showValidationMessage('Username already used');
-				            						setTimeout(() => {resolve()}, 500);
-			            						}
-			            					}
-			            				});
-			            			}
-            					}
-            				});
-			            }
+        				$.ajax({
+        					url: "{{ route('user.get') }}",
+        					data: {
+        						select: "id",
+        						where: ["username", $("[name='username']").val()]
+        					},
+        					success: result => {
+        						result = JSON.parse(result);
+        						if(result.length && result[0].id != user.id){
+        			    			Swal.showValidationMessage('Username already used');
+            						setTimeout(() => {resolve()}, 500);
+        						}
+        					}
+        				});
 
 			            bool ? setTimeout(() => {resolve()}, 500) : "";
 				    });
@@ -275,9 +146,12 @@
 						url: "{{ route('user.update') }}",
 						data: {
 							id: $("[name='id']").val(),
-							role: $("[name='role']").val(),
 							fname: $("[name='fname']").val(),
+							mname: $("[name='mname']").val(),
+							lname: $("[name='lname']").val(),
+							suffix: $("[name='suffix']").val(),
 							email: $("[name='email']").val(),
+							contact: $("[name='contact']").val(),
 							username: $("[name='username']").val(),
 						},
 						message: "Success"
