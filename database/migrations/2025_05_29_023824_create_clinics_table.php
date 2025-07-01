@@ -24,6 +24,8 @@ return new class extends Migration
 
             $table->string('logo')->nullable();
 
+            $table->boolean('status')->default(0);
+
             $table->timestamps();
             $table->softDeletes();
 

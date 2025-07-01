@@ -55,4 +55,8 @@ class User extends Authenticatable
     public function doctor(){
         return $this->belongsTo('App\Models\Doctor');
     }
+
+    public function clinic(){
+        return $this->hasOne('App\Models\Clinic');
+    }
 }

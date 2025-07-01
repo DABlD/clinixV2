@@ -18,9 +18,9 @@ class LoginController extends Controller
         ]);
     
         if (Auth::attempt($credentials)) {
-            if(Auth::user()->role == "Admin" && Auth::user()->email_verified_at == null){
+            if(Auth::user()->role != "Super Admin" && !Auth::user()->clinic->status){
                 Auth::logout();
-                return redirect('login')->withErrors('Your account has not been approved yet.');
+                return redirect('login')->withErrors('Your clinic has not been activated yet.');
             }
 
             $request->session()->regenerate();

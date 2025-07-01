@@ -95,7 +95,7 @@ class ClinicController extends Controller
     }
 
     public function update(Request $req){
-        $result = DB::table($this->table)->where('id', $req->id)->update($req->except(['id', '_token']));
+        $result = Clinic::where('id', $req->id)->update($req->except(['id', '_token']));
 
         echo Helper::log(auth()->user()->id, 'updated clinic', $req->id);
     }

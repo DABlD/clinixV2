@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Traits\ClinicAttribute;
+
 class Clinic extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, ClinicAttribute;
 
     protected $fillable = [
-        'user_id','name','location','region','contact','pf','logo'
+        'user_id','name','location','region','contact','pf','logo','status'
     ];
 
     protected $casts = [

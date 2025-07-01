@@ -77,7 +77,7 @@ Route::group([
 
                 Route::get("/", ucfirst($cname) . "Controller@index")
                     ->defaults("sidebar", 1)
-                    ->defaults("icon", "fas fa-clinic")
+                    ->defaults("icon", "fas fa-hospital")
                     ->defaults("name", ucfirst($cname) . "s")
                     ->defaults("roles", array("Super Admin"))
                     // ->defaults("group", "Settings")
@@ -120,6 +120,7 @@ Route::group([
             ], function () use($cname){
 
                 Route::get("user", ucfirst($cname) . "Controller@user")->name('user');
+                Route::get("clinic", ucfirst($cname) . "Controller@clinic")->name('clinic');
             }
         );
 
