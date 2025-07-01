@@ -53,10 +53,14 @@ class User extends Authenticatable
     }
 
     public function doctor(){
-        return $this->belongsTo('App\Models\Doctor');
+        return $this->hasOne('App\Models\Doctor');
     }
 
     public function clinic(){
         return $this->hasOne('App\Models\Clinic');
+    }
+
+    public function patient(){
+        return $this->hasOne('App\Models\Patient');
     }
 }
