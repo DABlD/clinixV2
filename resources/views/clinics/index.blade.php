@@ -100,6 +100,7 @@
 	                    },
 	                }
 	            ],
+	            order: [[0]]
 				// drawCallback: function(){
 				// 	init();
 				// }
