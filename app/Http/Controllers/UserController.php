@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\{Nurse, Patient, Cashier, Receptionist};
+use App\Models\{Imaging, Laboratory};
 use DB;
 use Auth;
 
@@ -72,10 +74,21 @@ class UserController extends Controller
         $data->address = $req->address;
         $data->contact = $req->contact;
         $data->password = $req->password;
+        $data->save();
+
+        $role = "App\\Models\\$req->role";
+        $temp = new $role();
+        $temp->user_id = $data->id;
+        $temp->tin = $req->tin;
+        $temp->sss = $req->sss;
+        $temp->philhealth = $req->philhealth;
+        $temp->pagibig = $req->pagibig;
+
+        $temp->save();
 
         Helper::log(auth()->user()->id, "created $data->role user", $data->id);
 
-        echo $data->save();
+        echo 1;
     }
 
     public function update(Request $req){
@@ -94,7 +107,14 @@ class UserController extends Controller
             $user->save();
         }
         else{
-            DB::table($this->table)->where('id', $req->id)->update($req->except(['id', '_token', 'avatar']));
+            $except1 = ['id', '_token', 'avatar', 'sss', 'tin', 'philhealth', 'pagibig'];
+            $include = ['sss', 'tin', 'philhealth', 'pagibig'];
+
+            DB::table($this->table)->where('id', $req->id)->update($req->except($except1));
+
+            if($req->role != "Admin"){
+                DB::table(strtolower($req->role))->where('id', $req->id)->update($req->only($include));
+            }
         }
 
         echo Helper::log(auth()->user()->id, 'updated user', $req->id);

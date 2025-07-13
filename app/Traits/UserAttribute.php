@@ -5,6 +5,7 @@ namespace App\Traits;
 trait UserAttribute{
 	public function getActionsAttribute(){
 		$id = $this->id;
+		$role = $this->role;
 		$action = "";
 
 		if($this->deleted_at){
@@ -13,7 +14,7 @@ trait UserAttribute{
 					    "</a>&nbsp;";
 		}
 		else{
-			$action = 	"<a class='btn btn-success btn-sm' data-toggle='tooltip' title='View' onClick='view($id)'>" .
+			$action = 	"<a class='btn btn-success btn-sm' data-toggle='tooltip' title='View' onClick='view($id, `$role`)'>" .
 					        "<i class='fas fa-search'></i>" .
 					    "</a>&nbsp;";
 

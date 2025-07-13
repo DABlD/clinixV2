@@ -46,14 +46,14 @@
 @endsection
 
 @push('styles')
-	<link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/datatables.bundle.min.css') }}">
+	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}"> --}}
+	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.bundle.min.css') }}"> --}}
 	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.bootstrap4.min.css') }}"> --}}
 	{{-- <link rel="stylesheet" href="{{ asset('css/datatables-jquery.min.css') }}"> --}}
 @endpush
 
 @push('scripts')
-	<script src="{{ asset('js/datatables.min.js') }}"></script>
+	{{-- <script src="{{ asset('js/datatables.min.js') }}"></script> --}}
 	<script src="{{ asset('js/datatables.bundle.min.js') }}"></script>
 	{{-- <script src="{{ asset('js/datatables.bootstrap4.min.js') }}"></script> --}}
 	{{-- <script src="{{ asset('js/datatables-jquery.min.js') }}"></script> --}}

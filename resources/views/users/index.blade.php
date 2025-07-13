@@ -43,14 +43,14 @@
 @endsection
 
 @push('styles')
-	<link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/datatables.bundle.min.css') }}">
+	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/datatables.bundle.min.css') }}"> --}}
 	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.bootstrap4.min.css') }}"> --}}
 	{{-- <link rel="stylesheet" href="{{ asset('css/datatables-jquery.min.css') }}"> --}}
 @endpush
 
 @push('scripts')
-	<script src="{{ asset('js/datatables.min.js') }}"></script>
+	{{-- <script src="{{ asset('js/datatables.min.js') }}"></script> --}}
 	<script src="{{ asset('js/datatables.bundle.min.js') }}"></script>
 	{{-- <script src="{{ asset('js/datatables.bootstrap4.min.js') }}"></script> --}}
 	{{-- <script src="{{ asset('js/datatables-jquery.min.js') }}"></script> --}}
@@ -83,12 +83,147 @@
 			});
 		});
 
-		function view(id){
+		function create(){
+			Swal.fire({
+				title: "Enter User Details",
+				html: `
+	                ${input("fname", "First Name", null, 3, 9)}
+	                ${input("mname", "Middle Name", null, 3, 9)}
+	                ${input("lname", "Last Name", null, 3, 9)}
+	                ${input("suffix", "Suffix", null, 3, 9)}
+					${input("email", "Email", null, 3, 9, 'email')}
+	                ${input("contact", "Contact", null, 3, 9)}
+	                ${input("birthday", "Birthday", null, 3, 9)}
+					<div class="row iRow">
+					    <div class="col-md-3 iLabel">
+					        Gender
+					    </div>
+					    <div class="col-md-9 iInput">
+					        <select name="gender" class="form-control">
+					        	<option value="">Select Gender</option>
+					        	<option value="Male">Male</option>
+					        	<option value="Female">Female</option>
+					        </select>
+					    </div>
+					</div>
+
+					<div class="row iRow">
+					    <div class="col-md-3 iLabel">
+					        Role
+					    </div>
+					    <div class="col-md-9 iInput">
+					        <select name="role" class="form-control">
+					        	<option value="">Select Role</option>
+					        	<option value="Doctor">Doctor</option>
+					        	<option value="Nurse">Nurse</option>
+					        	<option value="Receptionist">Receptionist</option>
+					        	<option value="Laboratory">Laboratory</option>
+					        	<option value="Imaging">Imaging</option>
+					        	<option value="Cashier">Cashier</option>
+					        </select>
+					    </div>
+					</div>
+	                <br>
+
+	                ${input("tin", "TIN", null, 3, 9)}
+	                ${input("sss", "SSS", null, 3, 9)}
+	                ${input("philhealth", "Philhealth", null, 3, 9)}
+	                ${input("pagibig", "Pag-IBIG", null, 3, 9)}
+
+	                <br>
+	                ${input("username", "Username", null, 3, 9)}
+	                ${input("password", "Password", null, 3, 9, 'password')}
+	                ${input("password_confirmation", "Confirm Password", null, 3, 9, 'password')}
+				`,
+				width: '800px',
+				confirmButtonText: 'Add',
+				showCancelButton: true,
+				cancelButtonColor: errorColor,
+				cancelButtonText: 'Cancel',
+				didOpen: () => {
+					$('[name="birthday"]').flatpickr({
+						altInput: true,
+						altFormat: "M j, Y",
+						dateFormat: "Y-m-d",
+						maxDate: moment().format("YYYY-MM-DD"),
+					});
+				},
+				preConfirm: () => {
+				    swal.showLoading();
+				    return new Promise(resolve => {
+				    	let bool = true;
+
+			            if($('[name="fname"]').val() == "" ||  $('[name="role"]').val() == "" || $('[name="username"]').val() == ""){
+			                Swal.showValidationMessage('Name, role, and username is required');
+			            }
+			            else if($("[name='password']").val().length < 8){
+			                Swal.showValidationMessage('Password must at least be 8 characters');
+			            }
+			            else if($("[name='password']").val() != $("[name='password_confirmation']").val()){
+			                Swal.showValidationMessage('Password do not match');
+			            }
+			            else{
+			            	let bool = false;
+	        				$.ajax({
+	        					url: "{{ route('user.get') }}",
+	        					data: {
+	        						select: "id",
+	        						where: ["username", $("[name='username']").val()]
+	        					},
+	        					success: result => {
+	        						result = JSON.parse(result);
+	        						if(result.length){
+	        			    			Swal.showValidationMessage('Username already used');
+	            						setTimeout(() => {resolve()}, 500);
+	        						}
+	        					}
+	        				});
+			            }
+
+			            bool ? setTimeout(() => {resolve()}, 500) : "";
+				    });
+				},
+			}).then(result => {
+				if(result.value){
+					swal.showLoading();
+					$.ajax({
+						url: "{{ route('user.store') }}",
+						type: "POST",
+						data: {
+							fname: $("[name='fname']").val(),
+							mname: $("[name='mname']").val(),
+							lname: $("[name='lname']").val(),
+							suffix: $("[name='suffix']").val(),
+							email: $("[name='email']").val(),
+							contact: $("[name='contact']").val(),
+							gender: $("[name='gender']").val(),
+							birthday: $("[name='birthday']").val(),
+							tin: $("[name='tin']").val(),
+							sss: $("[name='sss']").val(),
+							philhealth: $("[name='philhealth']").val(),
+							pagibig: $("[name='pagibig']").val(),
+							role: $("[name='role']").val(),
+							username: $("[name='username']").val(),
+							password: $("[name='password']").val(),
+							_token: $('meta[name="csrf-token"]').attr('content')
+						},
+						success: () => {
+							ss("Success");
+							reload();
+						}
+					})
+				}
+			});
+		}
+
+		function view(id, role){
+			console.log(role.toLowerCase);
 			$.ajax({
 				url: "{{ route('user.get') }}",
 				data: {
 					select: '*',
 					where: ['id', id],
+					load: role.toLowerCase
 				},
 				success: admin => {
 					admin = JSON.parse(admin)[0];
@@ -108,6 +243,13 @@
 	                ${input("suffix", "Suffix", user.suffix, 3, 9)}
 					${input("email", "Email", user.email, 3, 9, 'email')}
 					${input("contact", "Contact", user.contact, 3, 9)}
+	                ${input("birthday", "Birthday", null, 3, 9)}
+
+	                <br>
+					${input("tin", "TIN", user.tin, 3, 9)}
+					${input("sss", "SSS", user.sss, 3, 9)}
+					${input("philhealth", "Philhealth", user.philhealth, 3, 9)}
+					${input("pagibig", "Pag-IBIG", user.pagibig, 3, 9)}
 
 	                <br>
 	                ${input("username", "Username", user.username, 3, 9)}
@@ -120,6 +262,15 @@
 				showDenyButton: true,
 				denyButtonColor: successColor,
 				denyButtonText: 'Change Password',
+				didOpen: () => {
+					$('[name="birthday"]').flatpickr({
+						altInput: true,
+						altFormat: "M j, Y",
+						dateFormat: "Y-m-d",
+						maxDate: moment().format("YYYY-MM-DD"),
+						defaultDate: user.birthday
+					});
+				},
 				preConfirm: () => {
 				    swal.showLoading();
 				    return new Promise(resolve => {
@@ -156,7 +307,13 @@
 							suffix: $("[name='suffix']").val(),
 							email: $("[name='email']").val(),
 							contact: $("[name='contact']").val(),
+							birthday: $("[name='birthday']").val(),
+							tin: $("[name='tin']").val(),
+							sss: $("[name='sss']").val(),
+							philhealth: $("[name='philhealth']").val(),
+							pagibig: $("[name='pagibig']").val(),
 							username: $("[name='username']").val(),
+							role: user.role,
 						},
 						message: "Success"
 					},	() => {

@@ -73,7 +73,7 @@
 @endpush
 
 @push('scripts')
-	<script src="{{ asset('js/datatables.min.js') }}"></script>
+	{{-- <script src="{{ asset('js/datatables.min.js') }}"></script> --}}
 	<script src="{{ asset('js/datatables.bundle.min.js') }}"></script>
 	{{-- <script src="{{ asset('js/datatables.bootstrap4.min.js') }}"></script> --}}
 	{{-- <script src="{{ asset('js/datatables-jquery.min.js') }}"></script> --}}
