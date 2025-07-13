@@ -1,5 +1,7 @@
-{{-- <h3 class="float-right">
-    <a class="btn btn-success btn-sm" data-toggle="tooltip" title="Add Admin" onclick="create()">
-        <i class="fas fa-plus fa-2xl"></i>
-    </a>
-</h3> --}}
+<h3 class="float-right">
+    @if(auth()->user()->role == "Admin")
+        <a class="btn btn-success btn-sm" data-toggle="tooltip" title="Add User" onclick="create()">
+            <i class="fas fa-plus"></i>
+        </a>
+    @endif
+</h3>

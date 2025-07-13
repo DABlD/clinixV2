@@ -5,25 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Doctor extends Model
+class Nurse extends Model
 {
     use SoftDeletes;
 
     protected $fillable = [
         'user_id',
+        'doctor_id',
         'sss',
         'tin',
         'philhealth',
-        'pagibig',
-        'license_number',
-        's2_number',
-        'ptr',
-        'specialization',
-        'pharma_partner',
-        'title',
-        'medical_association',
-        'diplomate',
-        'signature'
+        'pagibig'
     ];
 
     protected $casts = [
@@ -32,8 +24,11 @@ class Doctor extends Model
         'deleted_at' => "datetime"
     ];
 
-
     public function user(){
         return $this->belongsTo('App\Models\User');
+    }
+
+    public function doctor(){
+        return $this->belongsTo('App\Models\Doctor');
     }
 }

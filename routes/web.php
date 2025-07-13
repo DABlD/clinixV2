@@ -58,7 +58,7 @@ Route::group([
                     ->defaults("sidebar", 1)
                     ->defaults("icon", "fas fa-users")
                     ->defaults("name", ucfirst($cname) . "s")
-                    ->defaults("roles", array("Super Admin"))
+                    ->defaults("roles", array("Super Admin", 'Admin'))
                     // ->defaults("group", "Settings")
                     ->name($cname)
                     ->defaults("href", "/$cname");
@@ -83,7 +83,7 @@ Route::group([
                     ->defaults("sidebar", 1)
                     ->defaults("icon", "fas fa-hospital")
                     ->defaults("name", ucfirst($cname) . "s")
-                    ->defaults("roles", array("Super Admin"))
+                    ->defaults("roles", array("Super Admin", "Admin"))
                     // ->defaults("group", "Settings")
                     ->name($cname)
                     ->defaults("href", "/$cname");

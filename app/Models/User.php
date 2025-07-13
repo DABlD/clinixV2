@@ -63,4 +63,24 @@ class User extends Authenticatable
     public function patient(){
         return $this->hasOne('App\Models\Patient');
     }
+
+    public function cashier(){
+        return $this->hasOne('App\Models\Cashier');
+    }
+
+    public function nurse(){
+        return $this->hasOne('App\Models\Nurse');
+    }
+
+    public function imaging(){
+        return $this->hasOne('App\Models\Imaging');
+    }
+
+    public function laboratory(){
+        return $this->hasOne('App\Models\Laboratory');
+    }
+
+    public function receptionist(){
+        return $this->hasOne('App\Models\Receptionist');
+    }
 }

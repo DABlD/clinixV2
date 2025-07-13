@@ -65,6 +65,7 @@
 					data: {
 						select: "*",
 						where: ["role", "!=", "Super Admin"],
+						where2: ["role", "!=", "Patient"],
 					}
 				},
 				columns: [

@@ -11,27 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctors', function (Blueprint $table) {
+        Schema::create('nurses', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedInteger("user_id"); // ADMIN
+            $table->unsignedInteger("user_id");
+            $table->unsignedInteger("doctor_id")->nullable();
 
             $table->string('sss')->nullable();
             $table->string('tin')->nullable();
             $table->string('philhealth')->nullable();
             $table->string('pagibig')->nullable();
-
-            $table->string('license_number')->nullable();
-            $table->string('s2_number')->nullable();
-            $table->string('ptr')->nullable();
-            $table->string('specialization')->nullable();
-            $table->string('pharma_partner')->nullable();
-            $table->string('title')->nullable();
-
-            $table->json('medical_association')->nullable();
-            $table->json('diplomate')->nullable();
-
-            $table->string('signature')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
@@ -48,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctors');
+        Schema::dropIfExists('nurses');
     }
 };
