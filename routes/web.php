@@ -24,6 +24,10 @@ Route::get('/', function(){
    return redirect()->route('login');
 });
 
+Route::get('/terms-and-conditions', function(){
+   return view('terms-and-conditions');
+})->name('terms-and-conditions');
+
 Route::get('forgotPassword', 'UserController@forgotPassword')->name('forgotPassword');
 Route::get('resetPassword', 'UserController@resetPassword')->name('resetPassword');
 

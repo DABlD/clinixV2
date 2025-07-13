@@ -204,7 +204,8 @@
 
                         <br>
 
-                        <input type="checkbox" name="terms-and-condition"> I accept the terms and condition
+                        <input type="checkbox" name="terms-and-condition"> 
+                            I accept the <a target="_blank" href="{{ route('terms-and-conditions') }}" style="color: blue;">Terms and Condition</a> 
                     </div>
                         
                     <div class="container-register100-form-btn">
