@@ -217,17 +217,22 @@
 		}
 
 		function view(id, role){
-			console.log(role.toLowerCase);
+			role = role.toLowerCase();
 			$.ajax({
 				url: "{{ route('user.get') }}",
 				data: {
 					select: '*',
 					where: ['id', id],
-					load: role.toLowerCase
+					load: [role]
 				},
-				success: admin => {
-					admin = JSON.parse(admin)[0];
-					showDetails(admin);
+				success: user => {
+					user = JSON.parse(user)[0];
+					user.tin = user[role].tin;
+					user.sss = user[role].sss;
+					user.philhealth = user[role].philhealth;
+					user.pagibig = user[role].pagibig;
+
+					showDetails(user);
 				}
 			})
 		}

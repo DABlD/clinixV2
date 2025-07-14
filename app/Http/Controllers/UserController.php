@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\{Nurse, Patient, Cashier, Receptionist};
-use App\Models\{Imaging, Laboratory};
+use App\Models\{Admin, Nurse, Patient, Cashier};
+use App\Models\{Imaging, Laboratory, Receptionist};
 use DB;
 use Auth;
 
@@ -111,10 +111,7 @@ class UserController extends Controller
             $include = ['sss', 'tin', 'philhealth', 'pagibig'];
 
             DB::table($this->table)->where('id', $req->id)->update($req->except($except1));
-
-            if($req->role != "Admin"){
-                DB::table(strtolower($req->role))->where('id', $req->id)->update($req->only($include));
-            }
+            DB::table(strtolower($req->role) . 's')->where('user_id', $req->id)->update($req->only($include));
         }
 
         echo Helper::log(auth()->user()->id, 'updated user', $req->id);
