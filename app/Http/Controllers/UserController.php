@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\{User, Clinic};
 use App\Models\{Admin, Nurse, Patient, Cashier};
 use App\Models\{Imaging, Laboratory, Receptionist};
 use DB;
 use Auth;
+use Image;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -63,6 +64,9 @@ class UserController extends Controller
 
     public function store(Request $req){
         $data = new User();
+
+        $data->clinic_id = auth()->user()->clinic_id;
+
         $data->username = $req->username;
         $data->fname = $req->fname;
         $data->mname = $req->mname;
@@ -95,15 +99,21 @@ class UserController extends Controller
         if($req->hasFile('avatar')){
             $user = User::find($req->id);
 
+            $clinic = $user->clinic->name;
+            $path = public_path("uploads\\$clinic\\avatars\\");
+            
+            if (!is_dir($path)) {
+                mkdir($path, 0775, true);
+            }
+
             $temp = $req->file('avatar');
             $image = Image::make($temp);
 
             $name = $user->lname . '_' . $user->fname . '-' . time() . "." . $temp->getClientOriginalExtension();
-            $destinationPath = public_path('uploads/' . env('UPLOAD_URL'));
 
             $image->resize(250, 250);
-            $image->save($destinationPath . $name);
-            $user->avatar = 'uploads/' . env('UPLOAD_URL') . $name;
+            $image->save($path . $name);
+            $user->avatar = "uploads\\$clinic\\avatars\\" . $name;
             $user->save();
         }
         else{
@@ -111,7 +121,10 @@ class UserController extends Controller
             $include = ['sss', 'tin', 'philhealth', 'pagibig'];
 
             DB::table($this->table)->where('id', $req->id)->update($req->except($except1));
-            DB::table(strtolower($req->role) . 's')->where('user_id', $req->id)->update($req->only($include));
+
+            if(sizeof($req->only($include))){
+                DB::table(strtolower($req->role) . 's')->where('user_id', $req->id)->update($req->only($include));
+            }
         }
 
         echo Helper::log(auth()->user()->id, 'updated user', $req->id);
@@ -215,6 +228,29 @@ class UserController extends Controller
     public function delete(Request $req){
         echo User::find($req->id)->delete();
         Helper::log(auth()->user()->id, 'deleted user', $req->id);
+    }
+
+    public function profile(){
+        $user = auth()->user();
+
+        $role = strtolower($user->role);
+        $user->load($role);
+        $user->tin = $user->{$role}->tin;
+        $user->sss = $user->{$role}->sss;
+        $user->philhealth = $user->{$role}->philhealth;
+        $user->pagibig = $user->{$role}->pagibig;
+
+        $nurse = Nurse::where('doctor_id', auth()->user()->id)->get();
+        $nurse->load('user');
+
+        $settings = Clinic::where('id', $user->clinic_id)->get();
+
+        return $this->_view('profile', [
+            'title' => "Profile",
+            'data' => $user,
+            'nurses' => $nurse,
+            'settings' => $settings
+        ]);
     }
 
     public function index(){

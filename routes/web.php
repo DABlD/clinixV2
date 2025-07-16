@@ -47,6 +47,14 @@ Route::group([
             ->name('dashboard')
             ->defaults('href', '/');
 
+        Route::get('/profile', 'UserController@profile')
+            ->defaults('sidebar', 1)
+            ->defaults('icon', 'fas fa-user-doctor')
+            ->defaults('name', 'Profile')
+            ->defaults('roles', array('Admin'))
+            ->name('profile')
+            ->defaults('href', '/profile');
+
         // USER ROUTES
         $cname = "user";
         Route::group([
@@ -142,6 +150,17 @@ Route::group([
 
         // DOCTOR ROUTES
         $cname = "doctor";
+        Route::group([
+                'as' => "$cname.",
+                'prefix' => "$cname/"
+            ], function () use($cname){
+                Route::get("get/", ucfirst($cname) . "Controller@get")->name('get');
+                Route::post("update/", ucfirst($cname) . "Controller@update")->name('update');
+            }
+        );
+
+        // NURSE ROUTES
+        $cname = "nurse";
         Route::group([
                 'as' => "$cname.",
                 'prefix' => "$cname/"
