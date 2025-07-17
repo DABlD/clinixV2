@@ -38,7 +38,6 @@ Route::group([
     ], function() {
         Route::get('/', "DashboardController@index")->name('dashboard');
 
-
         Route::get('/', 'DashboardController@index')
             ->defaults('sidebar', 1)
             ->defaults('icon', 'fas fa-list')
@@ -51,7 +50,7 @@ Route::group([
             ->defaults('sidebar', 1)
             ->defaults('icon', 'fas fa-user-doctor')
             ->defaults('name', 'Profile')
-            ->defaults('roles', array('Admin'))
+            ->defaults('roles', array('Admin', 'Doctor'))
             ->name('profile')
             ->defaults('href', '/profile');
 

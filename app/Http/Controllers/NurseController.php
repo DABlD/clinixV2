@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Nurse, User};
+use App\Models\{Nurse, User, Patient};
 use DB;
 
 use App\Helpers\Helper;
 
-class PatientController extends Controller
+class NurseController extends Controller
 {
     public function __construct(){
         $this->table = "nurses";
@@ -56,14 +56,14 @@ class PatientController extends Controller
     }
 
     public function update(Request $req){
-        $result = Patient::where('id', $req->id)->update($req->except(['id', '_token']));
+        $result = Nurse::where('id', $req->id)->update($req->except(['id', '_token']));
 
-        echo Helper::log(auth()->user()->id, 'updated patient', $req->id);
+        echo Helper::log(auth()->user()->id, 'updated nurse', $req->id);
     }
 
     public function delete(Request $req){
         User::find($req->id)->delete();
-        Helper::log(auth()->user()->id, 'deleted patient', $req->id);
+        Helper::log(auth()->user()->id, 'deleted nurse', $req->id);
     }
 
     private function _view($view, $data = array()){

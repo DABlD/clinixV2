@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Doctor;
 use DB;
+use Image;
 
 use App\Helpers\Helper;
 
@@ -56,7 +57,32 @@ class DoctorController extends Controller
     }
 
     public function update(Request $req){
-        $result = DB::table($this->table)->where('id', $req->id)->update($req->except(['id', '_token']));
+        $id = auth()->user()->clinic->id;
+
+        if($req->hasFile('signature')){
+            $doctor = Doctor::find($id);
+
+            $cname = $doctor->user->clinic->name;
+            $folder = $doctor->user->lname . ', ' . $doctor->user->fname . ' ' . substr($doctor->user->mname, 0, 1);
+            $path = public_path("uploads\\$cname\\Doctors\\$folder\\");
+            
+            if (!is_dir($path)) {
+                mkdir($path, 0775, true);
+            }
+
+            $temp = $req->file('signature');
+            $image = Image::make($temp);
+
+            $name = 'ESIG-' . time() . "." . $temp->getClientOriginalExtension();
+
+            // $image->resize(250, 250);
+            $image->save($path . $name);
+            $doctor->signature = "uploads\\$cname\\Doctors\\$folder\\" . $name;
+            $doctor->save();
+        }
+        else{
+            $result = DB::table($this->table)->where('id', $req->id)->update($req->except(['id', '_token']));
+        }
 
         echo Helper::log(auth()->user()->id, 'updated doctor details', $req->id);
     }

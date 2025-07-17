@@ -86,7 +86,7 @@
                                     <tbody id="assistantList">
                                         @foreach($nurses as $nurse)
                                             <tr>
-                                                <td class="nurse" data-id="{{ $nurse->user->id }}" onclick="selectRow(this)">
+                                                <td class="nurse" data-id="{{ $nurse->id }}" onclick="selectRow(this)">
                                                     {{ $nurse->user->lname }}, {{ $nurse->user->fname }} {{ $nurse->user->mname }} ({{ substr($nurse->user->gender, 0, 1) }}{{ now()->parse($data->birthday)->age }})
                                                 </td>
                                             </tr>
@@ -119,7 +119,7 @@
 
                     <div class="card-body table-responsive">
                         <div style="text-align: center;">
-                            <img src="{{ asset($data->signature) }}" alt="No Signature" width="300" height="200" id="preview2">
+                            <img src="{{ asset($data->doctor->signature) }}" alt="No Signature" width="300" height="200" id="preview2">
 
                             <br>
                             <label for="files2" class="btn">Upload New Image</label>
@@ -205,15 +205,15 @@
                             @if(auth()->user()->role == "Doctor")
                                 <div class="chart tab-pane" id="tab2" style="position: relative;">
                                     <div class="row">
-                                        {{ $col("License Number", "license_number", $data->license_number) }}
-                                        {{ $col("S2 Number", "s2_number", $data->s2_number) }}
-                                        {{ $col("PTR Number", "ptr", $data->ptr) }}
+                                        {{ $col("License Number", "license_number", $data->doctor->license_number) }}
+                                        {{ $col("S2 Number", "s2_number", $data->doctor->s2_number) }}
+                                        {{ $col("PTR Number", "ptr", $data->doctor->ptr) }}
                                     </div>
 
                                     <div class="row">
-                                        {{ $col("Specialization", "specialization", $data->specialization) }}
-                                        {{ $col("Pharma Partner", "pharma_partner", $data->pharma_partner) }}
-                                        {{ $col("Title", "Title", $data->title) }}
+                                        {{ $col("Specialization", "specialization", $data->doctor->specialization) }}
+                                        {{ $col("Pharma Partner", "pharma_partner", $data->doctor->pharma_partner) }}
+                                        {{ $col("Title", "title", $data->doctor->title) }}
                                     </div>
 
                                     <div class="float-right">
@@ -348,7 +348,7 @@
 
 
                         <div class="float-right">
-                            <a class="btn btn-success" data-toggle="tooltip" title="Save" onclick="save2()">
+                            <a class="btn btn-success" data-toggle="tooltip" title="Save" onclick="save6()">
                                 Save
                             </a>
                         </div>
@@ -526,7 +526,7 @@
         async function updateSignature(){
             let formData = new FormData();
 
-            formData.append('id', {{ $data->id }});
+            formData.append('id', {{ $data->doctor->id }});
             formData.append('signature', $("#files2").prop('files')[0]);
             formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
@@ -562,11 +562,11 @@
             let id = $('tr.selected td').data('id');
             if(id){
                 $.ajax({
-                    url: '{{ route('user.get') }}',
+                    url: '{{ route('nurse.get') }}',
                     data: {
                         select: "*",
                         where: ["id", id],
-                        load: ["nurse"]
+                        load: ["user"]
                     },
                     success: result => {
                         result = JSON.parse(result)[0];
@@ -579,7 +579,7 @@
             }
         }
 
-        function showAssistant(user){
+        function showAssistant(nurse){
             Swal.fire({
                 title: "Nurse Information",
                 html: `
@@ -602,7 +602,7 @@
                                 <div class="card-body">
 
                                     <div class="col-md-12">
-                                        <img src="${user.avatar}" alt="avatar" width="120" height="120">
+                                        <img src="${nurse.user.avatar}" alt="avatar" width="120" height="120">
                                     </div>
 
                                     <br>
@@ -610,7 +610,7 @@
                                     <div class="col-md-12 pInfo-left">
                                         <span class="label">SSS</span>
                                         <br>
-                                        <span class="pInfo">${user.nurse.sss}</span>
+                                        <span class="pInfo">${nurse.sss}</span>
                                     </div>
 
                                     <br>
@@ -618,7 +618,7 @@
                                     <div class="col-md-12 pInfo-left">
                                         <span class="label">TIN</span>
                                         <br>
-                                        <span class="pInfo">${user.nurse.tin}</span>
+                                        <span class="pInfo">${nurse.tin}</span>
                                     </div>
                                     
                                     <br>
@@ -626,7 +626,7 @@
                                     <div class="col-md-12 pInfo-left">
                                         <span class="label">Philhealth</span>
                                         <br>
-                                        <span class="pInfo">${user.nurse.philhealth}</span>
+                                        <span class="pInfo">${nurse.philhealth}</span>
                                     </div>
                                     
                                     <br>
@@ -634,7 +634,7 @@
                                     <div class="col-md-12 pInfo-left">
                                         <span class="label">Pagibig</span>
                                         <br>
-                                        <span class="pInfo">${user.nurse.pagibig}</span>
+                                        <span class="pInfo">${nurse.pagibig}</span>
                                     </div>
 
                                 </div>
@@ -660,17 +660,17 @@
                                         <div class="col-md-4">
                                             <span class="label">First Name</span>
                                             <br>
-                                            <span class="pInfo">${user.fname ?? "-"}</span>
+                                            <span class="pInfo">${nurse.user.fname ?? "-"}</span>
                                         </div>
                                         <div class="col-md-4">
                                             <span class="label">Middle Name</span>
                                             <br>
-                                            <span class="pInfo">${user.mname ?? "-"}</span>
+                                            <span class="pInfo">${nurse.user.mname ?? "-"}</span>
                                         </div>
                                         <div class="col-md-4">
                                             <span class="label">Last Name</span>
                                             <br>
-                                            <span class="pInfo">${user.lname ?? "-"}</span>
+                                            <span class="pInfo">${nurse.user.lname ?? "-"}</span>
                                         </div>
                                     </div>
 
@@ -680,17 +680,17 @@
                                         <div class="col-md-4">
                                             <span class="label">Birthday</span>
                                             <br>
-                                            <span class="pInfo">${toDate(user.birthday)}</span>
+                                            <span class="pInfo">${toDate(nurse.user.birthday)}</span>
                                         </div>
                                         <div class="col-md-4">
                                             <span class="label">Age</span>
                                             <br>
-                                            <span class="pInfo">${moment().diff(user.birthday, 'years')}</span>
+                                            <span class="pInfo">${moment().diff(nurse.user.birthday, 'years')}</span>
                                         </div>
                                         <div class="col-md-4">
                                             <span class="label">Gender</span>
                                             <br>
-                                            <span class="pInfo">${user.gender}</span>
+                                            <span class="pInfo">${nurse.user.gender}</span>
                                         </div>
                                     </div>
 
@@ -700,7 +700,7 @@
                                         <div class="col-md-12">
                                             <span class="label">Address</span>
                                             <br>
-                                            <span class="pInfo">${user.address}</span>
+                                            <span class="pInfo">${nurse.user.address}</span>
                                         </div>
                                     </div>
 
@@ -724,7 +724,7 @@
                                     <div class="col-md-12 pInfo-left">
                                         <span class="label">Email</span>
                                         <br>
-                                        <span class="pInfo">${user.email ?? "-"}</span>
+                                        <span class="pInfo">${nurse.user.email ?? "-"}</span>
                                     </div>
 
                                     <br>
@@ -732,7 +732,7 @@
                                     <div class="col-md-12 pInfo-left">
                                         <span class="label">Contact</span>
                                         <br>
-                                        <span class="pInfo">${user.contact ?? "-"}</span>
+                                        <span class="pInfo">${nurse.user.contact ?? "-"}</span>
                                     </div>
                                 </div>
                             </div>
@@ -758,7 +758,7 @@
                                     <div class="col-md-12 pInfo-left">
                                         <span class="label">Username</span>
                                         <br>
-                                        <span class="pInfo">${user.username ?? "-"}</span>
+                                        <span class="pInfo">${nurse.user.username ?? "-"}</span>
                                     </div>
                                 </div>
                             </div>
@@ -816,7 +816,7 @@
                         let age = nurse.user.birthday ? moment().diff(moment(nurse.user.birthday), "years") : "";
 
                         nurseString += `
-                            <option value="${nurse.user.id}">
+                            <option value="${nurse.id}">
                                 ${nurse.user.lname}, ${nurse.user.fname} (${nurse.user.gender[0] + age})
                             </option>
                         `;
@@ -851,7 +851,7 @@
                                 url: "{{ route('nurse.update') }}",
                                 data: {
                                     id: id,
-                                    doctor_id: {{ auth()->user()->id }}
+                                    doctor_id: {{ auth()->user()->doctor->id }}
                                 }
                             }, () => {
                                 ss("Success");
@@ -868,7 +868,7 @@
                 url: "{{ route('nurse.get') }}",
                 data: {
                     select: "*",
-                    where: ["user_id", id],
+                    where: ["id", id],
                     load: ['user']
                 },
                 success: nurse => {
@@ -913,17 +913,36 @@
             });
         }
 
-        function save2(){
+        function save6(){
             swal.showLoading();
             update({
                 url: "{{ route('doctor.update') }}",
                 data: {
-                    id: {{ $data->id }},
+                    id: {{ $data->doctor->id }},
                     diplomate: [
                         $('#dp1').val(),
                         $('#dp2').val(),
                         $('#dp3').val()
                     ]
+                }
+            }, () => {
+                ss("Success");
+            });
+        }
+
+        function save2(){
+            console.log('save');
+            swal.showLoading();
+            update({
+                url: "{{ route('doctor.update') }}",
+                data: {
+                    id: {{ $data->doctor->id }},
+                    license_number: $('#license_number').val(),
+                    s2_number: $('#s2_number').val(),
+                    ptr: $('#ptr').val(),
+                    specialization: $('#specialization').val(),
+                    pharma_partner: $('#pharma_partner').val(),
+                    title: $('#title').val(),
                 }
             }, () => {
                 ss("Success");
@@ -1011,7 +1030,7 @@
         }
 
         function getDiplomate(){
-            let diplomates = '{!! $data->diplomate !!}';
+            let diplomates = '{!! $data->doctor->diplomate !!}';
 
             if(diplomates){
                 diplomates = JSON.parse(diplomates);
@@ -1073,7 +1092,7 @@
                     update({
                         url: "{{ route('doctor.update') }}",
                         data: {
-                            id: {{ $data->id }},
+                            id: {{ $data->doctor->id }},
                             medical_association: JSON.stringify(array)
                         }
                     }, () => {
@@ -1102,7 +1121,7 @@
                 update({
                     url: "{{ route('doctor.update') }}",
                     data: {
-                        id: {{ $data->id }},
+                        id: {{ $data->doctor->id }},
                         medical_association: JSON.stringify(array)
                     }
                 }, () => {
