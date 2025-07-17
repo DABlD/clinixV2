@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Clinic;
 use App\Models\{User, Doctor};
 use DB;
+use Image;
 
 use App\Helpers\Helper;
 
@@ -95,9 +96,33 @@ class ClinicController extends Controller
     }
 
     public function update(Request $req){
-        $result = Clinic::where('id', $req->id)->update($req->except(['id', '_token']));
+        $id = auth()->user()->clinic->id;
 
-        echo Helper::log(auth()->user()->id, 'updated clinic', $req->id);
+        if($req->hasFile('logo')){
+            $clinic = Clinic::find($id);
+
+            $cname = $clinic->name;
+            $path = public_path("uploads\\$cname\\logos\\");
+            
+            if (!is_dir($path)) {
+                mkdir($path, 0775, true);
+            }
+
+            $temp = $req->file('logo');
+            $image = Image::make($temp);
+
+            $name = 'Logo-' . time() . "." . $temp->getClientOriginalExtension();
+
+            $image->resize(250, 250);
+            $image->save($path . $name);
+            $clinic->logo = "uploads\\$cname\\logos\\" . $name;
+            $clinic->save();
+        }
+        else{
+            $result = Clinic::where('id', $id)->update($req->except(['id', '_token']));
+        }
+
+        echo Helper::log(auth()->user()->id, 'updated clinic', $id);
     }
 
     public function index(){

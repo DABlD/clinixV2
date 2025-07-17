@@ -153,6 +153,15 @@
                                         Account Information
                                     </a>
                                 </li>
+
+                                @if(auth()->user()->role == "Admin")
+                                    &nbsp;
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#tab4" data-toggle="tab">
+                                            Clinic Settings
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </h3>
                     </div>
@@ -226,6 +235,70 @@
                                     </a>
                                 </div>
                             </div>
+
+                            <div class="chart tab-pane" id="tab4" style="position: relative;">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div style="text-align: center;">
+                                            <img src="{{ isset($settings['logo']) ? $settings['logo'] : "" }}" alt="No Logo" width="100%" id="preview3">
+
+                                            <br>
+                                            <label for="files3" class="btn">Upload New Logo</label>
+                                            <input id="files3" class="d-none" type="file" accept="image/*">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            {{ $col("Clinic Name", "name", isset($settings['name']) ? $settings['name'] : "", "text", 6) }}
+                                            {{ $col("Contact", "clinic_contact", isset($settings['contact']) ? $settings['contact'] : "", "text", 3) }}
+                                            {{ $col("PF", "pf", isset($settings['pf']) ? $settings['pf'] : "", "number", 3) }}
+                                        </div>
+                                        <div class="row">
+                                            {{ $col("Location", "location", isset($settings['location']) ? $settings['location'] : "") }}
+
+                                            @php
+                                                $options = [
+                                                    "Ilocos Region (Region I)",
+                                                    "Cagayan Valley (Region II)",
+                                                    "Central Luzon (Region III)",
+                                                    "CALABARZON (Region IV-A)",
+                                                    "MIMAROPA (Region IV-B)",
+                                                    "Bicol Region (Region V)",
+                                                    "Cordillera Administrative Region (CAR)",
+                                                    "National Capital Region (NCR) (Metro Manila)",
+                                                    "Western Visayas (Region VI)",
+                                                    "Central Visayas (Region VII)",
+                                                    "Eastern Visayas (Region VIII)",
+                                                    "Zamboanga Peninsula (Region IX)",
+                                                    "Northern Mindanao (Region X)",
+                                                    "Davao Region (Region XI)",
+                                                    "SOCSARGEN (Region XII)",
+                                                    "Caraga (Region XIII)",
+                                                    "Autonomous Region in Muslim Mindanao (ARMM)"
+                                                ];
+                                            @endphp
+                                            {{ $col("Region", "region", isset($settings['region']) ? $settings['region'] : "", 'select', 3, $options) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if(auth()->user()->role == "Admin")
+                                {{-- <div class="row">
+                                    {{ $col("TIN", "tin", $data->tin) }}
+                                    {{ $col("Philhealth", "philhealth", $data->philhealth) }}
+                                    {{ $col("SSS", "sss", $data->sss) }}
+                                    {{ $col("Pagibig", "pagibig", $data->pagibig) }}
+                                </div> --}}
+                                @endif
+
+                                <div class="float-right">
+                                    <a class="btn btn-success" data-toggle="tooltip" title="Save" onclick="save5()">
+                                        Save
+                                    </a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -382,6 +455,17 @@
                 updateSignature();
             });
 
+            // PREVIEW LOGO
+            $('#files3').on('change', e => {
+                var reader3 = new FileReader();
+                reader3.onload = function (e) {
+                    $('#preview3').attr('src', e.target.result);
+                }
+
+                reader3.readAsDataURL(e.target.files[0]);
+                updateLogo();
+            });
+
             // FILL FIELDS
             $('#suffix').val("{{ $data->suffix }}")
             $('#gender').val("{{ $data->gender }}")
@@ -408,8 +492,18 @@
                 $('.group3').show();
             });
 
+            $('[href="#tab4"]').on('click', () => {
+                {{-- $('.hidden').hide(); --}}
+                $('.group3').hide();
+            });
+
             $('[href="#tab1"]').click();
-            $('[href="#tab3"]').click(); //  FOR DEBUG
+
+            @if(auth()->user()->role == "Admin")
+            {{-- CLINIC SETTINGS (REGION) --}}
+                $('#region').val("{{ $settings['region'] }}");
+            @endif
+            {{-- $('[href="#tab3"]').click(); //  FOR DEBUG --}}
 		});
 
         async function updatePhoto(){
@@ -443,6 +537,20 @@
 
             ss('Success');
             reload();
+        }
+
+        async function updateLogo(){
+            let formData = new FormData();
+
+            formData.append('logo', $("#files3").prop('files')[0]);
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+            await fetch('{{ route('clinic.update') }}', {
+                method: "POST", 
+                body: formData
+            });
+
+            ss('Successfully Updated');
         }
 
         function selectRow(row){
@@ -885,6 +993,21 @@
                     }
                 }
             })
+        }
+
+        function save5(){
+            update({
+                url: "{{ route("clinic.update") }}",
+                data: {
+                    name: $('#name').val(),
+                    contact: $('#clinic_contact').val(),
+                    pf: $('#pf').val(),
+                    location: $('#location').val(),
+                    region: $('#region').val()
+                }
+            }, () => {
+                ss("Success");
+            });
         }
 
         function getDiplomate(){

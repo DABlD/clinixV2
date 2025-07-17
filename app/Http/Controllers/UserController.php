@@ -243,13 +243,13 @@ class UserController extends Controller
         $nurse = Nurse::where('doctor_id', auth()->user()->id)->get();
         $nurse->load('user');
 
-        $settings = Clinic::where('id', $user->clinic_id)->get();
+        $settings = Clinic::where('id', $user->clinic_id)->first();
 
         return $this->_view('profile', [
             'title' => "Profile",
             'data' => $user,
             'nurses' => $nurse,
-            'settings' => $settings
+            'settings' => $settings->toArray()
         ]);
     }
 
