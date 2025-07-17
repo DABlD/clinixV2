@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             
-            $table->enum('role', ['Super Admin', 'Admin', 'Patient', 'Nurse', 'Receptionist', 'Imaging', 'Laboratory', 'Cashier'])->nullable();
+            $table->enum('role', ['Super Admin', 'Admin', 'Patient', 'Nurse', 'Receptionist', 'Imaging', 'Laboratory', 'Cashier', 'Doctor'])->nullable();
             $table->string('clinic_id')->nullable();
 
             $table->string('fname')->nullable();
