@@ -249,8 +249,12 @@
                         					<span class="label">Gender</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="gender" class="form-control">
+		                    					<input type="text" id="gender" class="form-control" list="genders">
 		                    				</span>
+		                    				<datalist id="genders">
+		                    					<option value="Male">
+		                    					<option value="Female">
+		                    				</datalist>
                         				</div>
                         			</div>
 
@@ -975,8 +979,12 @@
                         					<span class="label">Gender</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="gender" class="form-control" value="${user.gender ?? ""}">
+		                    					<input type="text" id="gender" class="form-control" value="${user.gender ?? ""}" list="genders">
 		                    				</span>
+		                    				<datalist id="genders">
+		                    					<option value="Male">
+		                    					<option value="Female">
+		                    				</datalist>
                         				</div>
                         			</div>
 
