@@ -123,6 +123,8 @@
 		});
 
 		function create(){
+			let imageData = null;
+
 			Swal.fire({
 				title: "Patient Information",
     			confirmButtonText: "Save",
@@ -151,7 +153,9 @@
 		                        <div class="card-body">
 
 	                    			<div class="col-md-12">
-	    	                			<img src="images/default_avatar.png" alt="avatar" width="120" height="120">
+										<video id="webcam" autoplay playsinline style="width: 200px; height: 150px;"></video>
+										<canvas id="snapshot"></canvas>
+										<button id="captureImage">📸 Capture Image</button>
 	                    			</div>
 
 	                    			<br>
@@ -413,6 +417,42 @@
 						dateFormat: "Y-m-d",
 						maxDate: moment().format("YYYY-MM-DD")
 					});
+
+					$('#snapshot').hide();
+
+					const video = document.getElementById('webcam');
+					const canvas = document.getElementById('snapshot');
+					const ctx = canvas.getContext('2d');
+					let stream = null;
+
+					async function initWebcam() {
+					try {
+						stream = await navigator.mediaDevices.getUserMedia({ video: true });
+						video.srcObject = stream;
+					} catch (err) {
+							console.error('Webcam access denied or not available.', err);
+						}
+					}
+
+					$('#captureImage').click(e => {
+						// Set canvas size to match video
+						canvas.width = 200;
+						canvas.height = 150;
+
+						// Draw current frame
+						$('#webcam').hide();
+						$('#snapshot').show();
+						ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+						// Convert to base64
+						imageData = canvas.toDataURL('image/png');
+						console.log('Captured image:', imageData);
+
+						// TODO: Upload to server using fetch() if needed
+					});
+
+					// Start webcam on page load
+					initWebcam();
 				},
 				preConfirm: () => {
 				    swal.showLoading();
@@ -462,6 +502,7 @@
 						company_contact: $("#company_contact").val(),
 						sss: $("#sss").val(),
 						tin_number: $("#tin_number").val(),
+						imageData: imageData,
 						_token: $('meta[name="csrf-token"]').attr('content')
 					});
 				}
@@ -491,6 +532,7 @@
 		    formData.append('company_contact', data.company_contact);
 		    formData.append('sss', data.sss);
 		    formData.append('tin_number', data.tin_number);
+		    formData.append('imageData', data.imageData);
 		    formData.append('_token', data._token);
 	        await fetch('{{ route('patient.store') }}', {
 	    		method: "POST", 
@@ -538,7 +580,7 @@
 		                        <div class="card-body">
 
 	                    			<div class="col-md-12">
-	    	                			<img src="${user.avatar}" alt="avatar" width="120" height="120">
+	    	                			<img src="${user.avatar}" alt="avatar" width="200" height="150">
 	                    			</div>
 
 	                    			<br>
@@ -793,6 +835,8 @@
 		}
 
 		function showEdit(user){
+			let imageData = null;
+
 			Swal.fire({
 				title: "Patient Information",
     			confirmButtonText: "Save",
@@ -821,7 +865,15 @@
 		                        <div class="card-body">
 
 	                    			<div class="col-md-12">
-	    	                			<img src="images/default_avatar.png" alt="avatar" width="120" height="120">
+	    	                			<img src="images/default_avatar.png" alt="avatar" width="200" height="150">
+	                    			</div>
+
+	                    			<br>
+
+	                    			<div class="col-md-12">
+										<video id="webcam" autoplay playsinline style="width: 200px; height: 150px;"></video>
+										<canvas id="snapshot"></canvas>
+										<button id="captureImage">📸 Capture Image</button>
 	                    			</div>
 
 	                    			<br>
@@ -1092,6 +1144,42 @@
 						maxDate: moment().format("YYYY-MM-DD"),
 						defaultDate: user.birthday
 					});
+
+					$('#snapshot').hide();
+
+					const video = document.getElementById('webcam');
+					const canvas = document.getElementById('snapshot');
+					const ctx = canvas.getContext('2d');
+					let stream = null;
+
+					async function initWebcam() {
+					try {
+						stream = await navigator.mediaDevices.getUserMedia({ video: true });
+						video.srcObject = stream;
+					} catch (err) {
+							console.error('Webcam access denied or not available.', err);
+						}
+					}
+
+					$('#captureImage').click(e => {
+						// Set canvas size to match video
+						canvas.width = 200;
+						canvas.height = 150;
+
+						// Draw current frame
+						$('#webcam').hide();
+						$('#snapshot').show();
+						ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+						// Convert to base64
+						imageData = canvas.toDataURL('image/png');
+						console.log('Captured image:', imageData);
+
+						// TODO: Upload to server using fetch() if needed
+					});
+
+					// Start webcam on page load
+					initWebcam();
 				},
 				preConfirm: () => {
 				    swal.showLoading();
@@ -1146,6 +1234,7 @@
 						company_contact: $("#company_contact").val(),
 						sss: $("#sss").val(),
 						tin_number: $("#tin_number").val(),
+						imageData: imageData
 					};
 
 					update({

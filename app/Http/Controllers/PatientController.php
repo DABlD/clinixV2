@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{Patient, User};
 use DB;
+use Image;
 
 use App\Helpers\Helper;
 
@@ -72,13 +73,39 @@ class PatientController extends Controller
         $user->email = $req->email;
         $user->address = $req->address;
 
-        $user->save();
-
         $ctr = Patient::where('created_at', 'like', now()->format('Y-m-d') . '%')->count();
+        $pid = "P" . now()->format('ymd') . str_pad($ctr+1, 5, '0', STR_PAD_LEFT);
+
+        if(isset($req->imageData)){
+            $cname = auth()->user()->clinic->name;
+            $folder = $user->lname . ', ' . $user->fname . " ($pid)";
+            $path = public_path("uploads\\$cname\\Patients\\$folder\\");
+            
+            if (!is_dir($path)) {
+                mkdir($path, 0775, true);
+            }
+
+            $extensions = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif',
+                'image/webp' => 'webp',
+                'image/bmp' => 'bmp',
+            ];
+
+            $image = Image::make($req->imageData);
+
+            $name = 'Avatar-' . time() . "." . $extensions[$image->mime()];
+
+            $image->save($path . $name);
+            $user->avatar = "uploads\\$cname\\Patients\\$folder\\" . $name;
+        }
+
+        $user->save();
 
         $patient = new Patient();
         $patient->user_id = $user->id;
-        $patient->patient_id = "P" . now()->format('ymd') . str_pad($ctr+1, 5, '0', STR_PAD_LEFT);
+        $patient->patient_id = $pid;
         $patient->hmo_provider = $req->hmo_provider;
         $patient->hmo_number = $req->hmo_number;
         $patient->employment_status = $req->employment_status;
@@ -102,7 +129,37 @@ class PatientController extends Controller
     }
 
     public function update(Request $req){
-        $result = Patient::where('id', $req->id)->update($req->except(['id', '_token']));
+        if(isset($req->imageData)){
+            $patient = Patient::where('id', $req->id)->first();
+            $user = User::where('id', $patient->user_id)->first();
+
+            $pid = $patient->patient_id;
+
+            $cname = auth()->user()->clinic->name;
+            $folder = $user->lname . ', ' . $user->fname . " ($pid)";
+            $path = public_path("uploads\\$cname\\Patients\\$folder\\");
+            
+            if (!is_dir($path)) {
+                mkdir($path, 0775, true);
+            }
+
+            $extensions = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/gif' => 'gif',
+                'image/webp' => 'webp',
+                'image/bmp' => 'bmp',
+            ];
+
+            $image = Image::make($req->imageData);
+            $name = 'Avatar-' . time() . "." . $extensions[$image->mime()];
+
+            $image->save($path . $name);
+            $user->avatar = "uploads\\$cname\\Patients\\$folder\\" . $name;
+            $user->save();
+        }
+
+        $result = Patient::where('id', $req->id)->update($req->except(['id', 'imageData', '_token']));
 
         echo Helper::log(auth()->user()->id, 'updated patient', $req->id);
     }
