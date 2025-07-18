@@ -890,7 +890,7 @@
 	                    				<span class="label">HMO Provider</span>
 	                    				<br>
 	                    				<span class="pInfo">
-	                    					<input type="text" id="hmo_provider" class="form-control" value="${user.patient.hmo_provider}">
+	                    					<input type="text" id="hmo_provider" class="form-control" value="${user.patient.hmo_provider ?? ""}">
 	                    				</span>
 	                    			</div>
 	                    			
@@ -900,7 +900,7 @@
 	                    				<span class="label">HMO Number</span>
 	                    				<br>
 	                    				<span class="pInfo">
-	                    					<input type="text" id="hmo_number" class="form-control" value="${user.patient.hmo_number}">
+	                    					<input type="text" id="hmo_number" class="form-control" value="${user.patient.hmo_number ?? ""}">
 	                    				</span>
 	                    			</div>
 
@@ -928,28 +928,28 @@
                         					<span class="label">First Name</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="fname" class="form-control" value="${user.fname}">
+		                    					<input type="text" id="fname" class="form-control" value="${user.fname ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-3">
                         					<span class="label">Middle Name</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="mname" class="form-control" value="${user.mname}">
+		                    					<input type="text" id="mname" class="form-control" value="${user.mname ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">Last Name</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="lname" class="form-control" value="${user.lname}">
+		                    					<input type="text" id="lname" class="form-control" value="${user.lname ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-1">
                         					<span class="label">Suffix</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="suffix" class="form-control" value="${user.suffix}">
+		                    					<input type="text" id="suffix" class="form-control" value="${user.suffix ?? ""}">
 		                    				</span>
                         				</div>
                         			</div>
@@ -968,14 +968,14 @@
                         					<span class="label">Birth Place</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="birth_place" class="form-control" value="${user.patient.birth_place}">
+		                    					<input type="text" id="birth_place" class="form-control" value="${user.patient.birth_place ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">Gender</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="gender" class="form-control" value="${user.gender}">
+		                    					<input type="text" id="gender" class="form-control" value="${user.gender ?? ""}">
 		                    				</span>
                         				</div>
                         			</div>
@@ -987,21 +987,21 @@
                         					<span class="label">Civil Status</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="civil_status" class="form-control" value="${user.patient.civil_status}">
+		                    					<input type="text" id="civil_status" class="form-control" value="${user.patient.civil_status ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">Nationality</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="nationality" class="form-control" value="${user.patient.nationality}">
+		                    					<input type="text" id="nationality" class="form-control" value="${user.patient.nationality ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">Religion</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="religion" class="form-control" value="${user.patient.religion}">
+		                    					<input type="text" id="religion" class="form-control" value="${user.patient.religion ?? ""}">
 		                    				</span>
                         				</div>
                         			</div>
@@ -1013,7 +1013,7 @@
                         					<span class="label">Address</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="address" class="form-control" value="${user.address}">
+		                    					<input type="text" id="address" class="form-control" value="${user.address ?? ""}">
 		                    				</span>
                         				</div>
                         			</div>
@@ -1043,7 +1043,7 @@
 	                    				<span class="label">Email</span>
 	                    				<br>
 	                    				<span class="pInfo">
-	                    					<input type="email" id="email" class="form-control" value="${user.email}">
+	                    					<input type="email" id="email" class="form-control" value="${user.email ?? ""}">
 	                    				</span>
 	                    			</div>
 
@@ -1053,7 +1053,7 @@
 	                    				<span class="label">Contact</span>
 	                    				<br>
 	                    				<span class="pInfo">
-	                    					<input type="text" id="contact" class="form-control" value="${user.contact}">
+	                    					<input type="text" id="contact" class="form-control" value="${user.contact ?? ""}">
 	                    				</span>
 	                    			</div>
 		                        </div>
@@ -1080,21 +1080,21 @@
                         					<span class="label">Employment Status</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="employment_status" class="form-control" value="${user.patient.employment_status}">
+		                    					<input type="text" id="employment_status" class="form-control" value="${user.patient.employment_status ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">Company Name</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="company_name" class="form-control" value="${user.patient.company_name}">
+		                    					<input type="text" id="company_name" class="form-control" value="${user.patient.company_name ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">Position</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="company_position" class="form-control" value="${user.patient.company_position}">
+		                    					<input type="text" id="company_position" class="form-control" value="${user.patient.company_position ?? ""}">
 		                    				</span>
                         				</div>
                         			</div>
@@ -1106,21 +1106,21 @@
                         					<span class="label">Company Contact</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="company_contact" class="form-control" value="${user.patient.company_contact}">
+		                    					<input type="text" id="company_contact" class="form-control" value="${user.patient.company_contact ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">SSS</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="sss" class="form-control" value="${user.patient.sss}">
+		                    					<input type="text" id="sss" class="form-control" value="${user.patient.sss ?? ""}">
 		                    				</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">TIN</span>
                         					<br>
 		                    				<span class="pInfo">
-		                    					<input type="text" id="tin_number" class="form-control" value="${user.patient.tin_number}">
+		                    					<input type="text" id="tin_number" class="form-control" value="${user.patient.tin_number ?? ""}">
 		                    				</span>
                         				</div>
                         			</div>
