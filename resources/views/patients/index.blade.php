@@ -588,7 +588,7 @@
 	                    			<div class="col-md-12 pInfo-left">
 	                    				<span class="label">Patient ID</span>
 	                    				<br>
-	                    				<span class="pInfo">${user.patient.patient_id}</span>
+	                    				<span class="pInfo">${user.patient.patient_id ?? "-"}</span>
 	                    			</div>
 
 	                    			<br>
@@ -596,7 +596,7 @@
 	                    			<div class="col-md-12 pInfo-left">
 	                    				<span class="label">HMO Provider</span>
 	                    				<br>
-	                    				<span class="pInfo">${user.patient.hmo_provider}</span>
+	                    				<span class="pInfo">${user.patient.hmo_provider ?? "-"}</span>
 	                    			</div>
 	                    			
 	                    			<br>
@@ -604,7 +604,7 @@
 	                    			<div class="col-md-12 pInfo-left">
 	                    				<span class="label">HMO Number</span>
 	                    				<br>
-	                    				<span class="pInfo">${user.patient.hmo_number}</span>
+	                    				<span class="pInfo">${user.patient.hmo_number ?? "-"}</span>
 	                    			</div>
 
 		                        </div>
@@ -665,7 +665,7 @@
                         				<div class="col-md-4">
                         					<span class="label">Birth Place</span>
                         					<br>
-                        					<span class="pInfo">${user.birth_place}</span>
+                        					<span class="pInfo">${user.birth_place ?? "-"}</span>
                         				</div>
                         			</div>
 
@@ -675,17 +675,17 @@
                         				<div class="col-md-4">
                         					<span class="label">Gender</span>
                         					<br>
-                        					<span class="pInfo">${user.gender}</span>
+                        					<span class="pInfo">${user.gender ?? "-"}</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">Civil Status</span>
                         					<br>
-                        					<span class="pInfo">${user.patient.civil_status}</span>
+                        					<span class="pInfo">${user.patient.civil_status ?? "-"}</span>
                         				</div>
                         				<div class="col-md-4">
                         					<span class="label">Nationality</span>
                         					<br>
-                        					<span class="pInfo">${user.patient.nationality}</span>
+                        					<span class="pInfo">${user.patient.nationality ?? "-"}</span>
                         				</div>
                         			</div>
 
@@ -695,7 +695,7 @@
                         				<div class="col-md-4">
                         					<span class="label">Religion</span>
                         					<br>
-                        					<span class="pInfo">${user.patient.religion}</span>
+                        					<span class="pInfo">${user.patient.religion ?? "-"}</span>
                         				</div>
                         			</div>
 
@@ -705,7 +705,7 @@
                         				<div class="col-md-12">
                         					<span class="label">Address</span>
                         					<br>
-                        					<span class="pInfo">${user.address}</span>
+                        					<span class="pInfo">${user.address ?? "-"}</span>
                         				</div>
                         			</div>
 
