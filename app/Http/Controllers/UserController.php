@@ -240,15 +240,17 @@ class UserController extends Controller
         $user->philhealth = $user->{$role}->philhealth;
         $user->pagibig = $user->{$role}->pagibig;
 
-        $nurse = Nurse::where('doctor_id', auth()->user()->doctor->id)->get();
-        $nurse->load('user');
+        if(auth()->user()->role == "Doctor"){
+            $nurse = Nurse::where('doctor_id', auth()->user()->doctor->id)->get();
+            $nurse->load('user');
+        }
 
         $settings = Clinic::where('id', $user->clinic_id)->first();
 
         return $this->_view('profile', [
             'title' => "Profile",
             'data' => $user,
-            'nurses' => $nurse,
+            'nurses' => $nurse ?? null,
             'settings' => $settings->toArray()
         ]);
     }

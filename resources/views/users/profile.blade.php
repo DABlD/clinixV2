@@ -107,26 +107,27 @@
                             </div>
                         </div>
                     </div>
-                @endif
 
-                <div class="card hidden group2">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-table mr-1"></i>
-                            Signature
-                        </h3>
-                    </div>
+                    <div class="card hidden group2">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-table mr-1"></i>
+                                Signature
+                            </h3>
+                        </div>
 
-                    <div class="card-body table-responsive">
-                        <div style="text-align: center;">
-                            <img src="{{ asset($data->doctor->signature) }}" alt="No Signature" width="300" height="200" id="preview2">
+                        <div class="card-body table-responsive">
+                            <div style="text-align: center;">
+                                <img src="{{ asset($data->doctor->signature) }}" alt="No Signature" width="300" height="200" id="preview2">
 
-                            <br>
-                            <label for="files2" class="btn">Upload New Image</label>
-                            <input id="files2" class="d-none" type="file" accept="image/*">
+                                <br>
+                                <label for="files2" class="btn">Upload New Image</label>
+                                <input id="files2" class="d-none" type="file" accept="image/*">
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
+
             </section>
 
             <section class="col-md-8 connectedSortable informations">
@@ -523,21 +524,23 @@
             reload();
         }
 
-        async function updateSignature(){
-            let formData = new FormData();
+        @if(auth()->user()->role == "Doctor")
+            async function updateSignature(){
+                let formData = new FormData();
 
-            formData.append('id', {{ $data->doctor->id }});
-            formData.append('signature', $("#files2").prop('files')[0]);
-            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+                formData.append('id', {{ $data->doctor->id }});
+                formData.append('signature', $("#files2").prop('files')[0]);
+                formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
-            await fetch('{{ route('doctor.update') }}', {
-                method: "POST", 
-                body: formData
-            });
+                await fetch('{{ route('doctor.update') }}', {
+                    method: "POST", 
+                    body: formData
+                });
 
-            ss('Success');
-            reload();
-        }
+                ss('Success');
+                reload();
+            }
+        @endif
 
         async function updateLogo(){
             let formData = new FormData();
@@ -779,113 +782,116 @@
             });
         }
 
-        function deleteAssistant(){
-            let id = $('#assistantList tr.selected td').data('id');
-            if(id){
-                swal.showLoading();
-                update({
-                    url: "{{ route('nurse.update') }}",
+
+        @if(auth()->user()->role == "Doctor")
+            function deleteAssistant(){
+                let id = $('#assistantList tr.selected td').data('id');
+                if(id){
+                    swal.showLoading();
+                    update({
+                        url: "{{ route('nurse.update') }}",
+                        data: {
+                            id: id,
+                            doctor_id: null
+                        },
+                        message: "Success"
+                    },  () => {
+                        $('#assistantList tr.selected').remove();
+                    });
+                }
+                else{
+                    se("No Selected Assistant");
+                }
+            }
+
+            function addAssistant(){
+                $.ajax({
+                    url: "{{ route('nurse.get') }}",
                     data: {
-                        id: id,
-                        doctor_id: null
+                        select: "*",
+                        where: ["doctor_id", null],
+                        load: ['user']
                     },
-                    message: "Success"
-                },  () => {
-                    $('#assistantList tr.selected').remove();
-                });
+                    success: nurses => {
+                        nurses = JSON.parse(nurses);
+                        nurseString = "";
+
+
+                        nurses.forEach(nurse => {
+                            let age = nurse.user.birthday ? moment().diff(moment(nurse.user.birthday), "years") : "";
+
+                            nurseString += `
+                                <option value="${nurse.id}">
+                                    ${nurse.user.lname}, ${nurse.user.fname} (${nurse.user.gender[0] + age})
+                                </option>
+                            `;
+                        });
+
+                        Swal.fire({
+                            title: "Assistants",
+                            html: `
+                                <select class="form-control" id="assistant">
+                                    <option value="">Select Assistant</option>
+                                    ${nurseString}
+                                </select>
+                            `,
+                            showCancelButton: true,
+                            cancelButtonColor: errorColor,
+                            cancelButtonText: 'Cancel',
+                            preConfirm: () => {
+                                swal.showLoading();
+                                return new Promise(resolve => {
+                                    setTimeout(() => {
+                                        if($('#assistant').val() == ""){
+                                            Swal.showValidationMessage('Select One');
+                                        }
+                                    resolve()}, 500);
+                                });
+                            },
+                        }).then(result => {
+                            if(result.value){
+                                let id = $('#assistant').val();
+
+                                update({
+                                    url: "{{ route('nurse.update') }}",
+                                    data: {
+                                        id: id,
+                                        doctor_id: {{ auth()->user()->doctor->id }}
+                                    }
+                                }, () => {
+                                    ss("Success");
+                                    displayNewAssistant(id);
+                                })
+                            }
+                        });
+                    }
+                })
             }
-            else{
-                se("No Selected Assistant");
-            }
-        }
 
-        function addAssistant(){
-            $.ajax({
-                url: "{{ route('nurse.get') }}",
-                data: {
-                    select: "*",
-                    where: ["doctor_id", null],
-                    load: ['user']
-                },
-                success: nurses => {
-                    nurses = JSON.parse(nurses);
-                    nurseString = "";
+            function displayNewAssistant(id){
+                $.ajax({
+                    url: "{{ route('nurse.get') }}",
+                    data: {
+                        select: "*",
+                        where: ["id", id],
+                        load: ['user']
+                    },
+                    success: nurse => {
+                        nurse = JSON.parse(nurse)[0];
 
-
-                    nurses.forEach(nurse => {
                         let age = nurse.user.birthday ? moment().diff(moment(nurse.user.birthday), "years") : "";
 
-                        nurseString += `
-                            <option value="${nurse.id}">
-                                ${nurse.user.lname}, ${nurse.user.fname} (${nurse.user.gender[0] + age})
-                            </option>
-                        `;
-                    });
-
-                    Swal.fire({
-                        title: "Assistants",
-                        html: `
-                            <select class="form-control" id="assistant">
-                                <option value="">Select Assistant</option>
-                                ${nurseString}
-                            </select>
-                        `,
-                        showCancelButton: true,
-                        cancelButtonColor: errorColor,
-                        cancelButtonText: 'Cancel',
-                        preConfirm: () => {
-                            swal.showLoading();
-                            return new Promise(resolve => {
-                                setTimeout(() => {
-                                    if($('#assistant').val() == ""){
-                                        Swal.showValidationMessage('Select One');
-                                    }
-                                resolve()}, 500);
-                            });
-                        },
-                    }).then(result => {
-                        if(result.value){
-                            let id = $('#assistant').val();
-
-                            update({
-                                url: "{{ route('nurse.update') }}",
-                                data: {
-                                    id: id,
-                                    doctor_id: {{ auth()->user()->doctor->id }}
-                                }
-                            }, () => {
-                                ss("Success");
-                                displayNewAssistant(id);
-                            })
-                        }
-                    });
-                }
-            })
-        }
-
-        function displayNewAssistant(id){
-            $.ajax({
-                url: "{{ route('nurse.get') }}",
-                data: {
-                    select: "*",
-                    where: ["id", id],
-                    load: ['user']
-                },
-                success: nurse => {
-                    nurse = JSON.parse(nurse)[0];
-
-                    let age = nurse.user.birthday ? moment().diff(moment(nurse.user.birthday), "years") : "";
-
-                    $('#assistantList').append(`
-                        <tr>
-                            <td class="nurse" data-id="${id}" onclick="selectRow(this)">
-                                ${nurse.user.lname}, ${nurse.user.fname} (${nurse.user.gender[0] + age})
-                            </td>
-                        </tr>
-                    `);
-                }
-            });
-        }
+                        $('#assistantList').append(`
+                            <tr>
+                                <td class="nurse" data-id="${id}" onclick="selectRow(this)">
+                                    ${nurse.user.lname}, ${nurse.user.fname} (${nurse.user.gender[0] + age})
+                                </td>
+                            </tr>
+                        `);
+                    }
+                });
+            }
+        @endif
 
         function save1(){
             swal.showLoading();
@@ -913,41 +919,43 @@
             });
         }
 
-        function save6(){
-            swal.showLoading();
-            update({
-                url: "{{ route('doctor.update') }}",
-                data: {
-                    id: {{ $data->doctor->id }},
-                    diplomate: [
-                        $('#dp1').val(),
-                        $('#dp2').val(),
-                        $('#dp3').val()
-                    ]
-                }
-            }, () => {
-                ss("Success");
-            });
-        }
+        @if(auth()->user()->role == "Doctor")
+            function save6(){
+                swal.showLoading();
+                update({
+                    url: "{{ route('doctor.update') }}",
+                    data: {
+                        id: {{ $data->doctor->id }},
+                        diplomate: [
+                            $('#dp1').val(),
+                            $('#dp2').val(),
+                            $('#dp3').val()
+                        ]
+                    }
+                }, () => {
+                    ss("Success");
+                });
+            }
 
-        function save2(){
-            console.log('save');
-            swal.showLoading();
-            update({
-                url: "{{ route('doctor.update') }}",
-                data: {
-                    id: {{ $data->doctor->id }},
-                    license_number: $('#license_number').val(),
-                    s2_number: $('#s2_number').val(),
-                    ptr: $('#ptr').val(),
-                    specialization: $('#specialization').val(),
-                    pharma_partner: $('#pharma_partner').val(),
-                    title: $('#title').val(),
-                }
-            }, () => {
-                ss("Success");
-            });
-        }
+            function save2(){
+                console.log('save');
+                swal.showLoading();
+                update({
+                    url: "{{ route('doctor.update') }}",
+                    data: {
+                        id: {{ $data->doctor->id }},
+                        license_number: $('#license_number').val(),
+                        s2_number: $('#s2_number').val(),
+                        ptr: $('#ptr').val(),
+                        specialization: $('#specialization').val(),
+                        pharma_partner: $('#pharma_partner').val(),
+                        title: $('#title').val(),
+                    }
+                }, () => {
+                    ss("Success");
+                });
+            }
+        @endif
 
         function save3(){
             swal.showLoading();
@@ -1029,58 +1037,88 @@
             });
         }
 
-        function getDiplomate(){
-            let diplomates = '{!! $data->doctor->diplomate !!}';
+        @if(auth()->user()->role == "Doctor")
+            function getDiplomate(){
+                let diplomates = '{!! $data->doctor->diplomate !!}';
 
-            if(diplomates){
-                diplomates = JSON.parse(diplomates);
+                if(diplomates){
+                    diplomates = JSON.parse(diplomates);
 
-                diplomates.forEach((diplomate, key) => {
-                    $('#dp' + (++key)).val(diplomate);
-                })
+                    diplomates.forEach((diplomate, key) => {
+                        $('#dp' + (++key)).val(diplomate);
+                    })
+                }
             }
-        }
 
-        function addAssociation(){
-            Swal.fire({
-                title: "Select Association to add",
-                html: `
-                    <select id="selectAssociation">
-                        <option value="">N/A</option>
-                        <option>Philippine Dental Association</option>
-                        <option>Philippine Medical Association</option>
-                        <option>Blue Cross Shield Association</option>
-                        <option>Philippine Veterinary Medical Association</option>
-                        <option>SBCA assoc.</option>
-                        <option>Philippine Heart Association</option>
-                        <option>Las Piñas Medical Society</option>
-                        <option>PRx</option>
-                    </select>
-                `,
-                didOpen: () => {
-                    $('#selectAssociation').select2({
-                        tag: true,
-                    });
+            function addAssociation(){
+                Swal.fire({
+                    title: "Select Association to add",
+                    html: `
+                        <select id="selectAssociation">
+                            <option value="">N/A</option>
+                            <option>Philippine Dental Association</option>
+                            <option>Philippine Medical Association</option>
+                            <option>Blue Cross Shield Association</option>
+                            <option>Philippine Veterinary Medical Association</option>
+                            <option>SBCA assoc.</option>
+                            <option>Philippine Heart Association</option>
+                            <option>Las Piñas Medical Society</option>
+                            <option>PRx</option>
+                        </select>
+                    `,
+                    didOpen: () => {
+                        $('#selectAssociation').select2({
+                            tag: true,
+                        });
 
-                    $('#select2-selectAssociation-container').css('text-align', 'left');
-                },
-                preConfirm: () => {
-                    swal.showLoading();
-                    return new Promise(resolve => {
-                        setTimeout(() => {
-                            if($('#selectAssociation').val() == ""){
-                                Swal.showValidationMessage('Select One');
+                        $('#select2-selectAssociation-container').css('text-align', 'left');
+                    },
+                    preConfirm: () => {
+                        swal.showLoading();
+                        return new Promise(resolve => {
+                            setTimeout(() => {
+                                if($('#selectAssociation').val() == ""){
+                                    Swal.showValidationMessage('Select One');
+                                }
+                            resolve()}, 500);
+                        });
+                    },
+                }).then(result => {
+                    if(result.value){
+                        $('#medicalAssociation').append(`
+                            <tr onclick="selectRow2(this)">
+                                <td class="data-ma">${$('#selectAssociation').val()}</td>
+                            </tr>
+                        `);
+
+                        let assocs = $('.data-ma');
+                        let array = [];
+
+                        assocs.each((key, assoc) => {
+                            array.push(assoc.innerHTML);
+                        });
+
+                        update({
+                            url: "{{ route('doctor.update') }}",
+                            data: {
+                                id: {{ $data->doctor->id }},
+                                medical_association: JSON.stringify(array)
                             }
-                        resolve()}, 500);
-                    });
-                },
-            }).then(result => {
-                if(result.value){
-                    $('#medicalAssociation').append(`
-                        <tr onclick="selectRow2(this)">
-                            <td class="data-ma">${$('#selectAssociation').val()}</td>
-                        </tr>
-                    `);
+                        }, () => {
+                            ss("Successfully Added");
+                        });
+                    }
+                });
+            }
+
+            function selectRow2(row){
+                $('.data-ma').parent().removeClass('selected');
+                $(row).addClass('selected');
+            }
+
+            function deleteAssociation(){
+                if($('#medicalAssociation tr.selected').length){
+                    $('#medicalAssociation tr.selected').remove();
 
                     let assocs = $('.data-ma');
                     let array = [];
@@ -1099,39 +1137,11 @@
                         ss("Successfully Added");
                     });
                 }
-            });
-        }
-
-        function selectRow2(row){
-            $('.data-ma').parent().removeClass('selected');
-            $(row).addClass('selected');
-        }
-
-        function deleteAssociation(){
-            if($('#medicalAssociation tr.selected').length){
-                $('#medicalAssociation tr.selected').remove();
-
-                let assocs = $('.data-ma');
-                let array = [];
-
-                assocs.each((key, assoc) => {
-                    array.push(assoc.innerHTML);
-                });
-
-                update({
-                    url: "{{ route('doctor.update') }}",
-                    data: {
-                        id: {{ $data->doctor->id }},
-                        medical_association: JSON.stringify(array)
-                    }
-                }, () => {
-                    ss("Successfully Added");
-                });
+                else{
+                    se("Select one to delete");
+                }
             }
-            else{
-                se("Select one to delete");
-            }
-        }
+        @endif
 	</script>
 @endpush
 
