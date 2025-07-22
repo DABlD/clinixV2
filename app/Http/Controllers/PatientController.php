@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{Patient, User};
+use App\Models\{MHR, Question};
 use DB;
 use Image;
 
@@ -76,7 +77,7 @@ class PatientController extends Controller
         $ctr = Patient::where('created_at', 'like', now()->format('Y-m-d') . '%')->count();
         $pid = "P" . now()->format('ymd') . str_pad($ctr+1, 5, '0', STR_PAD_LEFT);
 
-        if(isset($req->imageData)){
+        if(isset($req->imageData) && $req->imageData != "null" && $req->imageData != null){
             $cname = auth()->user()->clinic->name;
             $folder = $user->lname . ', ' . $user->fname . " ($pid)";
             $path = public_path("uploads\\$cname\\Patients\\$folder\\");
@@ -125,11 +126,31 @@ class PatientController extends Controller
 
         Helper::log(auth()->user()->id, 'created patient', $user->id);
 
+        $mhr = new MHR();
+        $mhr->user_id = $user->id;
+        $mhr->patient_id = $patient->id;
+
+        $temp = array();
+        $questions = Question::all();
+        foreach($questions as $question){
+            array_push($temp, [
+                "id" => $question->id,
+                "question" => $question->name,
+                "answer" => null,
+                "remark" => null
+            ]);
+        }
+        
+        $mhr->qwa = json_encode($temp);
+        $mhr->save();
+
+        Helper::log(auth()->user()->id, 'generated MHR', $user->id);
+
         echo "success";
     }
 
     public function update(Request $req){
-        if(isset($req->imageData)){
+        if(isset($req->imageData) && $req->imageData != "null" && $req->imageData != null){
             $patient = Patient::where('id', $req->id)->first();
             $user = User::where('id', $patient->user_id)->first();
 
