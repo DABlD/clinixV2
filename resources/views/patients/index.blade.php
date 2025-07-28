@@ -49,7 +49,7 @@
 	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('css/datatables.bundle.min.css') }}"> --}}
 	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.bootstrap4.min.css') }}"> --}}
-	{{-- <link rel="stylesheet" href="{{ asset('css/datatables-jquery.min.css') }}"> --}}
+	<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 
 
 	<style>
@@ -75,10 +75,13 @@
 @push('scripts')
 	{{-- <script src="{{ asset('js/datatables.min.js') }}"></script> --}}
 	<script src="{{ asset('js/datatables.bundle.min.js') }}"></script>
+	<script src="{{ asset('js/select2.min.js') }}"></script>
 	{{-- <script src="{{ asset('js/datatables.bootstrap4.min.js') }}"></script> --}}
 	{{-- <script src="{{ asset('js/datatables-jquery.min.js') }}"></script> --}}
 
 	<script>
+		var subjective = [], objective = [], assessment = [], plan = [];
+
 		$(document).ready(()=> {
 			var table = $('#table').DataTable({
 				ajax: {
@@ -1263,7 +1266,7 @@
 
 		function soap(uid){
 			Swal.fire({
-    			confirmButtonText: "OK",
+    			confirmButtonText: "Save",
 				allowEscapeKey: false,
 				allowOutsideClick: false,
 				showCancelButton: true,
@@ -1281,7 +1284,7 @@
                     		    </li>
                     		    &nbsp;
                     		    <li class="nav-item">
-                    		        <a class="nav-link" href="#soap" data-toggle="tab">
+                    		        <a class="nav-link" href="#soap" data-toggle="tab" data-href="subjective">
                     		            SOAP
                     		        </a>
                     		    </li>
@@ -1414,25 +1417,25 @@
 		    	                        <div class="card-body">
 				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link active" href="#subjective" data-toggle="tab" data-target="subjective">
+				                    		        <a class="nav-link active" href="#subjective" data-toggle="tab" data-href="subjective">
 				                    		            Subjective
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#objective" data-toggle="tab" data-target="objective">
+				                    		        <a class="nav-link" href="#objective" data-toggle="tab" data-href="objective">
 				                    		            Objective
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#assessment" data-toggle="tab" data-target="assessment">
+				                    		        <a class="nav-link" href="#assessment" data-toggle="tab" data-href="assessment">
 				                    		            Assessment
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#plan" data-toggle="tab" data-target="plan">
+				                    		        <a class="nav-link" href="#plan" data-toggle="tab" data-href="plan">
 				                    		            Plan
 				                    		        </a>
 				                    		    </li>
@@ -1442,7 +1445,6 @@
 
 				        					<div class="tab-content p-0">
 				        					    <div class="chart tab-pane active" id="subjective" style="position: relative;">
-				        					    	Subjective
 				        					    </div>
 
 				        					    <div class="chart tab-pane" id="objective" style="position: relative;">
@@ -1475,9 +1477,12 @@
 					$('[data-toggle="tab"').on('show.bs.tab', e => {
 						let target = $(e.target).data('href');
 						$(`#${target}`).prepend('<div class="preloader"></div>');
-						
+						console.log(target);
 						if(target == "history"){
 							getHistory(uid);
+						}
+						else if(target == "subjective"){
+							getSubjective(uid);
 						}
 					});
 					$('.swal2-html-container .tab-pane').css('min-height', '100px');
@@ -1572,6 +1577,75 @@
 					$(`#history`).append(string);
 				}
 			});
+
+			removeLoader();
+		}
+		
+		function getSubjective(uid){
+			// do not proceed if already initiated
+			if(subjective.length){
+				removeLoader();
+				return;
+			}
+
+			let string = "";
+
+			let complaints = [
+				"Abdominal pain and watery stool for 3 days",
+				"Abdominal pain with an acidic feel of vomiting",
+				"Cataract",
+				"Check up",
+				"Chest pain during activity exertion",
+				"Consultation",
+				"Vaccine schedule"
+			];
+
+			string += `
+				<div class="row iRow" style="margin-bottom: 10px;">
+				    <div class="col-md-3 iLabel">
+				        Type of Visit
+				    </div>
+				    <div class="col-md-9 iInput">
+				        <select id="type_of_visit" style="width: 100%;">
+				        	<option value="">Select One</option>
+				        	<option value="Walk-in Patient">Walk-in Patient</option>
+				        	<option value="Referral Patient">Referral Patient</option>
+				        	<option value="Follow-up Patient">Follow-up Patient</option>
+				        </select>
+				    </div>
+				</div>
+
+				<div class="row iRow" style="margin-bottom: 10px;">
+				    <div class="col-md-3 iLabel">
+				        Chief Complaint
+				    </div>
+				    <div class="col-md-9 iInput">
+				        <select id="chief_complaint" style="width: 100%;">
+				        	<option value="">Select One</option>
+				        </select>
+				    </div>
+				</div>
+
+				<div class="row iRow">
+				    <div class="col-md-3 iLabel">
+				        History of Present Illness
+				    </div>
+				    <div class="col-md-9 iInput">
+				        <textarea id="history_of_present_illness" class="form-control" rows="7"></textarea>
+				    </div
+				</div>
+			`;
+
+			$('#subjective').append(string);
+			$('#type_of_visit').select2();
+			$('#chief_complaint').select2({
+				data: complaints
+			});
+
+			subjective['type_of_visit'] = null;
+			subjective['chief_complaint'] = null;
+			subjective['history_of_present_illness'] = null;
+			subjective.length = 1;
 
 			removeLoader();
 		}
