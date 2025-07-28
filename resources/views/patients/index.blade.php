@@ -1261,8 +1261,7 @@
 			});
 		}
 
-		function soap(user){
-
+		function soap(uid){
 			Swal.fire({
     			confirmButtonText: "OK",
 				allowEscapeKey: false,
@@ -1270,6 +1269,7 @@
 				showCancelButton: true,
 				cancelButtonColor: errorColor,
 				cancelButtonText: 'Cancel',
+				position: 'top',
 				html: `
 	                <div class="row">
                     	<section class="col-lg-12">
@@ -1309,50 +1309,50 @@
 		    	                        <div class="card-body">
 				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link active" href="#history" data-toggle="tab">
+				                    		        <a class="nav-link active" href="#history" data-toggle="tab" data-href="history">
 				                    		            History
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#clinic_history" data-toggle="tab">
+				                    		        <a class="nav-link" href="#clinic_history" data-toggle="tab" data-href="clinic_history">
 				                    		            Clinic History
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#vital_signs" data-toggle="tab">
+				                    		        <a class="nav-link" href="#vital_signs" data-toggle="tab" data-href="vital_signs">
 				                    		            Vital Signs
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#prescriptions" data-toggle="tab">
+				                    		        <a class="nav-link" href="#prescriptions" data-toggle="tab" data-href="prescriptions">
 				                    		            Prescriptions
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#laboratory" data-toggle="tab">
-				                    		            Prescriptions
+				                    		        <a class="nav-link" href="#laboratory" data-toggle="tab" data-href="laboratory">
+				                    		            Laboratory
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#imaging" data-toggle="tab">
-				                    		            Prescriptions
+				                    		        <a class="nav-link" href="#imaging" data-toggle="tab" data-href="imaging">
+				                    		            Imaging
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#files" data-toggle="tab">
-				                    		            Prescriptions
+				                    		        <a class="nav-link" href="#files" data-toggle="tab" data-href="files">
+				                    		            Files
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#vaccine" data-toggle="tab">
-				                    		            Prescriptions
+				                    		        <a class="nav-link" href="#vaccine" data-toggle="tab" data-href="vaccine">
+				                    		            Vaccine
 				                    		        </a>
 				                    		    </li>
 				                    		</ul>
@@ -1361,7 +1361,7 @@
 
 				        					<div class="tab-content p-0">
 				        					    <div class="chart tab-pane active" id="history" style="position: relative;">
-				        					    	History
+				        					    	
 				        					    </div>
 
 				        					    <div class="chart tab-pane" id="clinic_history" style="position: relative;">
@@ -1414,25 +1414,25 @@
 		    	                        <div class="card-body">
 				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link active" href="#subjective" data-toggle="tab">
+				                    		        <a class="nav-link active" href="#subjective" data-toggle="tab" data-target="subjective">
 				                    		            Subjective
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#objective" data-toggle="tab">
+				                    		        <a class="nav-link" href="#objective" data-toggle="tab" data-target="objective">
 				                    		            Objective
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#assessment" data-toggle="tab">
+				                    		        <a class="nav-link" href="#assessment" data-toggle="tab" data-target="assessment">
 				                    		            Assessment
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#plan" data-toggle="tab">
+				                    		        <a class="nav-link" href="#plan" data-toggle="tab" data-target="plan">
 				                    		            Plan
 				                    		        </a>
 				                    		    </li>
@@ -1472,19 +1472,23 @@
 					$('#swal2-html-container .card-header').css('background-color', "#83c8e5");
 					$('#swal2-html-container .card-body').css('border', "1px solid rgba(0,0,0,0.125)");
 
-					$('#birthday').flatpickr({
-						altInput: true,
-						altFormat: "M j, Y",
-						dateFormat: "Y-m-d",
-						maxDate: moment().format("YYYY-MM-DD")
+					$('[data-toggle="tab"').on('show.bs.tab', e => {
+						let target = $(e.target).data('href');
+						$(`#${target}`).prepend('<div class="preloader"></div>');
+						
+						if(target == "history"){
+							getHistory(uid);
+						}
 					});
+					$('.swal2-html-container .tab-pane').css('min-height', '100px');
+					$('[data-href="history"]').trigger('show.bs.tab');
 				},
 				preConfirm: () => {
 				    swal.showLoading();
 				    return new Promise(resolve => {
 				    	let bool = true;
 
-				    	let check = ["fname","lname","gender","contact"];
+				    	{{-- let check = ["fname","lname","gender","contact"];
 				    	let flag = false;
 
 				    	check.forEach(field => {
@@ -1497,7 +1501,7 @@
 
 			            if(flag){
 			                Swal.showValidationMessage('Highlighted fields are required');
-			            }
+			            } --}}
 			            
 			            bool ? setTimeout(() => {resolve()}, 500) : "";
 				    });
@@ -1505,32 +1509,77 @@
 			}).then(result => {
 				if(result.value){
 					swal.showLoading();
-					uploadPatient({
-						fname: $("#fname").val(),
-						mname: $("#mname").val(),
-						lname: $("#lname").val(),
-						suffix: $("#suffix").val(),
-						birthday: $("#birthday").val(),
-						birth_place: $("#birth_place").val(),
-						gender: $("#gender").val(),
-						civil_status: $("#civil_status").val(),
-						nationality: $("#nationality").val(),
-						religion: $("#religion").val(),
-						contact: $("#contact").val(),
-						email: $("#email").val(),
-						address: $("#address").val(),
-						hmo_provider: $("#hmo_provider").val(),
-						hmo_number: $("#hmo_number").val(),
-						employment_status: $("#employment_status").val(),
-						company_name: $("#company_name").val(),
-						company_position: $("#company_position").val(),
-						company_contact: $("#company_contact").val(),
-						sss: $("#sss").val(),
-						tin_number: $("#tin_number").val(),
-						_token: $('meta[name="csrf-token"]').attr('content')
-					});
 				}
 			});
+		}
+
+		function getHistory(uid){
+			$.ajax({
+				url: "{{ route('user.get') }}",
+				data: {
+					select: "*",
+					where: ['id', uid],
+					load: ['patient.mhr']
+				},
+				success: result => {
+					result = JSON.parse(result)[0];
+					let mhr = result.patient.mhr;
+					let qwa = JSON.parse(mhr.qwa);
+
+					let string = "";
+					let bool = false;
+
+					qwa.forEach(row => {
+						if(row.type == "Category"){
+							if(bool){
+								string += `
+									</tbody>
+									</table>
+								`;
+							}
+
+							string += `
+								<div class="row ">
+                                    <div class="col-md-12" style="text-align: left;">
+                                        <b style="font-size: 1.5rem;">${row.question}</b>
+                                    </div>
+                                </div>
+
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th style="width: 40%;">Name</th>
+											<th style="width: 30%;">Answer</th>
+											<th style="width: 30%;">Remark</th>
+										</tr>
+									</thead>
+									<tbody>
+							`;
+
+							bool = true;
+						}
+						else{
+							string += `
+								<tr>
+									<td style="text-align: left;">${row.question}</td>
+									<td>${row.answer ?? "-"}</td>
+									<td>${row.remark ?? "-"}</td>
+								</tr>
+							`;
+						}
+					});
+
+					$(`#history`).append(string);
+				}
+			});
+
+			removeLoader();
+		}
+
+		function removeLoader(){
+			setTimeout(() => {
+				$('.preloader').remove();
+			}, 500);
 		}
 	</script>
 @endpush

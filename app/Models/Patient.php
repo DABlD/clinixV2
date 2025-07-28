@@ -46,4 +46,8 @@ class Patient extends Model
     public function clinic(){
         return $this->belongsTo('App\Models\Clinic');
     }
+
+    public function mhr(){
+        return $this->hasOne('App\Models\MHR');
+    }
 }

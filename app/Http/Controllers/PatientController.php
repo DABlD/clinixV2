@@ -136,6 +136,7 @@ class PatientController extends Controller
             array_push($temp, [
                 "id" => $question->id,
                 "question" => $question->name,
+                "type" => $question->type,
                 "answer" => null,
                 "remark" => null
             ]);
