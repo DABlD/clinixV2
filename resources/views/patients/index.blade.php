@@ -69,6 +69,25 @@
 	    	color: #fff !important;
 	    	background-color: #337ab7 !important;
 	    }
+
+		.file-upload-container {
+			max-width: 500px;
+			margin: 50px auto;
+			padding: 30px;
+			background-color: #fff;
+			border-radius: 15px;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+		}
+
+		.custom-file-label {
+			font-weight: 500;
+		}
+
+		input[type="file"].form-control {
+			padding: 10px;
+			cursor: pointer;
+		}
+
 	</style>
 @endpush
 
@@ -1448,15 +1467,12 @@
 				        					    </div>
 
 				        					    <div class="chart tab-pane" id="objective" style="position: relative;">
-				        					    	Objective
 				        					    </div>
 
 				        					    <div class="chart tab-pane" id="assessment" style="position: relative;">
-				        					    	Assessment
 				        					    </div>
 
 				        					    <div class="chart tab-pane" id="plan" style="position: relative;">
-				        					    	Plan
 				        					    </div>
 				        					</div>
 		    	                        </div>
@@ -1477,12 +1493,21 @@
 					$('[data-toggle="tab"').on('show.bs.tab', e => {
 						let target = $(e.target).data('href');
 						$(`#${target}`).prepend('<div class="preloader"></div>');
-						console.log(target);
+						
 						if(target == "history"){
 							getHistory(uid);
 						}
 						else if(target == "subjective"){
 							getSubjective(uid);
+						}
+						else if(target == "objective"){
+							getObjective(uid);
+						}
+						else if(target == "assessment"){
+							getAssessment(uid);
+						}
+						else if(target == "plan"){
+							getPlan(uid);
 						}
 					});
 					$('.swal2-html-container .tab-pane').css('min-height', '100px');
@@ -1639,7 +1664,8 @@
 			$('#subjective').append(string);
 			$('#type_of_visit').select2();
 			$('#chief_complaint').select2({
-				data: complaints
+				data: complaints,
+				tags: true
 			});
 
 			subjective['type_of_visit'] = null;
@@ -1647,6 +1673,426 @@
 			subjective['history_of_present_illness'] = null;
 			subjective.length = 1;
 
+			removeLoader();
+		}
+
+		function getObjective(uid){
+			// do not proceed if already initiated
+			if(objective.length){
+				removeLoader();
+				return;
+			}
+
+			let string = "";
+
+			string += `
+                <div class="row">
+                	<section class="col-lg-12">
+                		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
+                		    <li class="nav-item" style="width: 30%;">
+                		        <a class="nav-link active" href="#vitals" data-toggle="tab">
+                		            Vitals
+                		        </a>
+                		    </li>
+                		    &nbsp;
+                		    <li class="nav-item" style="width: 30%;">
+                		        <a class="nav-link" href="#drawing" data-toggle="tab">
+                		            Drawing
+                		        </a>
+                		    </li>
+                		    &nbsp;
+                		    <li class="nav-item" style="width: 30%;">
+                		        <a class="nav-link" href="#exam" data-toggle="tab">
+                		            Exam
+                		        </a>
+                		    </li>
+                		</ul>
+
+    					<br>
+
+    					{{-- CONTENT START --}}
+    					<div class="tab-content p-0">
+
+    					    <div class="chart tab-pane active" id="vitals" style="position: relative;">
+	    	                    <div class="card">
+	    	                        <div class="card-body">
+
+			                    		<div class="row">
+			                    			<div class="col-md-6">
+												<label class="form-label" style="float: left;">Blood Pressure</label>
+												<div class="input-group">
+													<input type="text" class="form-control" id="bp_systolic" placeholder="Systolic">
+													<strong class="input-group-text">/</strong>
+													<input type="text" class="form-control" id="bp_diastolic" placeholder="Diastolic">
+												</div>
+			                    			</div>
+
+											<div class="col-md-6">
+												<label class="form-label" style="float: left;">Pulse</label>
+												<div class="input-group">
+												    <input type="text" class="form-control" id="pulse_rate" placeholder="Pulse">
+												    <select class="form-control" id="pulse_type">
+												        <option>Regular</option>
+												        <option>Irregular</option>
+												    </select>
+												</div>
+											</div>
+			                    		</div>
+
+			                    		<div class="row" style="margin-top: 15px;">
+			                    			<div class="col-md-6">
+												<label class="form-label" style="float: left;">Temperature</label>
+												<div class="input-group">
+												    <input type="text" class="form-control" id="temperature" placeholder="Temp">
+												    <select class="form-control" id="temp_unit">
+												        <option>Celsius</option>
+												        <option>Farenheit</option>
+												    </select>
+												    <select class="form-control" id="temp_location">
+												        <option>Underarm</option>
+												        <option>Mouth</option>
+												        <option>Rectal</option>
+												        <option>Skin</option>
+												        <option>Ear</option>
+												    </select>
+												</div>
+			                    			</div>
+
+											<div class="col-md-6">
+												<label class="form-label" style="float: left;">Respiration Rate</label>
+												<div class="input-group">
+												    <input type="text" class="form-control" id="respiration_rate" placeholder="Rate">
+												    <select class="form-control" id="respiration_type">
+												        <option>Regular</option>
+												        <option>Irregular</option>
+												    </select>
+												</div>
+											</div>
+			                    		</div>
+
+			                    		<div class="row" style="margin-top: 15px;">
+			                    			<div class="col-md-6">
+												<label class="form-label" style="float: left;">Weight</label>
+												<div class="input-group">
+												    <input type="text" class="form-control" id="weight" placeholder="Weight">
+												    <select class="form-control" id="weight_unit">
+												        <option>Kg</option>
+												        <option>Lbs</option>
+												    </select>
+												</div>
+			                    			</div>
+
+											<div class="col-md-6">
+												<label class="form-label" style="float: left;">O2 SAT</label>
+											    <input type="text" class="form-control" id="o2_sat" placeholder="O2 SAT">
+											</div>
+			                    		</div>
+
+			                    		<div class="row" style="margin-top: 15px;">
+			                    			<div class="col-md-6">
+												<label class="form-label" style="float: left;">Height</label>
+												<div class="input-group">
+												    <input type="text" class="form-control" id="height" placeholder="Height">
+												    <select class="form-control" id="height_unit">
+												        <option>Cm</option>
+												        <option>Ft</option>
+												    </select>
+												</div>
+			                    			</div>
+			                    		</div>
+
+			                    	</div>
+	    	                    </div>
+    					    </div>
+
+    					    <div class="chart tab-pane" id="drawing" style="position: relative;">
+	    	                    <div class="card">
+	    	                        <div class="card-body">
+			                    		<canvas style="border: 1px solid black; cursor: crosshair;" id="canvas"></canvas>
+			                    		<br>
+			                    		
+										<div id="controls">
+											<label>Color:
+											    <input type="color" id="colorPicker" value="#000000">
+											</label>
+											<label>Brush Size:
+											    <input type="range" id="brushSize" min="1" max="50" value="3">
+											    <span id="sizeDisplay">3</span> px
+											</label>
+										</div>
+
+										<br>
+
+										<button id="undoBtn" class="btn btn-primary">Undo</button>
+									    <button id="clearBtn" class="btn btn-warning">Clear</button>
+									    <button id="saveBtn" class="btn btn-success">Save</button>
+
+			                    	</div>
+	    	                    </div>
+    					    </div>
+
+    					    <div class="chart tab-pane" id="exam" style="position: relative;">
+	    	                    <div class="card">
+	    	                        <div class="card-body">
+			                    		<div class="row">
+			                    			<div class="col-md-12">
+												<label class="form-label" style="float: left;">(Physical Examination)</label>
+												<div class="input-group">
+													<textarea id="physical_examination" class="form-control" rows="7"></textarea>
+												</div>
+			                    			</div>
+			                    		</div>
+			                    	</div>
+	    	                    </div>
+    					    </div>
+
+    					</div>
+	                </section>
+                </div>
+			`;
+
+			$('#objective').append(string);
+			let canvas = document.getElementById('canvas');
+			let ctx = canvas.getContext('2d');
+		    let colorPicker = document.getElementById('colorPicker');
+		    let brushSize = document.getElementById('brushSize');
+		    let sizeDisplay = document.getElementById('sizeDisplay');
+
+		    let undoBtn = document.getElementById('undoBtn');
+	        let clearBtn = document.getElementById('clearBtn');
+	        let saveBtn = document.getElementById('saveBtn');
+
+		    let drawing = false;
+		    let prevX = 0, prevY = 0;
+    		let history = [];
+
+		    canvas.width = 1000
+  			canvas.height = 400;
+
+		    canvas.addEventListener('mousedown', (e) => {
+		    	saveState(); //Save before drawing
+				drawing = true;
+				const rect = canvas.getBoundingClientRect();
+				prevX = e.clientX - rect.left;
+				prevY = e.clientY - rect.top;
+		    });
+
+	        canvas.addEventListener('mouseup', () => drawing = false);
+	        canvas.addEventListener('mouseleave', () => drawing = false);
+
+	        brushSize.addEventListener('input', () => {
+	        	sizeDisplay.textContent = brushSize.value;
+	        });
+
+	        canvas.addEventListener('mousemove', (e) => {
+				if (!drawing) return;
+
+				const rect = canvas.getBoundingClientRect();
+				const x = e.clientX - rect.left;
+				const y = e.clientY - rect.top;
+
+				ctx.lineWidth = brushSize.value;
+				ctx.lineCap = 'round';
+				ctx.strokeStyle = colorPicker.value;
+
+				ctx.beginPath();
+				ctx.moveTo(prevX, prevY);
+				ctx.lineTo(x, y);
+				ctx.stroke();
+
+				prevX = x;
+				prevY = y;
+            });
+
+            {{-- FOR UNDO --}}
+            function saveState() {
+				if (history.length >= 50) history.shift(); // Limit to 50 states
+				history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            }
+
+		    // Restore previous state
+		    function undo() {
+				if (history.length > 0) {
+					const imageData = history.pop();
+					ctx.putImageData(imageData, 0, 0);
+				}
+		    }
+
+		    // Undo button
+			undoBtn.addEventListener('click', undo);
+
+		    // Clear canvas
+		    clearBtn.addEventListener('click', () => {
+				saveState();
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+		    });
+
+		    // Save as PNG
+		    saveBtn.addEventListener('click', () => {
+				const link = document.createElement('a');
+				link.download = 'drawing.png';
+				link.href = canvas.toDataURL('image/png');
+				link.click();
+		    });
+
+            // Reset path when mouse is up
+            canvas.addEventListener('mouseup', () => ctx.beginPath());
+
+			objective['bp_systolic'] = null;
+			objective['bp_diastolic'] = null;
+			objective['pulse_rate'] = null;
+			objective['pulse_type'] = null;
+			objective['temperature'] = null;
+			objective['temp_unit'] = null;
+			objective['temp_location'] = null;
+			objective['respiration_rate'] = null;
+			objective['respiration_type'] = null;
+			objective['weight'] = null;
+			objective['weight_unit'] = null;
+			objective['o2_sat'] = null;
+			objective['height'] = null;
+			objective['height_unit'] = null;
+			objective.length = 1;
+
+			removeLoader();
+		}
+
+		function getAssessment(uid){
+			// do not proceed if already initiated
+			if(assessment.length){
+				removeLoader();
+				return;
+			}
+
+			let string = "";
+
+			string += `
+                <div class="card">
+                    <div class="card-body">
+                		<div class="row">
+                			<div class="col-md-12">
+								<label class="form-label" style="float: left;">Previous Diagnosis</label>
+								
+								<textarea class="form-control" rows="4" disabled></textarea>
+                			</div>
+                		</div>
+
+                		<br>
+
+                		<div class="row">
+                			<div class="col-md-12">
+								<label class="form-label" style="float: left;">
+									Diagnosis
+								</label>
+
+								<div style="float: right;">
+									<button class="btn btn-primary">Previous Diagnosis</button>
+									<button class="btn btn-primary">Diagnosis</button>
+									<button class="btn btn-primary">ICD</button>
+								</div>
+
+								<br>
+								<br>
+
+								<textarea id="diagnosis" class="form-control" rows="7"></textarea>
+                			</div>
+                		</div>
+                	</div>
+                </div>
+			`;
+
+			assessment['diagnosis'] = null;
+			assessment.length = 1;
+
+			$('#assessment').append(string);
+			removeLoader();
+		}
+
+		function getPlan(uid){
+			// do not proceed if already initiated
+			if(plan.length){
+				removeLoader();
+				return;
+			}
+
+			let string = "";
+
+			string += `
+                <div class="card">
+                    <div class="card-body">
+                		<div class="row">
+                			<div class="col-md-12">
+								<label class="form-label" style="float: left;">
+									Diagnosis Care Plan
+								</label>
+
+								<div style="float: right;">
+									<button class="btn btn-primary">Laboratory Request</button>
+									<button class="btn btn-primary">Imaging Request</button>
+								</div>
+
+								<br>
+								<br>
+
+								<textarea id="diagnosis_care_plan" class="form-control" rows="7"></textarea>
+                			</div>
+                		</div>
+
+						<br>
+
+                		<div class="row">
+                			<div class="col-md-12">
+								<label class="form-label" style="float: left;">
+									Therapeutic Care Plan
+								</label>
+
+								<div style="float: right;">
+									<button class="btn btn-primary">Previous Medication</button>
+									<button class="btn btn-primary">Prescription</button>
+									<button class="btn btn-primary">Certificate</button>
+									<button class="btn btn-primary">RVU</button>
+									<button class="btn btn-primary">Pedia Vaccine</button>
+								</div>
+
+								<br>
+								<br>
+
+								<textarea id="therapeutic_care_plan" class="form-control" rows="7"></textarea>
+                			</div>
+                		</div>
+						
+						<br>
+                		<div class="row">
+                			<div class="col-md-12">
+								<label class="form-label" style="float: left;">
+									File Upload
+								</label>
+
+								<input type="file" class="form-control" multiple>
+                			</div>
+                		</div>
+						
+						<br>
+                		<div class="row">
+                			<div class="col-md-12">
+								<label class="form-label" style="float: left;">
+									Doctors Note
+								</label>
+
+								<textarea id="doctors_note" class="form-control" rows="7"></textarea>
+                			</div>
+                		</div>
+                	</div>
+                </div>
+			`;
+
+			plan['diagnosis_care_plan'] = null;
+			plan['therapeutic_care_plan'] = null;
+			plan['file'] = null;
+			plan['doctors_note'] = null;
+			plan.length = 1;
+
+			$('#plan').append(string);
 			removeLoader();
 		}
 
