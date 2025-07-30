@@ -5,6 +5,7 @@
     <div class="container-fluid">
 
         <div class="row">
+
         	{{-- PACKAGES --}}
             <section class="col-lg-4 connectedSortable soap-categories">
                 <div class="card">
@@ -196,16 +197,15 @@
                     	</div>
                     </div>
                 </div>
-
             </section>
 
             {{-- QUESTIONS --}}
-            <section class="col-lg-8 connectedSortable">
+            <section class="col-lg-8 connectedSortable" id="medicalHistory">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title" style="margin-top: 10px;">
                             <i class="fas fa-table mr-1"></i>
-                            Exam
+                            Medical History
                         </h3>
                         
                         <h3 class="float-right" style="margin-bottom: 0px;">
@@ -220,6 +220,79 @@
                     </div>
                 </div>
             </section>
+
+            {{-- RVU --}}
+            <section class="col-lg-8 connectedSortable" id="rvu">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" style="margin-top: 10px;">
+                            <i class="fas fa-table mr-1"></i>
+                            RVU
+                        </h3>
+                        
+                        <h3 class="float-right" style="margin-bottom: 0px;">
+                            <a class="btn btn-success btn-sm" data-toggle="tooltip" title="Add RVU" onclick="addRVU()">
+                                <i class="fas fa-plus fa-xs"></i>
+                            </a>
+                        </h3>
+                    </div>
+
+                    <div class="card-body table-responsive">
+                    	<table class="table table-hover">
+                    		<tbody></tbody>
+                    	</table>
+                    </div>
+                </div>
+            </section>
+
+            {{-- ICD --}}
+            <section class="col-lg-8 connectedSortable" id="icd">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" style="margin-top: 10px;">
+                            <i class="fas fa-table mr-1"></i>
+                            ICD
+                        </h3>
+                        
+                        <h3 class="float-right" style="margin-bottom: 0px;">
+                            <a class="btn btn-success btn-sm" data-toggle="tooltip" title="Add ICD" onclick="addICD()">
+                                <i class="fas fa-plus fa-xs"></i>
+                            </a>
+                        </h3>
+                    </div>
+
+                    <div class="card-body table-responsive">
+                    	<table class="table table-hover">
+                    		<tbody></tbody>
+                    	</table>
+                    </div>
+                </div>
+            </section>
+
+            {{-- DIAGNOSIS --}}
+            <section class="col-lg-8 connectedSortable" id="diagnosis">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" style="margin-top: 10px;">
+                            <i class="fas fa-table mr-1"></i>
+                            Diagnosis
+                        </h3>
+                        
+                        <h3 class="float-right" style="margin-bottom: 0px;">
+                            <a class="btn btn-success btn-sm" data-toggle="tooltip" title="Add Diagnosis" onclick="addDiagnosis()">
+                                <i class="fas fa-plus fa-xs"></i>
+                            </a>
+                        </h3>
+                    </div>
+
+                    <div class="card-body table-responsive">
+                    	<table class="table table-hover">
+                    		<tbody></tbody>
+                    	</table>
+                    </div>
+                </div>
+            </section>
+
         </div>
     </div>
 
@@ -269,6 +342,10 @@
 		.table-responsive{
 			padding-top: 8px;
 			padding-bottom: 2px;
+		}
+
+		.col-lg-8.connectedSortable table{
+			border-bottom: 1px solid #dee2e6;
 		}
 	</style>
 @endpush
@@ -601,29 +678,108 @@
 			});
 		}
 
+		function hideTemplates(){
+			$('.col-lg-8.connectedSortable').slideUp();
+		}
+
 		function showRVU(){
+			hideTemplates();
+
 			$.ajax({
 				url: "{{ route('template.getRVU') }}",
 				success: result => {
-					console.log(result);
+					result = JSON.parse(result);
+
+					let string = "";
+
+					if(result.length){
+						result.forEach(temp => {
+							string += `
+								<tr>
+									<td>${temp.code}</td>
+									<td>${temp.block}</td>
+									<td>${temp.description}</td>
+								</tr>
+							`;
+						});
+					}
+					else{
+						string = `
+							<tr>
+								<td>No Entries</td>
+							</tr>
+						`;
+					}
+
+					$('#rvu .card-body tbody').html(string);
+					$('#rvu').slideDown();
 				}
 			})
 		}
 
 		function showICD(){
+			hideTemplates();
+
 			$.ajax({
 				url: "{{ route('template.getICD') }}",
 				success: result => {
-					console.log(result);
+					result = JSON.parse(result);
+
+					let string = "";
+
+					if(result.length){
+						result.forEach(temp => {
+							string += `
+								<tr>
+									<td>${temp.name}</td>
+									<td>${temp.code}</td>
+								</tr>
+							`;
+						});
+					}
+					else{
+						string = `
+							<tr>
+								<td>No Entries</td>
+							</tr>
+						`;
+					}
+
+					$('#icd .card-body tbody').html(string);
+					$('#icd').slideDown();
 				}
 			})
 		}
 
 		function showDiagnosis(){
+			hideTemplates();
+
 			$.ajax({
 				url: "{{ route('template.getDiagnosis') }}",
 				success: result => {
-					console.log(result);
+					result = JSON.parse(result);
+
+					let string = "";
+
+					if(result.length){
+						result.forEach(temp => {
+							string += `
+								<tr>
+									<td>${temp.name}</td>
+								</tr>
+							`;
+						});
+					}
+					else{
+						string = `
+							<tr>
+								<td>No Entries</td>
+							</tr>
+						`;
+					}
+
+					$('#diagnosis .card-body tbody').html(string);
+					$('#diagnosis').slideDown();
 				}
 			})
 		}
