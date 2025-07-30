@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedInteger("clinic_id")->nullable();
-            $table->string('name');
             $table->string('code');
+            $table->string('block');
+            $table->string('description');
 
             $table->timestamps();
             $table->softDeletes();
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('i_c_d_s');
+        Schema::dropIfExists('tm_icd');
     }
 };

@@ -12,7 +12,7 @@ class ICD extends Model
     protected $table = 'tm_icd';
 
     protected $fillable = [
-        'name', 'code', 'clinic_id'
+        'clinic_id', 'code', 'block', 'description'
     ];
     
     protected $casts = [

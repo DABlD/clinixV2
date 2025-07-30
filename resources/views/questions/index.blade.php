@@ -365,6 +365,7 @@
 
 		// QUESTION FUNCTIONS
 		function viewPackage(fPackageName){
+			hideTemplates();
 			fPackageName = name;
 			$('#addCategory').show();
 
@@ -453,7 +454,7 @@
 						`;
 					}
 
-					$('#questions').slideUp(500);
+					$('#medicalHistory').slideUp(500);
 					
 					setTimeout(() => {
 						$('#questions').html(
@@ -466,7 +467,7 @@
 						);
 
 						$('.tCode').hide();
-						$('#questions').slideDown();
+						$('#medicalHistory').slideDown();
 
 						$('.qtd').tableDnD({
 							onDrop: e => {
@@ -731,8 +732,9 @@
 						result.forEach(temp => {
 							string += `
 								<tr>
-									<td>${temp.name}</td>
 									<td>${temp.code}</td>
+									<td>${temp.block}</td>
+									<td>${temp.description}</td>
 								</tr>
 							`;
 						});
@@ -795,10 +797,96 @@
 					    <div class="col-md-4 iLabel">
 					        Description
 					    </div>
-					    <div class="col-md-9 iInput">
-					        <textarea name="description" rows="3" placeholder="Enter description"></textarea>
+					    <div class="col-md-8 iInput">
+					        <textarea name="description" rows="4" placeholder="Enter description" class="form-control"></textarea>
 					    </div>
 					</div>
+				`,
+				showCancelButton: true,
+				cancelButtonColor: errorColor,
+				preConfirm: () => {
+				    swal.showLoading();
+				    return new Promise(resolve => {
+				    	let bool = true;
+
+			            if($('.swal2-container input:placeholder-shown, .swal2-container textarea:placeholder-shown').length){
+			                Swal.showValidationMessage('Fill all fields');
+			            }
+
+			            bool ? setTimeout(() => {resolve()}, 500) : "";
+				    });
+				},
+			}).then(result => {
+				if(result.value){
+					$.ajax({
+						url: "{{ route('template.storeRVU') }}",
+						data: {
+							code: $('[name="code"]').val(),
+							block: $('[name="block"]').val(),
+							description: $('[name="description"]').val(),
+						},
+						success: result => {
+							console.log(result, "Successfully added RVU");
+							showRVU();
+						}
+					})
+				}
+			});
+		}
+
+		function addICD(){
+			Swal.fire({
+				title: 'Enter ICD Details',
+				html: `
+					${input('code', 'Code', null, 4, 8)}
+					${input('block', 'Block', null, 4, 8)}
+					
+					<div class="row iRow">
+					    <div class="col-md-4 iLabel">
+					        Description
+					    </div>
+					    <div class="col-md-8 iInput">
+					        <textarea name="description" rows="4" placeholder="Enter description" class="form-control"></textarea>
+					    </div>
+					</div>
+				`,
+				showCancelButton: true,
+				cancelButtonColor: errorColor,
+				preConfirm: () => {
+				    swal.showLoading();
+				    return new Promise(resolve => {
+				    	let bool = true;
+
+			            if($('.swal2-container input:placeholder-shown, .swal2-container textarea:placeholder-shown').length){
+			                Swal.showValidationMessage('Fill all fields');
+			            }
+
+			            bool ? setTimeout(() => {resolve()}, 500) : "";
+				    });
+				},
+			}).then(result => {
+				if(result.value){
+					$.ajax({
+						url: "{{ route('template.storeICD') }}",
+						data: {
+							code: $('[name="code"]').val(),
+							block: $('[name="block"]').val(),
+							description: $('[name="description"]').val(),
+						},
+						success: result => {
+							console.log(result, "Successfully added ICD");
+							showICD();
+						}
+					})
+				}
+			});
+		}
+
+		function addDiagnosis(){
+			Swal.fire({
+				title: 'Enter Diagnosis Details',
+				html: `
+					${input('name', 'Name', null, 4, 8)}
 				`,
 				showCancelButton: true,
 				cancelButtonColor: errorColor,
@@ -816,10 +904,16 @@
 				},
 			}).then(result => {
 				if(result.value){
-					addQuestion({
-						name: $('[name="name"]').val(),
-						type: 'Category',
-					});
+					$.ajax({
+						url: "{{ route('template.storeDiagnosis') }}",
+						data: {
+							name: $('[name="name"]').val(),
+						},
+						success: result => {
+							console.log(result, "Successfully added Diagnosis");
+							showDiagnosis();
+						}
+					})
 				}
 			});
 		}

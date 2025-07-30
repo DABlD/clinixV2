@@ -38,7 +38,7 @@ class TemplateManagerController extends Controller
         echo json_encode(RVU::where('clinic_id', auth()->user()->clinic_id)->get());
     }
 
-    public function storeRVU(){
+    public function storeRVU(Request $req){
         $temp = new RVU();
         $temp->clinic_id = auth()->user()->clinic_id;
         $temp->code = $req->code;
@@ -67,11 +67,12 @@ class TemplateManagerController extends Controller
         echo json_encode(ICD::where('clinic_id', auth()->user()->clinic_id)->get());
     }
 
-    public function storeICD(){
+    public function storeICD(Request $req){
         $temp = new ICD();
         $temp->clinic_id = auth()->user()->clinic_id;
-        $temp->name = $req->name;
         $temp->code = $req->code;
+        $temp->block = $req->block;
+        $temp->description = $req->description;
         $temp->save();
 
         Helper::log(auth()->user()->id, "added a new ICD", $temp->id);
@@ -81,8 +82,9 @@ class TemplateManagerController extends Controller
 
     public function updateICD(Request $req){
         $temp = new ICD();
-        $temp->name = $req->name;
         $temp->code = $req->code;
+        $temp->block = $req->block;
+        $temp->description = $req->description;
         $temp->save();
 
         Helper::log(auth()->user()->id, "updated an ICD", $temp->id);
