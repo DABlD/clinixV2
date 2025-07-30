@@ -203,6 +203,25 @@ Route::group([
             }
         );
 
+        // TEMPLATE MANAGER
+        $cname="template";
+        Route::group([
+                'as' => "$cname.",
+                'prefix' => "$cname/"
+            ], function () use($cname){
+
+                Route::get("getDiagnosis", ucfirst($cname) . "ManagerController@getDiagnosis")->name('getDiagnosis');
+                Route::get("storeDiagnosis", ucfirst($cname) . "ManagerController@storeDiagnosis")->name('storeDiagnosis');
+                Route::get("updateDiagnosis", ucfirst($cname) . "ManagerController@updateDiagnosis")->name('updateDiagnosis');
+                Route::get("getRVU", ucfirst($cname) . "ManagerController@getRVU")->name('getRVU');
+                Route::get("storeRVU", ucfirst($cname) . "ManagerController@storeRVU")->name('storeRVU');
+                Route::get("updateRVU", ucfirst($cname) . "ManagerController@updateRVU")->name('updateRVU');
+                Route::get("getICD", ucfirst($cname) . "ManagerController@getICD")->name('getICD');
+                Route::get("storeICD", ucfirst($cname) . "ManagerController@storeICD")->name('storeICD');
+                Route::get("updateICD", ucfirst($cname) . "ManagerController@updateICD")->name('updateICD');
+            }
+        );
+
         // DATATABLES
         $cname = "datatable";
         Route::group([

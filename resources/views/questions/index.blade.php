@@ -6,40 +6,194 @@
 
         <div class="row">
         	{{-- PACKAGES --}}
-            <section class="col-lg-4 connectedSortable">
+            <section class="col-lg-4 connectedSortable soap-categories">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">
-                            <i class="fas fa-table mr-1"></i>
-                            Diagnostic Examination
+                            <img src="{{ asset('images/icons/px.png') }}" width="30px">
+                            Px
                         </h3>
-                        
-                        {{-- <h3 class="float-right">
-                            <a class="btn btn-success btn-sm" data-toggle="tooltip" title="Add Laboratory" onclick="createPackage('Laboratory')">
-                                <i class="fas fa-plus fa-2xl"></i>
-                            </a>
-                        </h3> --}}
                     </div>
 
                     <div class="card-body table-responsive">
-                    	<table id="SubjectiveTable" class="table table-hover" style="width: 100%;">
-                    		<thead>
-                    			<tr>
-                    				<th>Name</th>
-                    				<th>Actions</th>
-                    			</tr>
-                    		</thead>
-                    		<tbody>
-                    			<tr>
-                    				<td>Medical Examination Report</td>
-                    				<td>
-                    					<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="viewPackage('Medical Examination Report')">
-                    						<i class="fas fa-search"></i>
-                    					</a>
-                    				</td>
-                    			</tr>
-                    		</tbody>
-                    	</table>
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Medical History
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="viewPackage('Medical Examination Report')">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <img src="{{ asset('images/icons/subjective.png') }}" width="30px">
+                            Subjective
+                        </h3>
+                    </div>
+
+                    <div class="card-body table-responsive">
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			History of Present Illness
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <img src="{{ asset('images/icons/objective.png') }}" width="30px">
+                            Objective
+                        </h3>
+                    </div>
+
+                    <div class="card-body table-responsive">
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Vitals
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Physical Examination
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Drawing Template
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <img src="{{ asset('images/icons/assessment.png') }}" width="30px">
+                            Assessment
+                        </h3>
+                    </div>
+
+                    <div class="card-body table-responsive">
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			RVU
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="showRVU()">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			ICD
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="showICD()">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Diagnosis
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="showDiagnosis()">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <img src="{{ asset('images/icons/plan.png') }}" width="30px">
+                            Plan
+                        </h3>
+                    </div>
+
+                    <div class="card-body table-responsive">
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Frequent Rx
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Laboratory
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Imaging
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Rx Format
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
+                    	<div class="row">
+                    		<div class="col-md-9">
+                    			Services
+                    		</div>
+                    		<div class="col-md-3">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    				<i class="fas fa-search fa-xs"></i>
+                    			</a>
+                    		</div>
+                    	</div>
                     </div>
                 </div>
 
@@ -49,14 +203,14 @@
             <section class="col-lg-8 connectedSortable">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">
+                        <h3 class="card-title" style="margin-top: 10px;">
                             <i class="fas fa-table mr-1"></i>
                             Exam
                         </h3>
                         
-                        <h3 class="float-right">
+                        <h3 class="float-right" style="margin-bottom: 0px;">
                             <a class="btn btn-success btn-sm" data-toggle="tooltip" id="addCategory" title="Add Category" onclick="addCategory()">
-                                <i class="fas fa-plus fa-2xl"></i>
+                                <i class="fas fa-plus fa-xs"></i>
                             </a>
                         </h3>
                     </div>
@@ -98,6 +252,23 @@
 
 		.qtd th:nth-child(3){
 			width: 25%;
+		}
+
+		.soap-categories .row{
+			margin-bottom: 5px;
+		}
+
+		.card-header{
+			background-color: #96c1db;
+		}
+
+		.card-title{
+			margin-top: 0px;
+		}
+
+		.table-responsive{
+			padding-top: 8px;
+			padding-bottom: 2px;
 		}
 	</style>
 @endpush
@@ -428,6 +599,33 @@
 					})
 				}
 			});
+		}
+
+		function showRVU(){
+			$.ajax({
+				url: "{{ route('template.getRVU') }}",
+				success: result => {
+					console.log(result);
+				}
+			})
+		}
+
+		function showICD(){
+			$.ajax({
+				url: "{{ route('template.getICD') }}",
+				success: result => {
+					console.log(result);
+				}
+			})
+		}
+
+		function showDiagnosis(){
+			$.ajax({
+				url: "{{ route('template.getDiagnosis') }}",
+				success: result => {
+					console.log(result);
+				}
+			})
 		}
 	</script>
 @endpush

@@ -11,7 +11,7 @@ class Patient extends Model
 {
     use SoftDeletes, PatientAttribute;
 
-    protected $filalble = [
+    protected $fillable = [
         'user_id',
         'patient_id',
         'civil_status',
