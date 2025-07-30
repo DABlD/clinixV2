@@ -783,5 +783,45 @@
 				}
 			})
 		}
+
+		function addRVU(){
+			Swal.fire({
+				title: 'Enter RVU Details',
+				html: `
+					${input('code', 'Code', null, 4, 8)}
+					${input('block', 'Block', null, 4, 8)}
+					
+					<div class="row iRow">
+					    <div class="col-md-4 iLabel">
+					        Description
+					    </div>
+					    <div class="col-md-9 iInput">
+					        <textarea name="description" rows="3" placeholder="Enter description"></textarea>
+					    </div>
+					</div>
+				`,
+				showCancelButton: true,
+				cancelButtonColor: errorColor,
+				preConfirm: () => {
+				    swal.showLoading();
+				    return new Promise(resolve => {
+				    	let bool = true;
+
+			            if($('.swal2-container input:placeholder-shown').length){
+			                Swal.showValidationMessage('Fill all fields');
+			            }
+
+			            bool ? setTimeout(() => {resolve()}, 500) : "";
+				    });
+				},
+			}).then(result => {
+				if(result.value){
+					addQuestion({
+						name: $('[name="name"]').val(),
+						type: 'Category',
+					});
+				}
+			});
+		}
 	</script>
 @endpush
