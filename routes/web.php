@@ -219,6 +219,11 @@ Route::group([
                 Route::get("getICD", ucfirst($cname) . "ManagerController@getICD")->name('getICD');
                 Route::get("storeICD", ucfirst($cname) . "ManagerController@storeICD")->name('storeICD');
                 Route::get("updateICD", ucfirst($cname) . "ManagerController@updateICD")->name('updateICD');
+
+                Route::get("delete", ucfirst($cname) . "ManagerController@delete")->name('delete');
+                Route::get("deleteRVU", ucfirst($cname) . "ManagerController@deleteRVU")->name('deleteRVU');
+                Route::get("deleteICD", ucfirst($cname) . "ManagerController@deleteICD")->name('deleteICD');
+                Route::get("deleteDiagnosis", ucfirst($cname) . "ManagerController@deleteDiagnosis")->name('deleteDiagnosis');
             }
         );
 

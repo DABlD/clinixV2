@@ -700,6 +700,11 @@
 									<td>${temp.code}</td>
 									<td>${temp.block}</td>
 									<td>${temp.description}</td>
+									<td>
+										<a class="btn btn-danger btn-sm" data-toggle="tooltip" title="Delete" onclick="del(${temp.id}, 'RVU')">
+											<i class="fas fa-trash"></i>
+										</a>
+									</td>
 								</tr>
 							`;
 						});
@@ -735,6 +740,11 @@
 									<td>${temp.code}</td>
 									<td>${temp.block}</td>
 									<td>${temp.description}</td>
+									<td>
+										<a class="btn btn-danger btn-sm" data-toggle="tooltip" title="Delete" onclick="del(${temp.id}, 'ICD')">
+											<i class="fas fa-trash"></i>
+										</a>
+									</td>
 								</tr>
 							`;
 						});
@@ -768,6 +778,11 @@
 							string += `
 								<tr>
 									<td>${temp.name}</td>
+									<td>
+										<a class="btn btn-danger btn-sm" data-toggle="tooltip" title="Delete" onclick="del(${temp.id}, 'Diagnosis')">
+											<i class="fas fa-trash"></i>
+										</a>
+									</td>
 								</tr>
 							`;
 						});
@@ -916,6 +931,19 @@
 					})
 				}
 			});
+		}
+
+		function del(id, type){
+			$.ajax({
+				url: "{{ route('template.delete') }}" + type,
+				data: {
+					id: id
+				},
+				success: result => {
+					console.log(result, "Successfully deleted an " + type);
+					window['show' + type]();
+				}
+			})
 		}
 	</script>
 @endpush

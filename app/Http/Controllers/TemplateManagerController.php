@@ -34,6 +34,11 @@ class TemplateManagerController extends Controller
         echo true;
     }
 
+    public function deleteDiagnosis(Request $req){
+        Diagnosis::where('id', $req->id)->delete();
+        Helper::log(auth()->user()->id, "deletad a Diagnosis", $req->id);
+    }
+
     public function getRVU(){
         echo json_encode(RVU::where('clinic_id', auth()->user()->clinic_id)->get());
     }
@@ -63,6 +68,11 @@ class TemplateManagerController extends Controller
         echo true;
     }
 
+    public function deleteRVU(Request $req){
+        RVU::where('id', $req->id)->delete();
+        Helper::log(auth()->user()->id, "deletad a RVU", $req->id);
+    }
+
     public function getICD(){
         echo json_encode(ICD::where('clinic_id', auth()->user()->clinic_id)->get());
     }
@@ -90,5 +100,10 @@ class TemplateManagerController extends Controller
         Helper::log(auth()->user()->id, "updated an ICD", $temp->id);
 
         echo true;
+    }
+
+    public function deleteICD(Request $req){
+        ICD::where('id', $req->id)->delete();
+        Helper::log(auth()->user()->id, "deletad a ICD", $req->id);
     }
 }
