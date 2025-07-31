@@ -1808,8 +1808,14 @@
     					    <div class="chart tab-pane" id="drawing" style="position: relative;">
 	    	                    <div class="card">
 	    	                        <div class="card-body">
-			                    		<canvas style="border: 1px solid black; cursor: crosshair;" id="canvas"></canvas>
-			                    		<br>
+	    	                        	<div class="row">
+	    	                        		<div class="col-md-2" style="overflow-y: scroll;" id="drawing_templates">
+	    	                        		</div>
+
+	    	                        		<div class="col-md-10">
+			                    				<canvas style="border: 1px solid black; cursor: crosshair;" id="canvas"></canvas>
+	    	                        		</div>
+	    	                        	</div>
 			                    		
 										<div id="controls">
 											<label>Color:
@@ -1866,7 +1872,7 @@
 		    let prevX = 0, prevY = 0;
     		let history = [];
 
-		    canvas.width = 1000
+		    canvas.width = 800;
   			canvas.height = 400;
 
 		    canvas.addEventListener('mousedown', (e) => {
@@ -1937,6 +1943,46 @@
 
             // Reset path when mouse is up
             canvas.addEventListener('mouseup', () => ctx.beginPath());
+
+            {{-- LOAD DRAWINGS --}}
+            $.ajax({
+            	url: "{{ route('template.getDrawing') }}",
+            	success: result => {
+            		result = JSON.parse(result);
+
+            		let string = "";
+
+            		result.forEach(drawing => {
+            			string += `
+            				<div class="row shadow" style="margin-bottom: 10px; cursor: pointer;">
+            					<div class="col-md-12">
+            						<img src="${drawing.image}" width="100%" class="imageToCanvas">
+            					</div>
+            				</div>
+            			`;
+            		});
+
+            		$('#drawing_templates').append(string);
+            		$('.imageToCanvas').on('click', e => {
+            			base_image = new Image();
+            			base_image.onload = function(){
+            				// Compute scale to fit height
+            				const scale = canvas.height / base_image.height;
+            				const newWidth = base_image.width * scale;
+            				const newHeight = canvas.height;
+
+            				// Optional: Center horizontally
+            				const x = (canvas.width - newWidth) / 2;
+            				const y = 0;
+
+            				// Draw scaled image
+            				ctx.drawImage(base_image, x, y, newWidth, newHeight);
+            			}
+            			base_image.src = $(e.target).attr('src');
+            			console.log(base_image.src);
+					});
+            	}
+            });
 
 			objective['bp_systolic'] = null;
 			objective['bp_diastolic'] = null;
