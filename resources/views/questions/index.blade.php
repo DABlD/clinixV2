@@ -981,14 +981,15 @@
 			}).then(result => {
 				if(result.value){
 					$.ajax({
-						url: "{{ route('template.storeDrawing') }}",
-						data: {
-							name: $('[name="name"]').val(),
-							specialization: $('[name="specialization"]').val()
-						},
+						url: "{{ route('template.storeRVU') }}",
+                        data: {
+                            code: $('[name="code"]').val(),
+                            block: $('[name="block"]').val(),
+                            description: $('[name="description"]').val(),
+                        },
 						success: result => {
-							console.log(result, "Successfully added Drawing");
-							showDrawing();
+							console.log(result, "Successfully added RVU");
+							showRVU();
 						}
 					})
 				}

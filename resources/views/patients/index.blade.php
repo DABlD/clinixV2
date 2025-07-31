@@ -38,6 +38,90 @@
                     </div>
                 </div>
             </section>
+
+			<div class="modal fade" id="bs-diagnosis" tabindex="-1">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5>Select a Diagnosis</h5>
+			            </div>
+
+			            <div class="modal-body">
+			            	<table class="table table-hover">
+			            		<thead>
+			            			<tr>
+			            				<th>Name</th>
+			            				<th>Action</th>
+			            			</tr>
+			            		</thead>
+			            		<tbody>
+			            		</tbody>
+			            	</table>
+			            </div>
+
+			            <div class="modal-footer">
+			                <button id="bs-diagnosis-submit" class="btn btn-primary">Confirm</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+
+			<div class="modal fade" id="bs-icd" tabindex="-1">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5>Select an ICD</h5>
+			            </div>
+
+			            <div class="modal-body">
+			            	<table class="table table-hover">
+			            		<thead>
+			            			<tr>
+			            				<th>Code</th>
+			            				<th>ICD</th>
+			            				<th>Action</th>
+			            			</tr>
+			            		</thead>
+			            		<tbody>
+			            		</tbody>
+			            	</table>
+			            </div>
+
+			            <div class="modal-footer">
+			                <button id="bs-icd-submit" class="btn btn-primary">Confirm</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+
+			<div class="modal fade" id="bs-rvu" tabindex="-1">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5>Select an RVU</h5>
+			            </div>
+
+			            <div class="modal-body">
+			            	<table class="table table-hover">
+			            		<thead>
+			            			<tr>
+			            				<th>Code</th>
+			            				<th>RVU</th>
+			            				<th>Action</th>
+			            			</tr>
+			            		</thead>
+			            		<tbody>
+			            		</tbody>
+			            	</table>
+			            </div>
+
+			            <div class="modal-footer">
+			                <button id="bs-rvu-submit" class="btn btn-primary">Confirm</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+
         </div>
     </div>
 
@@ -88,6 +172,13 @@
 			cursor: pointer;
 		}
 
+		.modal.show {
+		  z-index: 1085 !important;
+		}
+
+		.modal-backdrop.show {
+		  z-index: 1084 !important;
+		}
 	</style>
 @endpush
 
@@ -1284,6 +1375,8 @@
 		}
 
 		function soap(uid){
+			var subjective = [], objective = [], assessment = [], plan = [];
+
 			Swal.fire({
     			confirmButtonText: "Save",
 				allowEscapeKey: false,
@@ -2032,9 +2125,9 @@
 								</label>
 
 								<div style="float: right;">
-									<button class="btn btn-primary">Previous Diagnosis</button>
-									<button class="btn btn-primary">Diagnosis</button>
-									<button class="btn btn-primary">ICD</button>
+									<button class="btn btn-primary" id="callPreviousDiagnosis">Previous Diagnosis</button>
+									<button class="btn btn-primary" id="callDiagnosis">Diagnosis</button>
+									<button class="btn btn-primary" id="callICD">ICD</button>
 								</div>
 
 								<br>
@@ -2052,6 +2145,99 @@
 
 			$('#assessment').append(string);
 			removeLoader();
+
+			$('#callDiagnosis').on('click', e => {
+				modalOne = new bootstrap.Modal(document.getElementById('bs-diagnosis'), {
+					backdrop: 'static',
+					keyboard: false
+				});
+				modalOne.show();
+
+				$.ajax({
+					url: "{{ route('template.getDiagnosis') }}",
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = "";
+						if(result.length){
+							result.forEach(temp => {
+								string += `
+									<tr>
+										<td>${temp.name}</td>
+										<td>
+											<input type="checkbox" value="${temp.name}">
+										</td>
+									</tr>
+								`;
+							});
+						}
+						else{
+							string += `
+								<tr>
+									<td colspan="2">No entry. Check in Template Manager</td>
+								</tr>
+							`;
+						}
+
+						$('#bs-diagnosis table tbody').html(string);
+					}
+				})
+
+				document.getElementById('bs-diagnosis-submit').onclick = function () {
+					$('#bs-diagnosis [type="checkbox"]:checked').each((i, cbox) => {
+						$('#diagnosis').val($('#diagnosis').val() + ($('#diagnosis').val() ? ", " : "") + cbox.value);
+					});
+
+					modalOne.hide();
+				};
+			});
+
+			$('#callICD').on('click', e => {
+				modalTwo = new bootstrap.Modal(document.getElementById('bs-icd'), {
+					backdrop: 'static',
+					keyboard: false
+				});
+				modalTwo.show();
+
+				$.ajax({
+					url: "{{ route('template.getICD') }}",
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = "";
+						if(result.length){
+							result.forEach(temp => {
+								string += `
+									<tr>
+										<td>${temp.code}</td>
+										<td>${temp.description}</td>
+										<td>
+											<input type="checkbox" value="${temp.code + " " + temp.description}">
+										</td>
+									</tr>
+								`;
+							});
+						}
+						else{
+							string += `
+								<tr>
+									<td colspan="2">No entry. Check in Template Manager</td>
+								</tr>
+							`;
+						}
+
+						$('#bs-icd table tbody').html(string);
+					}
+				})
+
+				document.getElementById('bs-icd-submit').onclick = function () {
+					$('#bs-icd [type="checkbox"]:checked').each((i, cbox) => {
+						$('#diagnosis').val($('#diagnosis').val() + ($('#diagnosis').val() ? "\n" : "") + cbox.value);
+					});
+
+					modalTwo.hide();
+				};
+			});
 		}
 
 		function getPlan(uid){
@@ -2093,11 +2279,11 @@
 								</label>
 
 								<div style="float: right;">
-									<button class="btn btn-primary">Previous Medication</button>
-									<button class="btn btn-primary">Prescription</button>
-									<button class="btn btn-primary">Certificate</button>
-									<button class="btn btn-primary">RVU</button>
-									<button class="btn btn-primary">Pedia Vaccine</button>
+									<button class="btn btn-primary" id="callPreviousMedication">Previous Medication</button>
+									<button class="btn btn-primary" id="callPrescription">Prescription</button>
+									<button class="btn btn-primary" id="callCertificate">Certificate</button>
+									<button class="btn btn-primary" id="callRVU">RVU</button>
+									<button class="btn btn-primary" id="callPediaVaccine">Pedia Vaccine</button>
 								</div>
 
 								<br>
@@ -2140,6 +2326,53 @@
 
 			$('#plan').append(string);
 			removeLoader();
+
+			$('#callRVU').on('click', e => {
+				modalThree = new bootstrap.Modal(document.getElementById('bs-rvu'), {
+					backdrop: 'static',
+					keyboard: false
+				});
+				modalThree.show();
+
+				$.ajax({
+					url: "{{ route('template.getRVU') }}",
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = "";
+						if(result.length){
+							result.forEach(temp => {
+								string += `
+									<tr>
+										<td>${temp.code}</td>
+										<td>${temp.description}</td>
+										<td>
+											<input type="checkbox" value="${temp.code + " " + temp.description}">
+										</td>
+									</tr>
+								`;
+							});
+						}
+						else{
+							string += `
+								<tr>
+									<td colspan="2">No entry. Check in Template Manager</td>
+								</tr>
+							`;
+						}
+
+						$('#bs-rvu table tbody').html(string);
+					}
+				})
+
+				document.getElementById('bs-rvu-submit').onclick = function () {
+					$('#bs-rvu [type="checkbox"]:checked').each((i, cbox) => {
+						$('#therapeutic_care_plan').val($('#therapeutic_care_plan').val() + ($('#therapeutic_care_plan').val() ? "\n" : "") + cbox.value);
+					});
+
+					modalThree.hide();
+				};
+			});
 		}
 
 		function removeLoader(){
