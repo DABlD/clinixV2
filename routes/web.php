@@ -178,6 +178,8 @@ Route::group([
             ], function () use($cname){
                 Route::get("get/", ucfirst($cname) . "Controller@get")->name('get');
                 Route::post("update/", ucfirst($cname) . "Controller@update")->name('update');
+
+                Route::get("getSpecializations/", ucfirst($cname) . "Controller@getSpecializations")->name('getSpecializations');
             }
         );
 
@@ -219,11 +221,15 @@ Route::group([
                 Route::get("getICD", ucfirst($cname) . "ManagerController@getICD")->name('getICD');
                 Route::get("storeICD", ucfirst($cname) . "ManagerController@storeICD")->name('storeICD');
                 Route::get("updateICD", ucfirst($cname) . "ManagerController@updateICD")->name('updateICD');
+                Route::get("getDrawing", ucfirst($cname) . "ManagerController@getDrawing")->name('getDrawing');
+                Route::post("storeDrawing", ucfirst($cname) . "ManagerController@storeDrawing")->name('storeDrawing');
+                Route::get("updateDrawing", ucfirst($cname) . "ManagerController@updateDrawing")->name('updateDrawing');
 
                 Route::get("delete", ucfirst($cname) . "ManagerController@delete")->name('delete');
                 Route::get("deleteRVU", ucfirst($cname) . "ManagerController@deleteRVU")->name('deleteRVU');
                 Route::get("deleteICD", ucfirst($cname) . "ManagerController@deleteICD")->name('deleteICD');
                 Route::get("deleteDiagnosis", ucfirst($cname) . "ManagerController@deleteDiagnosis")->name('deleteDiagnosis');
+                Route::get("deleteDrawing", ucfirst($cname) . "ManagerController@deleteDrawing")->name('deleteDrawing');
             }
         );
 

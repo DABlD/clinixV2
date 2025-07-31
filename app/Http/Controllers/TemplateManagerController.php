@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{RVU, ICD, Diagnosis};
+use App\Models\{Drawing};
+use Image;
 
 use App\Helpers\Helper;
 
@@ -105,5 +107,54 @@ class TemplateManagerController extends Controller
     public function deleteICD(Request $req){
         ICD::where('id', $req->id)->delete();
         Helper::log(auth()->user()->id, "deletad a ICD", $req->id);
+    }
+
+    public function getDrawing(){
+        echo json_encode(Drawing::where('clinic_id', auth()->user()->clinic_id)->get());
+    }
+
+    public function storeDrawing(Request $req){
+        $drawing = new Drawing();
+        
+        $clinic = auth()->user()->clinic->name;
+        $path = public_path("uploads\\$clinic\\drawings\\");
+        
+        if (!is_dir($path)) {
+            mkdir($path, 0775, true);
+        }
+
+        $temp = $req->file('image');
+        $image = Image::make($temp);
+
+        $name = $req->name . '-' . time() . "." . $temp->getClientOriginalExtension();
+
+        $image->save($path . $name);
+        $drawing->image = "uploads\\$clinic\\drawings\\" . $name;
+
+        $drawing->clinic_id = auth()->user()->clinic_id;
+        $drawing->name = $req->name;
+        $drawing->specialization = $req->specialization;
+        $drawing->save();
+
+        Helper::log(auth()->user()->id, "added a new Drawing", $drawing->id);
+
+        echo true;
+    }
+
+    public function updateDrawing(Request $req){
+        $temp = new Drawing();
+        $temp->name = $req->name;
+        $temp->specialization = $req->specialization;
+        $temp->image = $req->image;
+        $temp->save();
+
+        Helper::log(auth()->user()->id, "updated an Drawing", $temp->id);
+
+        echo true;
+    }
+
+    public function deleteDrawing(Request $req){
+        Drawing::where('id', $req->id)->delete();
+        Helper::log(auth()->user()->id, "deletad a Drawing", $req->id);
     }
 }

@@ -56,6 +56,10 @@ class DoctorController extends Controller
         echo json_encode($array);
     }
 
+    public function getSpecializations(){
+        echo json_encode(Doctor::distinct('specialization')->pluck('specialization'));
+    }
+
     public function update(Request $req){
         $id = auth()->user()->clinic->id;
 

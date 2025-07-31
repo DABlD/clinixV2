@@ -86,7 +86,7 @@
                     			Drawing Template
                     		</div>
                     		<div class="col-md-3">
-                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="">
+                    			<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" onclick="showDrawing()">
                     				<i class="fas fa-search fa-xs"></i>
                     			</a>
                     		</div>
@@ -217,6 +217,30 @@
 
                     <div class="card-body table-responsive" id="questions">
                     	No Selected Package
+                    </div>
+                </div>
+            </section>
+
+            {{-- DRAWINGS --}}
+            <section class="col-lg-8 connectedSortable" id="drawing">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title" style="margin-top: 10px;">
+                            <i class="fas fa-table mr-1"></i>
+                            Drawing Template
+                        </h3>
+                        
+                        <h3 class="float-right" style="margin-bottom: 0px;">
+                            <a class="btn btn-success btn-sm" data-toggle="tooltip" title="Add Drawing" onclick="addDrawing()">
+                                <i class="fas fa-plus fa-xs"></i>
+                            </a>
+                        </h3>
+                    </div>
+
+                    <div class="card-body table-responsive">
+                    	<table class="table table-hover">
+                    		<tbody></tbody>
+                    	</table>
                     </div>
                 </div>
             </section>
@@ -683,6 +707,50 @@
 			$('.col-lg-8.connectedSortable').slideUp();
 		}
 
+		function showDrawing(){
+			hideTemplates();
+
+			$.ajax({
+				url: "{{ route('template.getDrawing') }}",
+				success: result => {
+					result = JSON.parse(result);
+
+					let string = "";
+
+					if(result.length){
+						result.forEach(temp => {
+							string += `
+								<tr>
+									<td style="vertical-align: middle;">${temp.name}</td>
+									<td style="vertical-align: middle;">${temp.specialization}</td>
+									<td style="vertical-align: middle;">
+										<a target="_blank" href="${temp.image}">
+											<img src="${temp.image}" width="100px" height="100px">
+										</a>
+									</td>
+									<td style="vertical-align: middle;">
+										<a class="btn btn-danger btn-sm" data-toggle="tooltip" title="Delete" onclick="del(${temp.id}, 'Drawing')">
+											<i class="fas fa-trash"></i>
+										</a>
+									</td>
+								</tr>
+							`;
+						});
+					}
+					else{
+						string = `
+							<tr>
+								<td>No Entries</td>
+							</tr>
+						`;
+					}
+
+					$('#drawing .card-body tbody').html(string);
+					$('#drawing').slideDown();
+				}
+			})
+		}
+
 		function showRVU(){
 			hideTemplates();
 
@@ -801,6 +869,85 @@
 			})
 		}
 
+		function addDrawing(){
+			Swal.fire({
+				title: 'Enter RVU Details',
+				html: `
+					${input('name', 'Name', null, 4, 8)}
+					
+					<div class="row iRow">
+					    <div class="col-md-4 iLabel">
+					        Specialization
+					    </div>
+					    <div class="col-md-8 iInput">
+					        <select name="specialization" class="form-control">
+					        	<option value="">Select Specialization</option>
+					        </select>
+					    </div>
+					</div>
+					
+					${input('image', 'Image', null, 4, 8, 'file')}
+				`,
+				showCancelButton: true,
+				cancelButtonColor: errorColor,
+				didOpen: () => {
+					$.ajax({
+						url: "{{ route('doctor.getSpecializations') }}",
+						success: result => {
+							result = JSON.parse(result);
+
+							string = "";
+
+							result.forEach(specialization => {
+								if(specialization != null){
+								    string += `
+								        <option value="${specialization}">
+								            ${specialization}
+								        </option>
+								    `;
+								}
+							});
+
+							$('[name="specialization"]').append(string);
+							$('[name="specialization"]').select2({tags: true});
+						}
+					})
+				},
+				preConfirm: () => {
+				    swal.showLoading();
+				    return new Promise(resolve => {
+				    	let bool = true;
+
+			            if($('.swal2-container input:placeholder-shown').length || $('.swal2-container [name="image"]').val() == ""){
+			                Swal.showValidationMessage('Fill all fields');
+			            }
+
+			            bool ? setTimeout(() => {resolve()}, 500) : "";
+				    });
+				},
+			}).then(result => {
+				if(result.value){
+					let formData = new FormData();
+					formData.append('name', $('[name="name"]').val());
+					formData.append('specialization', $('[name="specialization"]').val());
+					formData.append('image', $('[name="image"]').prop('files')[0]);
+					formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+					storeDrawing(formData);
+				}
+			});
+		}
+
+		async function storeDrawing(formData){
+		    await fetch('{{ route('template.storeDrawing') }}', {
+		        method: "POST", 
+		        body: formData,
+		    }).then(result => {
+				console.log(result, "Successfully added RVU");
+				showDrawing();
+		    });
+		}
+
 		function addRVU(){
 			Swal.fire({
 				title: 'Enter RVU Details',
@@ -834,15 +981,14 @@
 			}).then(result => {
 				if(result.value){
 					$.ajax({
-						url: "{{ route('template.storeRVU') }}",
+						url: "{{ route('template.storeDrawing') }}",
 						data: {
-							code: $('[name="code"]').val(),
-							block: $('[name="block"]').val(),
-							description: $('[name="description"]').val(),
+							name: $('[name="name"]').val(),
+							specialization: $('[name="specialization"]').val()
 						},
 						success: result => {
-							console.log(result, "Successfully added RVU");
-							showRVU();
+							console.log(result, "Successfully added Drawing");
+							showDrawing();
 						}
 					})
 				}
