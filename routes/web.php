@@ -32,6 +32,17 @@ Route::get('resetPassword', 'UserController@resetPassword')->name('resetPassword
 
 Route::post("clinic/store", "ClinicController@store")->name('clinic.store');
 
+// API
+Route::group([
+        'prefix' => "api/"
+    ], function (){
+        // AUTH
+        Route::post('/tokens/create', 'ApiController@getToken');
+        Route::middleware('auth:sanctum')->post('/tokens/revoke', 'ApiController@revokeToken');
+        Route::middleware('auth:sanctum')->post('patient/store', 'ApiController@patientStore');
+    }
+);
+
 Route::group([
         'middleware' => 'auth',
     ], function() {

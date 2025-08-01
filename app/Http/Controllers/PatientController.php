@@ -74,8 +74,7 @@ class PatientController extends Controller
         $user->email = $req->email;
         $user->address = $req->address;
 
-        $ctr = Patient::where('created_at', 'like', now()->format('Y-m-d') . '%')->count();
-        $pid = "P" . now()->format('ymd') . str_pad($ctr+1, 5, '0', STR_PAD_LEFT);
+        $pid = $req->patient_id;
 
         if(isset($req->imageData) && $req->imageData != "null" && $req->imageData != null){
             $cname = auth()->user()->clinic->name;
