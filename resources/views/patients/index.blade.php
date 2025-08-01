@@ -1422,52 +1422,52 @@
 		    	                        </div>
 
 		    	                        <div class="card-body">
-				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
+				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;" style="text-align: center;">
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link active" href="#history" data-toggle="tab" data-href="history">
-				                    		            History
+				                    		            <img src="{{ asset('images/icons/med_history.png') }}" width="50px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#clinic_history" data-toggle="tab" data-href="clinic_history">
-				                    		            Clinic History
+				                    		            <img src="{{ asset('images/icons/clinic_history.png') }}" width="50px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#vital_signs" data-toggle="tab" data-href="vital_signs">
-				                    		            Vital Signs
+				                    		            <img src="{{ asset('images/icons/vital_sign.png') }}" width="50px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#prescriptions" data-toggle="tab" data-href="prescriptions">
-				                    		            Prescriptions
+				                    		            <img src="{{ asset('images/icons/prescription.png') }}" width="50px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#laboratory" data-toggle="tab" data-href="laboratory">
-				                    		            Laboratory
+				                    		            <img src="{{ asset('images/icons/lab_request.png') }}" width="50px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#imaging" data-toggle="tab" data-href="imaging">
-				                    		            Imaging
+				                    		            <img src="{{ asset('images/icons/imaging.png') }}" width="50px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#files" data-toggle="tab" data-href="files">
-				                    		            Files
+				                    		            <img src="{{ asset('images/icons/files.png') }}" width="50px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#vaccine" data-toggle="tab" data-href="vaccine">
-				                    		            Vaccine
+				                    		            <img src="{{ asset('images/icons/vaccine.png') }}" width="50px">
 				                    		        </a>
 				                    		    </li>
 				                    		</ul>
