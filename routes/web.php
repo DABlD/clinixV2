@@ -167,7 +167,7 @@ Route::group([
                     ->defaults("sidebar", 1)
                     ->defaults("icon", "fas fa-list-check")
                     ->defaults("name", "Template Manager")
-                    ->defaults("roles", array("Super Admin", "Admin"))
+                    ->defaults("roles", array("Admin"))
                     // ->defaults("group", "Settings")
                     ->name($cname)
                     ->defaults("href", "/$cname");
