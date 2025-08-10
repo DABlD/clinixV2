@@ -191,6 +191,7 @@
 
 	<script>
 		var subjective = [], objective = [], assessment = [], plan = [];
+		var stream = null;
 
 		$(document).ready(()=> {
 			var table = $('#table').DataTable({
@@ -540,7 +541,7 @@
 					const video = document.getElementById('webcam');
 					const canvas = document.getElementById('snapshot');
 					const ctx = canvas.getContext('2d');
-					let stream = null;
+					stream = null;
 
 					async function initWebcam() {
 					try {
@@ -595,6 +596,7 @@
 				    });
 				},
 			}).then(result => {
+				stream.getTracks()[0].stop();;
 				if(result.value){
 					swal.showLoading();
 					uploadPatient({
@@ -1271,7 +1273,7 @@
 					const video = document.getElementById('webcam');
 					const canvas = document.getElementById('snapshot');
 					const ctx = canvas.getContext('2d');
-					let stream = null;
+					stream = null;
 
 					async function initWebcam() {
 					try {
@@ -1326,6 +1328,7 @@
 				    });
 				},
 			}).then(result => {
+				stream.getTracks()[0].stop();;
 				if(result.value){
 					swal.showLoading();
 					let userData = {
