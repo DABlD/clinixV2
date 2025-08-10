@@ -1635,6 +1635,62 @@
 			}).then(result => {
 				if(result.value){
 					swal.showLoading();
+
+					let formData = new FormData();
+
+					let soapS = {
+						's_type_of_visit': $('#type_of_visit').val(),
+						's_chief_complaint': $('#chief_complaint').val(),
+						's_history_of_present_illness': $('#history_of_present_illness').val(),
+					};
+
+					let soapO = {
+						'o_systolic': $('#bp_systolic').val(),
+						'o_diastolic': $('#bp_diastolic').val(),
+						'o_pulse': $('#pulse_rate').val(),
+						'o_pulse_type': $('#pulse_type').val(),
+						'o_temperature': $('#temperature').val(),
+						'o_temperature_unit': $('#temp_unit').val(),
+						'o_temperature_location': $('#temp_location').val(),
+						'o_respiration_rate': $('#respiration_rate').val(),
+						'o_respiration_type': $('#respiration_type').val(),
+						'o_weight': $('#weight').val(),
+						'o_weight_unit': $('#weight_unit').val(),
+						'o_height': $('#height').val(),
+						'o_height_unit': $('#height_unit').val(),
+						'o_o2_sat': $('#o2_sat').val(),
+						'o_drawing': (history.length ? canvas.toDataURL("image/png") : null),
+						'o_physical_examination': $('#physical_examination').val(),
+					};
+
+					let soapA = {
+						'diagnosis': $('#diagnosis').val(),
+					};
+
+					let soapP = {
+						'p_diagnosis_care_plan': $('#diagnosis_care_plan').val(),
+						'p_therapeutic_care_plan': $('#therapeutic_care_plan').val(),
+						'p_doctors_note': $('#doctors_note').val(),
+					};
+
+					formData.append('uid', uid);
+					formData.append('soapS', soapS);
+					formData.append('soapO', soapO);
+					formData.append('soapA', soapA);
+					formData.append('soapP', soapP);
+
+					let fileInput = document.getElementById("files");
+				    if (fileInput.files.length > 0) {
+				        formData.append("files", fileInput.files[0]);
+				    }
+
+				    fetch("{{ route('soap.store') }}", {
+			            method: "POST",
+			            body: formData
+			        }).then(result => {
+			        	console.log(result);
+			        	soap(uid);
+			        })
 				}
 			});
 		}
@@ -2303,7 +2359,7 @@
 									File Upload
 								</label>
 
-								<input type="file" class="form-control" multiple>
+								<input type="file" id="files" class="form-control" multiple>
                 			</div>
                 		</div>
 						

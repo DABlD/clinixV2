@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedInteger("clinic_id")->nullable();
+            $table->unsignedInteger("user_id")->nullable();
             $table->unsignedInteger("patient_id")->nullable();
 
             $table->string('s_type_of_visit')->nullable();

@@ -13,6 +13,7 @@ class SOAP extends Model
 
     protected $fillable = [
         'clinic_id',
+        'user_id',
         'patient_id',
         's_type_of_visit',
         's_chief_complaint',
