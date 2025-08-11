@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{User};
+use App\Models\{User, SOAP};
 use DB;
 use Image;
 
@@ -59,101 +59,84 @@ class SOAPController extends Controller
     public function store(Request $req){
         $soap = new SOAP();
 
+        $soapS = json_decode($req->soapS);
+        $soapO = json_decode($req->soapO);
+        $soapA = json_decode($req->soapA);
+        $soapP = json_decode($req->soapP);
+
         $user = User::find($req->uid);
         $pid = $user->patient->patient_id;
 
         $soap->clinic_id = $user->clinic_id;
         $soap->user_id = $user->id;
-        $soap->patient_id = $pid;
+        $soap->patient_id = $user->patient->id;
 
         //Soap
-        $soap->s_type_of_visit = $req->soapS->s_type_of_visit;
-        $soap->s_chief_complaint = $req->soapS->s_chief_complaint;
-        $soap->s_history_of_present_illness = $req->soapS->s_history_of_present_illness;
+        $soap->s_type_of_visit = $soapS->s_type_of_visit;
+        $soap->s_chief_complaint = $soapS->s_chief_complaint;
+        $soap->s_history_of_present_illness = $soapS->s_history_of_present_illness;
 
         // sOap
-        $soap->o_systolic = $req->soapO->o_systolic;
-        $soap->o_diastolic = $req->soapO->o_diastolic;
-        $soap->o_pulse = $req->soapO->o_pulse;
-        $soap->o_pulse_type = $req->soapO->o_pulse_type;
-        $soap->o_temperature = $req->soapO->o_temperature;
-        $soap->o_temperature_unit = $req->soapO->o_temperature_unit;
-        $soap->o_temperature_location = $req->soapO->o_temperature_location;
-        $soap->o_respiration_rate = $req->soapO->o_respiration_rate;
-        $soap->o_respiration_type = $req->soapO->o_respiration_type;
-        $soap->o_weight = $req->soapO->o_weight;
-        $soap->o_weight_unit = $req->soapO->o_weight_unit;
-        $soap->o_height = $req->soapO->o_height;
-        $soap->o_height_unit = $req->soapO->o_height_unit;
-        $soap->o_o2_sat = $req->soapO->o_o2_sat;
-        // $soap->o_drawing = $req->soapO->o_drawing;
-        $soap->o_physical_examination = $req->soapO->o_physical_examination;
+        $soap->o_systolic = $soapO->o_systolic;
+        $soap->o_diastolic = $soapO->o_diastolic;
+        $soap->o_pulse = $soapO->o_pulse;
+        $soap->o_pulse_type = $soapO->o_pulse_type;
+        $soap->o_temperature = $soapO->o_temperature;
+        $soap->o_temperature_unit = $soapO->o_temperature_unit;
+        $soap->o_temperature_location = $soapO->o_temperature_location;
+        $soap->o_respiration_rate = $soapO->o_respiration_rate;
+        $soap->o_respiration_type = $soapO->o_respiration_type;
+        $soap->o_weight = $soapO->o_weight;
+        $soap->o_weight_unit = $soapO->o_weight_unit;
+        $soap->o_height = $soapO->o_height;
+        $soap->o_height_unit = $soapO->o_height_unit;
+        $soap->o_o2_sat = $soapO->o_o2_sat;
+        // $soap->o_drawing = $soapO->o_drawing;
+        $soap->o_physical_examination = $soapO->o_physical_examination;
 
         // soAp
         // $soap->a_previous_diagnosis = $req->a_previous_diagnosis;
-        $soap->a_diagnosis = $req->soapA->a_diagnosis;
+        $soap->a_diagnosis = $soapA->a_diagnosis;
 
         // soaP
-        // $soap->p_laboratory_requests = $req->soapP->p_laboratory_requests;
-        // $soap->p_imaging_requests = $req->soapP->p_imaging_requests;
-        $soap->p_diagnosis_care_plan = $req->soapP->p_diagnosis_care_plan;
-        // $soap->p_previous_medication = $req->soapP->p_previous_medication;
-        $soap->p_therapeutic_care_plan = $req->soapP->p_therapeutic_care_plan;
-        $soap->p_doctors_note = $req->soapP->p_doctors_note;
+        // $soap->p_laboratory_requests = $soapP->p_laboratory_requests;
+        // $soap->p_imaging_requests = $soapP->p_imaging_requests;
+        $soap->p_diagnosis_care_plan = $soapP->p_diagnosis_care_plan;
+        // $soap->p_previous_medication = $soapP->p_previous_medication;
+        $soap->p_therapeutic_care_plan = $soapP->p_therapeutic_care_plan;
+        $soap->p_doctors_note = $soapP->p_doctors_note;
         // $soap->p_files = $req->files;
 
-        if($req->soapO->o_drawing){
-            $cname = auth()->user()->clinic->name;
-            $folder = $user->lname . ', ' . $user->fname . " ($pid)";
-            $path = public_path("uploads\\$cname\\Patients\\$folder\\");
-            
-            if (!is_dir($path)) {
-                mkdir($path, 0775, true);
-            }
+        $cname = auth()->user()->clinic->name;
+        $folder = $user->lname . ', ' . $user->fname . " ($pid)";
+        $path = public_path("uploads\\$cname\\Patients\\$folder\\");
+        if (!is_dir($path)) {
+            mkdir($path, 0775, true);
+        }
 
-            $extensions = [
-                'image/jpeg' => 'jpg',
-                'image/png' => 'png',
-                'image/gif' => 'gif',
-                'image/webp' => 'webp',
-                'image/bmp' => 'bmp',
-            ];
+        if($soapO->o_drawing){
+            $imageData = str_replace('data:image/png;base64,', '', $soapO->o_drawing);
+            $imageData = str_replace(' ', '+', $imageData);
 
-            $imageData = str_replace('data:image/png;base64,', '', $req->soapO->o_drawing);
-            $imageData = str_replace(' ', '+', $req->soapO->o_drawing);
+            $image = Image::make(base64_decode($imageData))->encode('png');
+            // $image->fill('#ffffff', 0, 0);
+            $image2 = Image::canvas($image->width(), $image->height(), '#ffffff');
+            $image2->insert($image, 'top-left', 0, 0)->encode('png');
 
-            $image = Image::make($base64_decode($imageData));
+            $name = 'SOAP Drawing-' . time() . ".png";
 
-            $name = 'SOAP Drawing-' . time() . "." . $extensions[$image->mime()];
-
-            $image->save($path . $name);
+            $image2->save($path . $name);
             $soap->o_drawing = "uploads\\$cname\\Patients\\$folder\\" . $name;
         }
 
         if($req->hasFile('files')){
-            $cname = $user->clinic->name;
-            $folder = $user->lname . ', ' . $user->fname . " ($pid)";
-            $path = public_path("uploads\\$cname\\Patients\\$folder\\");
-            
-            if (!is_dir($path)) {
-                mkdir($path, 0775, true);
-            }
-
-            $extensions = [
-                'image/jpeg' => 'jpg',
-                'image/png' => 'png',
-                'image/gif' => 'gif',
-                'image/webp' => 'webp',
-                'image/bmp' => 'bmp',
-            ];  
-
             $files = [];
 
             foreach($req->file('files') as $key => $file){
                 $image = Image::make($file);
                 $ctr = $key+1;
 
-                $name = "SOAP File$ctr -" . time() . "." . $extensions[$image->mime()];
+                $name = "SOAP File$ctr -" . time() . "." . $file->getClientOriginalExtension();
 
                 $image->save($path . $name);
                 array_push($files, "uploads\\$cname\\Patients\\$folder\\" . $name);

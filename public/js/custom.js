@@ -120,3 +120,31 @@ setTimeout(() => {
 	$('[name="table_length"]').removeClass();
 	$('#table_filter [type="search"]').removeClass();
 }, 500);
+
+// autofill
+function fillForm(){
+	console.log('test');
+  // Ctrl + Alt + F to trigger autofill
+    document.querySelectorAll('.swal2-container input[type="text"]').forEach(input => {
+      input.value = 'Test ' + Math.floor(Math.random() * 1000);
+    });
+    document.querySelectorAll('.swal2-container input[type="email"]').forEach(input => {
+      input.value = 'test' + Math.floor(Math.random() * 1000) + '@example.com';
+    });
+    document.querySelectorAll('.swal2-container input[type="number"]').forEach(input => {
+      input.value = Math.floor(Math.random() * 100);
+    });
+    document.querySelectorAll('.swal2-container textarea').forEach(area => {
+      area.value = 'Lorem ipsum ' + Math.floor(Math.random() * 1000);
+    });
+    // Select dropdowns
+	document.querySelectorAll('select').forEach(select => {
+		const options = Array.from(select.options).filter(o => o.value !== "");
+		if (options.length > 0) {
+			const randomOption = options[Math.floor(Math.random() * options.length)];
+			select.value = randomOption.value;
+			select.dispatchEvent(new Event('change')); // trigger change event if listeners exist
+		}
+	});
+    console.log('%cForm filled with test data!', 'color: green; font-weight: bold;');
+}

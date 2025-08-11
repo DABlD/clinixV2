@@ -1664,7 +1664,7 @@
 					};
 
 					let soapA = {
-						'diagnosis': $('#diagnosis').val(),
+						'a_diagnosis': $('#diagnosis').val(),
 					};
 
 					let soapP = {
@@ -1674,22 +1674,27 @@
 					};
 
 					formData.append('uid', uid);
-					formData.append('soapS', soapS);
-					formData.append('soapO', soapO);
-					formData.append('soapA', soapA);
-					formData.append('soapP', soapP);
+					formData.append('soapS', JSON.stringify(soapS));
+					formData.append('soapO', JSON.stringify(soapO));
+					formData.append('soapA', JSON.stringify(soapA));
+					formData.append('soapP', JSON.stringify(soapP));
 
-					let fileInput = document.getElementById("files");
-				    if (fileInput.files.length > 0) {
-				        formData.append("files", fileInput.files[0]);
+					let fileInput = document.getElementById("p_files");
+				    for (let i = 0; i < fileInput.files.length; i++) {
+				        formData.append("files[]", fileInput.files[i]);
 				    }
+
+		    		formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
 				    fetch("{{ route('soap.store') }}", {
 			            method: "POST",
 			            body: formData
 			        }).then(result => {
 			        	console.log(result);
-			        	soap(uid);
+			        	ss('Successfully saved');
+			        	setTimeout(() => {
+			        		soap(uid);
+			        	}, 1000);
 			        })
 				}
 			});
@@ -2359,7 +2364,7 @@
 									File Upload
 								</label>
 
-								<input type="file" id="files" class="form-control" multiple>
+								<input type="file" id="p_files" class="form-control" multiple>
                 			</div>
                 		</div>
 						
