@@ -161,7 +161,7 @@ class SoapController extends Controller
 
             $cname = auth()->user()->clinic->name;
             $folder = $user->lname . ', ' . $user->fname . " ($pid)";
-            $path = public_path("uploads\\$cname\\Patients\\$folder\\");
+            $path = public_path("uploads/$cname/Patients/$folder/");
             
             if (!is_dir($path)) {
                 mkdir($path, 0775, true);
@@ -179,7 +179,7 @@ class SoapController extends Controller
             $name = 'Avatar-' . time() . "." . $extensions[$image->mime()];
 
             $image->save($path . $name);
-            $user->avatar = "uploads\\$cname\\Patients\\$folder\\" . $name;
+            $user->avatar = "uploads/$cname/Patients/$folder/" . $name;
             $user->save();
         }
 

@@ -100,7 +100,7 @@ class UserController extends Controller
             $user = User::find($req->id);
 
             $clinic = $user->clinic->name;
-            $path = public_path("uploads\\$clinic\\avatars\\");
+            $path = public_path("uploads/$clinic/avatars/");
             
             if (!is_dir($path)) {
                 mkdir($path, 0775, true);
