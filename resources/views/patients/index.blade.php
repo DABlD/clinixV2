@@ -1551,9 +1551,7 @@
 				        					    	Imaging
 				        					    </div>
 
-				        					    <div class="chart tab-pane" id="files" style="position: relative;">
-				        					    	Files
-				        					    </div>
+				        					    <div class="chart tab-pane" id="files" style="position: relative;"></div>
 
 				        					    <div class="chart tab-pane" id="vaccine" style="position: relative;">
 				        					    	Vaccine
@@ -1647,6 +1645,9 @@
 						}
 						else if(target == "vital_signs"){
 							getVitalSigns(uid);
+						}
+						else if(target == "files"){
+							getFiles(uid);
 						}
 						else if(target == "subjective"){
 							getSubjective(uid);
@@ -1955,6 +1956,72 @@
 					`;
 
 					$('#vital_signs').html(string);
+				}
+			})
+		}
+
+		function getFiles(uid){
+			$.ajax({
+				url: "{{ route('soap.get') }}",
+				data: {
+					select: "*",
+					where: ['user_id', uid]
+				}, 
+				success: result => {
+					result = JSON.parse(result);
+
+					let string = `
+						<table class="table table-bordered rounded">
+						    <thead>
+						        <tr>
+						            <th>File</th>
+						            <th>Date</th>
+						            <th>Actions</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+					`;
+
+					result.forEach(soap => {
+						let fn = soap.o_drawing.split("\\").pop();
+						string += `
+							        <tr>
+							            <td>${fn}</td>
+							            <td>${moment.unix(fn.match(/(\d{10})/)[0]).format("MMM DD, YYYY")}</td>
+							            <td>
+							            	<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" href="${soap.o_drawing}" target="_blank">
+							            		<i class="fas fa-search"></i>
+							            	</a>
+							            </td>
+							        </tr>
+						`;
+
+						let files = JSON.parse(soap.p_files);
+						if(files.length){
+							files.forEach(file => {
+								let fn = file.split("\\").pop();
+								
+								string += `
+									<tr>
+									    <td>${fn}</td>
+									    <td>${moment.unix(fn.match(/(\d{10})/)[0]).format("MMM DD, YYYY")}</td>
+									    <td>
+									    	<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" href="${file}" target="_blank">
+									    		<i class="fas fa-search"></i>
+									    	</a>
+									    </td>
+									</tr>
+								`;
+							});
+						}
+					});
+
+					string += `
+						    </tbody>
+						</table>
+					`;
+
+					$('#files').html(string);
 				}
 			})
 		}
