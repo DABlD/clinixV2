@@ -9,7 +9,7 @@ use Image;
 
 use App\Helpers\Helper;
 
-class SOAPController extends Controller
+class SoapController extends Controller
 {   
     public function __construct(){
         $this->table = "soaps";

@@ -158,7 +158,7 @@ Route::group([
         );
 
         // SOAP ROUTES
-        $cname = "SOAP";
+        $cname = "soap";
         Route::group([
                 'as' => "$cname.",
                 'prefix' => "$cname/"
