@@ -123,7 +123,6 @@ setTimeout(() => {
 
 // autofill
 function fillForm(){
-	console.log('test');
   // Ctrl + Alt + F to trigger autofill
     document.querySelectorAll('.swal2-container input[type="text"]').forEach(input => {
       input.value = 'Test ' + Math.floor(Math.random() * 1000);

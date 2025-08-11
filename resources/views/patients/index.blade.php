@@ -2136,7 +2136,6 @@
             				ctx.drawImage(base_image, x, y, newWidth, newHeight);
             			}
             			base_image.src = $(e.target).attr('src');
-            			console.log(base_image.src);
 					});
             	}
             });
