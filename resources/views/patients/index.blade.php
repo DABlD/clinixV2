@@ -215,6 +215,26 @@
 		.collapsing {
 		  transition: height 0.5s ease-in-out;
 		}
+
+		#vital_signs .card {
+			background-color: #f7fdfc;
+			border: none;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(180, 180, 180, 0.2);
+		}
+		#vital_signs th {
+			background-color: #d5f4e6; /* pastel green */
+			color: #333;
+		}
+		#vital_signs  td {
+			background-color: #fef9e7; /* pastel yellow */
+			color: #555;
+		}
+		#vital_signs .table > :not(caption) > * > * {
+			vertical-align: middle;
+			text-align: center;
+		}
+
 	</style>
 @endpush
 
@@ -1517,10 +1537,7 @@
 				        					<div class="tab-content p-0">
 				        					    <div class="chart tab-pane active" id="history" style="position: relative;"></div>
 												<div class="chart tab-pane" id="clinic_history" style="position: relative;"></div>
-
-				        					    <div class="chart tab-pane" id="vital_signs" style="position: relative;">
-				        					    	Vital Signs
-				        					    </div>
+												<div class="chart tab-pane" id="vital_signs" style="position: relative;"></div>
 
 				        					    <div class="chart tab-pane" id="prescriptions" style="position: relative;">
 				        					    	Prescriptions
@@ -1627,6 +1644,9 @@
 						}
 						else if(target == "clinic_history"){
 							getClinicHistory(uid);
+						}
+						else if(target == "vital_signs"){
+							getVitalSigns(uid);
 						}
 						else if(target == "subjective"){
 							getSubjective(uid);
@@ -1883,6 +1903,58 @@
 					});
 
 					$('#clinic_history').html(string);
+				}
+			})
+		}
+
+		function getVitalSigns(uid){
+			$.ajax({
+				url: "{{ route('soap.get') }}",
+				data: {
+					select: "*",
+					where: ['user_id', uid]
+				}, 
+				success: result => {
+					result = JSON.parse(result);
+
+					let string = `
+						<table class="table table-bordered rounded">
+						    <thead>
+						        <tr>
+						            <th>Date</th>
+						            <th>Blood Pressure</th>
+						            <th>Pulse Rate</th>
+						            <th>Temperature</th>
+						            <th>Respiratory Rate</th>
+						            <th>O2 SAT</th>
+						            <th>Weight</th>
+						            <th>Height</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+					`;
+
+					result.forEach(soap => {
+						string += `
+							        <tr>
+							            <td>${toDate(soap.created_at)}</td>
+							            <td>${soap.o_systolic}/${soap.o_diastolic}</td>
+							            <td>${soap.o_pulse}</td>
+							            <td>${soap.o_temperature}</td>
+							            <td>${soap.o_respiration_rate}</td>
+							            <td>${soap.o_o2_sat}</td>
+							            <td>${soap.o_weight} ${soap.o_weight_unit}</td>
+							            <td>${soap.o_height} ${soap.o_height_unit}</td>
+							        </tr>
+						`;
+					});
+
+					string += `
+						    </tbody>
+						</table>
+					`;
+
+					$('#vital_signs').html(string);
 				}
 			})
 		}
