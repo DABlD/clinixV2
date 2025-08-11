@@ -1428,49 +1428,49 @@
 				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;" style="text-align: center;">
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link active" href="#history" data-toggle="tab" data-href="history">
-				                    		            <img src="{{ asset('images/icons/med_history.png') }}" width="50px">
+				                    		            <img src="{{ asset('images/icons/med_history.png') }}" width="30px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#clinic_history" data-toggle="tab" data-href="clinic_history">
-				                    		            <img src="{{ asset('images/icons/clinic_history.png') }}" width="50px">
+				                    		            <img src="{{ asset('images/icons/clinic_history.png') }}" width="30px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#vital_signs" data-toggle="tab" data-href="vital_signs">
-				                    		            <img src="{{ asset('images/icons/vital_sign.png') }}" width="50px">
+				                    		            <img src="{{ asset('images/icons/vital_sign.png') }}" width="30px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#prescriptions" data-toggle="tab" data-href="prescriptions">
-				                    		            <img src="{{ asset('images/icons/prescription.png') }}" width="50px">
+				                    		            <img src="{{ asset('images/icons/prescription.png') }}" width="30px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#laboratory" data-toggle="tab" data-href="laboratory">
-				                    		            <img src="{{ asset('images/icons/lab_request.png') }}" width="50px">
+				                    		            <img src="{{ asset('images/icons/lab_request.png') }}" width="30px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#imaging" data-toggle="tab" data-href="imaging">
-				                    		            <img src="{{ asset('images/icons/imaging.png') }}" width="50px">
+				                    		            <img src="{{ asset('images/icons/imaging.png') }}" width="30px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#files" data-toggle="tab" data-href="files">
-				                    		            <img src="{{ asset('images/icons/files.png') }}" width="50px">
+				                    		            <img src="{{ asset('images/icons/files.png') }}" width="30px">
 				                    		        </a>
 				                    		    </li>
 				                    		    &nbsp;
 				                    		    <li class="nav-item">
 				                    		        <a class="nav-link" href="#vaccine" data-toggle="tab" data-href="vaccine">
-				                    		            <img src="{{ asset('images/icons/vaccine.png') }}" width="50px">
+				                    		            <img src="{{ asset('images/icons/vaccine.png') }}" width="30px">
 				                    		        </a>
 				                    		    </li>
 				                    		</ul>
