@@ -117,7 +117,7 @@ class TemplateManagerController extends Controller
         $drawing = new Drawing();
         
         $clinic = auth()->user()->clinic->name;
-        $path = public_path("uploads\\$clinic\\drawings\\");
+        $path = public_path("uploads/$clinic/drawings/");
         
         if (!is_dir($path)) {
             mkdir($path, 0775, true);
@@ -129,7 +129,7 @@ class TemplateManagerController extends Controller
         $name = $req->name . '-' . time() . "." . $temp->getClientOriginalExtension();
 
         $image->save($path . $name);
-        $drawing->image = "uploads\\$clinic\\drawings\\" . $name;
+        $drawing->image = "uploads/$clinic/drawings/" . $name;
 
         $drawing->clinic_id = auth()->user()->clinic_id;
         $drawing->name = $req->name;

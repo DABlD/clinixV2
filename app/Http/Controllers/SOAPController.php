@@ -109,7 +109,7 @@ class SoapController extends Controller
 
         $cname = auth()->user()->clinic->name;
         $folder = $user->lname . ', ' . $user->fname . " ($pid)";
-        $path = public_path("uploads\\$cname\\Patients\\$folder\\");
+        $path = public_path("uploads/$cname/Patients/$folder/");
         if (!is_dir($path)) {
             mkdir($path, 0775, true);
         }
@@ -126,7 +126,7 @@ class SoapController extends Controller
             $name = 'SOAP Drawing-' . time() . ".png";
 
             $image2->save($path . $name);
-            $soap->o_drawing = "uploads\\$cname\\Patients\\$folder\\" . $name;
+            $soap->o_drawing = "uploads/$cname/Patients/$folder/" . $name;
         }
 
         if($req->hasFile('files')){
@@ -139,7 +139,7 @@ class SoapController extends Controller
                 $name = "SOAP File$ctr -" . time() . "." . $file->getClientOriginalExtension();
 
                 $image->save($path . $name);
-                array_push($files, "uploads\\$cname\\Patients\\$folder\\" . $name);
+                array_push($files, "uploads/$cname/Patients/$folder/" . $name);
             }
 
             $soap->p_files = json_encode($files);

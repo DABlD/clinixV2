@@ -68,7 +68,7 @@ class DoctorController extends Controller
 
             $cname = $doctor->user->clinic->name;
             $folder = $doctor->user->lname . ', ' . $doctor->user->fname . ' ' . substr($doctor->user->mname, 0, 1);
-            $path = public_path("uploads\\$cname\\Doctors\\$folder\\");
+            $path = public_path("uploads/$cname/Doctors/$folder/");
             
             if (!is_dir($path)) {
                 mkdir($path, 0775, true);
@@ -81,7 +81,7 @@ class DoctorController extends Controller
 
             // $image->resize(250, 250);
             $image->save($path . $name);
-            $doctor->signature = "uploads\\$cname\\Doctors\\$folder\\" . $name;
+            $doctor->signature = "uploads/$cname/Doctors/$folder/" . $name;
             $doctor->save();
         }
         else{

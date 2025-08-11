@@ -38,7 +38,7 @@ class ApiController extends Controller
         if(isset($req->imageData) && $req->imageData != "null" && $req->imageData != null){
             $cname = $clinic->name;
             $folder = $user->lname . ', ' . $user->fname . " ($pid)";
-            $path = public_path("uploads\\$cname\\Patients\\$folder\\");
+            $path = public_path("uploads/$cname/Patients/$folder/");
             
             if (!is_dir($path)) {
                 mkdir($path, 0775, true);
@@ -57,7 +57,7 @@ class ApiController extends Controller
             $name = 'Avatar-' . time() . "." . $extensions[$image->mime()];
 
             $image->save($path . $name);
-            $user->avatar = "uploads\\$cname\\Patients\\$folder\\" . $name;
+            $user->avatar = "uploads/$cname/Patients/$folder/" . $name;
         }
 
         $user->save();

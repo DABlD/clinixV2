@@ -113,7 +113,7 @@ class UserController extends Controller
 
             $image->resize(250, 250);
             $image->save($path . $name);
-            $user->avatar = "uploads\\$clinic\\avatars\\" . $name;
+            $user->avatar = "uploads/$clinic/avatars/" . $name;
             $user->save();
         }
         else{

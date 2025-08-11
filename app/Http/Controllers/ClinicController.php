@@ -102,7 +102,7 @@ class ClinicController extends Controller
             $clinic = Clinic::find($id);
 
             $cname = $clinic->name;
-            $path = public_path("uploads\\$cname\\Logos\\");
+            $path = public_path("uploads/$cname/Logos/");
             
             if (!is_dir($path)) {
                 mkdir($path, 0775, true);
@@ -115,7 +115,7 @@ class ClinicController extends Controller
 
             $image->resize(250, 250);
             $image->save($path . $name);
-            $clinic->logo = "uploads\\$cname\\Logos\\" . $name;
+            $clinic->logo = "uploads/$cname/Logos/" . $name;
             $clinic->save();
         }
         else{
