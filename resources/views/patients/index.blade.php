@@ -1983,7 +1983,7 @@
 					`;
 
 					result.forEach(soap => {
-						let fn = soap.o_drawing.split("\\").pop();
+						let fn = soap.o_drawing.split("/").pop();
 						string += `
 							        <tr>
 							            <td>${fn}</td>
@@ -1999,7 +1999,7 @@
 						let files = JSON.parse(soap.p_files);
 						if(files.length){
 							files.forEach(file => {
-								let fn = file.split("\\").pop();
+								let fn = file.split("/").pop();
 								
 								string += `
 									<tr>
