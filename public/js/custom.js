@@ -4,12 +4,12 @@ let dateFormat = "YYYY-MM-DD";
 let dateFormat2 = "MMM DD, YYYY";
 let dateTimeFormat = "YYYY-MM-DD H:m:s";
 
-function toDate(timetamp){
-	return moment(timetamp).format('MMM DD, YYYY');
+function toDate(timestamp, format = 'MMM DD, YYYY'){
+	return moment(timestamp).format(format);
 }
 
-function toDateTime(timestamp){
-	return moment(timestamp).format('MMM. DD, YYYY h:mm A');	
+function toDateTime(timestamp, format = 'MMM. DD, YYYY h:mm A'){
+	return moment(timestamp).format(format);
 }
 
 function ss(title = "", text = ""){

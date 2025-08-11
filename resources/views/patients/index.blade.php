@@ -135,7 +135,6 @@
 	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.bootstrap4.min.css') }}"> --}}
 	<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 
-
 	<style>
 		.label{
 			font-weight: bold;
@@ -179,6 +178,43 @@
 		.modal-backdrop.show {
 		  z-index: 1084 !important;
 		}
+
+
+		/* Rotate caret when collapsed is open */
+		.collapse-toggle[aria-expanded="true"] .bi {
+		  transform: rotate(90deg);
+		}
+		.collapse-toggle .bi {
+		  transition: transform 0.2s ease;
+		}
+
+		/* Section colors (neutral palette) */
+		.header-row			{ border-left: 4px solid #FAFAFA; background-color: #FAFAFA; }
+		.section-subjective { border-left: 4px solid #E6F4EA; background-color: #E6F4EA; }
+		.section-objective  { border-left: 4px solid #E7F0FA; background-color: #E7F0FA; }
+		.section-assessment { border-left: 4px solid #F2E8F9; background-color: #F2E8F9; }
+		.section-plan       { border-left: 4px solid #FFF2E6; background-color: #FFF2E6; }
+
+		.soapDetails{
+			text-align: left;
+		}
+
+		.soapDetails .card-header{
+			font-weight: 700;
+		}
+
+		.caret-soap[aria-expanded="true"]{
+			transform: rotate(180deg);
+			transition: transform 0.2s ease;
+		}
+
+		.collapse {
+		  transition: height 0.5s ease-in-out;
+		}
+
+		.collapsing {
+		  transition: height 0.5s ease-in-out;
+		}
 	</style>
 @endpush
 
@@ -188,6 +224,7 @@
 	<script src="{{ asset('js/select2.min.js') }}"></script>
 	{{-- <script src="{{ asset('js/datatables.bootstrap4.min.js') }}"></script> --}}
 	{{-- <script src="{{ asset('js/datatables-jquery.min.js') }}"></script> --}}
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 	<script>
 		var subjective = [], objective = [], assessment = [], plan = [];
@@ -1478,13 +1515,8 @@
 				        					<br>
 
 				        					<div class="tab-content p-0">
-				        					    <div class="chart tab-pane active" id="history" style="position: relative;">
-				        					    	
-				        					    </div>
-
-				        					    <div class="chart tab-pane" id="clinic_history" style="position: relative;">
-				        					    	Clinic History
-				        					    </div>
+				        					    <div class="chart tab-pane active" id="history" style="position: relative;"></div>
+												<div class="chart tab-pane" id="clinic_history" style="position: relative;"></div>
 
 				        					    <div class="chart tab-pane" id="vital_signs" style="position: relative;">
 				        					    	Vital Signs
@@ -1592,6 +1624,9 @@
 						
 						if(target == "history"){
 							getHistory(uid);
+						}
+						else if(target == "clinic_history"){
+							getClinicHistory(uid);
 						}
 						else if(target == "subjective"){
 							getSubjective(uid);
@@ -1761,6 +1796,95 @@
 			});
 
 			removeLoader();
+		}
+
+		function getClinicHistory(uid){
+			$.ajax({
+				url: "{{ route('soap.get') }}",
+				data: {
+					select: "*",
+					where: ['user_id', uid]
+				}, 
+				success: result => {
+					result = JSON.parse(result);
+
+					let string = "";
+
+					result.forEach(soap => {
+						string += `
+							<div class="container my-4">
+							    <!-- Header Row -->
+							    <div class="d-flex justify-content-between align-items-center border p-2 rounded header-row">
+							        <div>
+							            <strong>Date:</strong> ${toDate(soap.created_at, 'ddd MMM DD, YYYY hh:MM A')}
+							        </div>
+							        <button class="btn btn-sm btn-info caret-soap" data-bs-toggle="collapse" data-bs-target="#soapDetails${soap.id}" aria-expanded="true">
+							            <i class='fas fa-caret-up'></i>
+							        </button>
+							    </div>
+							    <!-- Collapsible SOAP Section -->
+							    <div class="collapse mt-3 soapDetails" id="soapDetails${soap.id}">
+							        <div class="row g-3">
+							            <!-- Subjective -->
+							            <div class="col-12">
+							                <div class="card border-start border-4 border-success">
+							                    <div class="card-header fw-bold section-subjective">Subjective</div>
+							                    <div class="card-body">
+							                        <p><strong>Type of Visit:</strong> ${soap.s_type_of_visit}</p>
+							                        <p><strong>Chief Complaint:</strong> ${soap.s_chief_complaint}</p>
+							                    </div>
+							                </div>
+							            </div>
+							            <!-- Objective -->
+							            <div class="col-12">
+							                <div class="card border-start border-4 border-primary">
+							                    <div class="card-header fw-bold section-objective">Objective</div>
+							                    <div class="card-body">
+							                    	<div class="row" style="width: 100%;">
+							                    		<div class="col-md-6">
+									                        <p><strong>Vitals:</strong> ${soap.o_systolic}/${soap.o_diastolic}</p>
+									                        <p><strong>Pulse:</strong> ${soap.o_pulse} ${soap.o_pulse_type}</p>
+									                        <p><strong>Temperature:</strong> ${soap.o_temperature} ${soap.o_temperature_unit} (${soap.o_temperature_location})</p>
+									                        <p><strong>Respiration:</strong> ${soap.o_respiration_rate} ${soap.o_respiration_type}</p>
+									                    </div>
+							                    		<div class="col-md-6">
+									                        <p><strong>O2 Sat:</strong> ${soap.o_o2_sat}</p>
+									                        <p><strong>Height:</strong> ${soap.o_height} ${soap.o_height_unit}</p>
+									                        <p><strong>Weight:</strong> ${soap.o_weight} ${soap.o_weight_unit}</p>
+									                    </div>
+									                </div>
+							                    </div>
+							                </div>
+							            </div>
+							            <!-- Assessment -->
+							            <div class="col-12">
+							                <div class="card border-start border-4 border-warning">
+							                    <div class="card-header fw-bold section-assessment">Assessment</div>
+							                    <div class="card-body">
+							                        <p><strong>Diagnosis:</strong> ${soap.a_diagnosis}</p>
+							                    </div>
+							                </div>
+							            </div>
+							            <!-- Plan -->
+							            <div class="col-12">
+							                <div class="card border-start border-4 border-info">
+							                    <div class="card-header fw-bold section-plan">Plan</div>
+							                    <div class="card-body">
+							                        <p><strong>Diagnostic Care Plan:</strong> ${soap.p_diagnosis_care_plan}</p>
+							                        <p><strong>Therapeutic Care Plan:</strong> ${soap.p_therapeutic_care_plan}</p>
+							                        <p><strong>Doctor's Note:</strong> ${soap.p_doctors_note}</p>
+							                    </div>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+							</div>
+						`;
+					});
+
+					$('#clinic_history').html(string);
+				}
+			})
 		}
 		
 		function getSubjective(uid){
