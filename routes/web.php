@@ -145,7 +145,7 @@ Route::group([
                     ->defaults("sidebar", 1)
                     ->defaults("icon", "fas fa-users-medical")
                     ->defaults("name", ucfirst($cname) . "s")
-                    ->defaults("roles", array("Admin"))
+                    ->defaults("roles", array("Admin", "Doctor"))
                     // ->defaults("group", "Settings")
                     ->name($cname)
                     ->defaults("href", "/$cname");
