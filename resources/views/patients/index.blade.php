@@ -1976,7 +1976,7 @@
 			                    		
 										<div id="controls">
 											<label>Color:
-											    <input type="color" id="colorPicker" value="#000000">
+											    <input type="color" id="colorPicker" value="#FF0000">
 											</label>
 											<label>Brush Size:
 											    <input type="range" id="brushSize" min="1" max="50" value="3">
