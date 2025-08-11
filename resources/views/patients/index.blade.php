@@ -1378,7 +1378,7 @@
 		}
 
 		function soap(uid){
-			var subjective = [], objective = [], assessment = [], plan = [];
+			subjective = [], objective = [], assessment = [], plan = [];
 
 			Swal.fire({
     			confirmButtonText: "Save",
@@ -1691,7 +1691,7 @@
 			            body: formData
 			        }).then(result => {
 			        	console.log(result);
-			        	ss('Successfully saved');
+			        	ss('Successfully saved SOAP');
 			        	setTimeout(() => {
 			        		soap(uid);
 			        	}, 1000);
