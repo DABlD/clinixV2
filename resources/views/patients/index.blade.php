@@ -18,21 +18,37 @@
 
                     <div class="card-body table-responsive">
                     	<table id="table" class="table table-hover" style="width: 100%;">
-                    		<thead>
-                    			<tr>
-                    				<th>PID</th>
-                    				<th>Last Name</th>
-                    				<th>First Name</th>
-                    				<th>Gender</th>
-                    				<th>Birthday</th>
-                    				<th>Contact</th>
-                    				<th>Email</th>
-                    				<th>Nationality</th>
-                    				<th>Actions</th>
-                    			</tr>
-                    		</thead>
-
                     		<tbody>
+
+                    			<!-- Patient 1 -->
+								{{-- <div class="patient-card d-flex align-items-center justify-content-between flex-wrap">
+								    <div class="d-flex align-items-center">
+								        <img src="https://placehold.co/64" class="avatar me-3" alt="Avatar">
+								        <div>
+								            <h6 class="mb-0 text-uppercase fw-bold">Doe, John</h6>
+								            <div class="text-muted small">Male</div>
+								            <div class="text-secondary small">PATIENT_ID</div>
+								            <a class="visit-link" onclick="toggleVisit(this)">visit ↑</a>
+								            <div class="visit-actions">
+								                <div class="d-flex gap-2 mt-2 flex-wrap">
+								                    <img src="https://placehold.co/40?text=H" class="action-icon" title="History">
+								                    <img src="https://placehold.co/40?text=V" class="action-icon" title="Vitals">
+								                    <img src="https://placehold.co/40?text=P" class="action-icon" title="Prescription">
+								                    <img src="https://placehold.co/40?text=L" class="action-icon" title="Lab">
+								                </div>
+								            </div>
+								        </div>
+								    </div>
+								    <div class="text-end">
+								        <button class="btn btn-primary btn-sm mb-2">SOAP Note</button><br>
+								        <div class="form-check form-switch d-inline-flex align-items-center">
+								            <input class="form-check-input" type="checkbox" checked>
+								            <label class="form-check-label small ms-1">Active Patient</label>
+								        </div>
+								    </div>
+								</div> --}}
+
+
                     		</tbody>
                     	</table>
                     </div>
@@ -130,111 +146,51 @@
 @endsection
 
 @push('styles')
-	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.min.css') }}">
-	<link rel="stylesheet" href="{{ asset('css/datatables.bundle.min.css') }}"> --}}
-	{{-- <link rel="stylesheet" href="{{ asset('css/datatables.bootstrap4.min.css') }}"> --}}
 	<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 
 	<style>
-		.label{
-			font-weight: bold;
-		}
-
-		.pInfo{
-			color: deepskyblue !important;
-		}
-
-	    #swal2-html-container .nav-pills>li>a {
-	    	border-top: 3px solid !important;
-	    }
-
-	    #swal2-html-container .nav-link.active {
-	    	color: #fff !important;
-	    	background-color: #337ab7 !important;
-	    }
-
-		.file-upload-container {
-			max-width: 500px;
-			margin: 50px auto;
-			padding: 30px;
-			background-color: #fff;
-			border-radius: 15px;
-			box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-		}
-
-		.custom-file-label {
-			font-weight: 500;
-		}
-
-		input[type="file"].form-control {
-			padding: 10px;
-			cursor: pointer;
-		}
-
-		.modal.show {
-		  z-index: 1085 !important;
-		}
-
-		.modal-backdrop.show {
-		  z-index: 1084 !important;
-		}
-
-
-		/* Rotate caret when collapsed is open */
-		.collapse-toggle[aria-expanded="true"] .bi {
-		  transform: rotate(90deg);
-		}
-		.collapse-toggle .bi {
-		  transition: transform 0.2s ease;
-		}
-
-		/* Section colors (neutral palette) */
-		.header-row			{ border-left: 4px solid #FAFAFA; background-color: #FAFAFA; }
-		.section-subjective { border-left: 4px solid #E6F4EA; background-color: #E6F4EA; }
-		.section-objective  { border-left: 4px solid #E7F0FA; background-color: #E7F0FA; }
-		.section-assessment { border-left: 4px solid #F2E8F9; background-color: #F2E8F9; }
-		.section-plan       { border-left: 4px solid #FFF2E6; background-color: #FFF2E6; }
-
-		.soapDetails{
-			text-align: left;
-		}
-
-		.soapDetails .card-header{
-			font-weight: 700;
-		}
-
-		.caret-soap[aria-expanded="true"]{
-			transform: rotate(180deg);
-			transition: transform 0.2s ease;
-		}
-
-		.collapse {
-		  transition: height 0.5s ease-in-out;
-		}
-
-		.collapsing {
-		  transition: height 0.5s ease-in-out;
-		}
-
-		#vital_signs .card {
-			background-color: #f7fdfc;
-			border: none;
-			border-radius: 10px;
-			box-shadow: 0 0 10px rgba(180, 180, 180, 0.2);
-		}
-		#vital_signs th {
-			background-color: #d5f4e6; /* pastel green */
-			color: #333;
-		}
-		#vital_signs  td {
-			background-color: #fef9e7; /* pastel yellow */
-			color: #555;
-		}
-		#vital_signs .table > :not(caption) > * > * {
-			vertical-align: middle;
-			text-align: center;
-		}
-
+		.patient-card {
+		      background: #fff;
+		      border-radius: 10px;
+		      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+		      padding: 1rem 1.5rem;
+		      margin-bottom: 1rem;
+		      transition: box-shadow .3s;
+		    }
+		    .patient-card:hover {
+		      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+		    }
+		    .avatar {
+		      width: 64px;
+		      height: 64px;
+		      border-radius: 50%;
+		      object-fit: cover;
+		      margin-right: 10px;
+		    }
+		    .visit-actions {
+		      display: none;
+		      margin-top: .5rem;
+		    }
+		    .visit-link {
+		      font-size: 0.9rem;
+		      font-weight: 500;
+		      color: #0d6efd;
+		      cursor: pointer;
+		      text-decoration: none;
+		    }
+		    .visit-link:hover { text-decoration: underline; }
+		    .action-icon {
+		      width: 40px;
+		      height: 40px;
+		      border-radius: 8px;
+		      border: 1px solid #ddd;
+		      padding: 5px;
+		      transition: background .2s;
+		      background: #fafafa;
+		    }
+		    .action-icon:hover {
+		      background: #e8f0ff;
+		    }
 	</style>
 @endpush
 
@@ -250,48 +206,135 @@
 		var subjective = [], objective = [], assessment = [], plan = [];
 		var stream = null;
 
+		var search = null;
+		var page = 0;
+
 		$(document).ready(()=> {
-			var table = $('#table').DataTable({
-				ajax: {
-					url: "{{ route('datatable.patient') }}",
-                	dataType: "json",
-                	dataSrc: "",
-					data: {
-						select: "*",
-						load: ['user']
-					}
-				},
-				columns: [
-					{data: 'patient_id'},
-					{data: 'user.lname'},
-					{data: 'user.fname'},
-					{data: 'user.gender'},
-					{data: 'user.birthday'},
-					{data: 'user.contact'},
-					{data: 'user.email'},
-					{data: 'nationality'},
-					{data: 'actions'},
-				],
-        		pageLength: 25,
-	            columnDefs: [
-	                {
-	                    targets: 4,
-	                    render: birthday => {
-	                        if(birthday){
-	                        	return toDate(birthday) + ` (${moment().diff(birthday, 'years')})`;
-	                        }
-	                        else{
-	                        	return "";
-	                        }
-	                    },
-	                }
-	            ],
-	            order: [[0]]
-				// drawCallback: function(){
-				// 	init();
-				// }
-			});
+			getPatients();
 		});
+
+		function proceedSearch() {
+			search = document.getElementById('searchInput').value;
+			console.log(search);
+			getPatients();
+		}
+
+		function toggleVisit(link) {
+		    const actions = link.nextElementSibling;
+		    const isVisible = actions.style.display === 'block';
+		    actions.style.display = isVisible ? 'none' : 'block';
+		    link.textContent = isVisible ? 'visit ↑' : 'visit ↓';
+		  }
+
+		function getPatients(){
+			const limit = 10;
+			$.ajax({
+				url: "{{ route('patient.get') }}",
+				data: {
+					select: "patients.*",
+					load: ['user'],
+					filters: true,
+					search: search,
+					offset: page * limit,
+					limit: limit
+				},
+				success: patients => {
+					patients = JSON.parse(patients);
+					let tc = patients.tc;
+
+					patients = patients.patients;
+
+
+					let patientString = "";
+
+					if(patients.length){
+						patients.forEach(patient => {
+							console.log(patient);
+							patientString += `
+								<div class="patient-card d-flex align-items-center justify-content-between flex-wrap">
+								    <div class="d-flex align-items-center">
+								        <img src="${patient.user.avatar}" class="avatar me-3" alt="Avatar">
+								        <div>
+								            <h6 class="mb-0 text-uppercase fw-bold">${patient.user.lname}, ${patient.user.fname} ${patient.user.mname}</h6>
+								            <div class="text-muted small">${patient.user.gender}</div>
+								            <div class="text-secondary small">${patient.patient_id}</div>
+								            <a class="visit-link" onclick="toggleVisit(this)">visit ↑</a>
+								            <div class="visit-actions">
+								                <div class="d-flex gap-2 mt-2 flex-wrap">
+								                    <img src="https://placehold.co/40?text=H" class="action-icon" title="History">
+								                    <img src="https://placehold.co/40?text=V" class="action-icon" title="Vitals">
+								                    <img src="https://placehold.co/40?text=P" class="action-icon" title="Prescription">
+								                    <img src="https://placehold.co/40?text=L" class="action-icon" title="Lab">
+								                </div>
+								            </div>
+								        </div>
+								    </div>
+								    <div class="text-end">
+								        <button class="btn btn-primary btn-sm mb-2">SOAP Note</button><br>
+								        <div class="form-check form-switch d-inline-flex align-items-center">
+								            <input class="form-check-input" type="checkbox">
+								            <label class="form-check-label small ms-1">Active Patient</label>
+								        </div>
+								    </div>
+								</div>
+							`;
+						});
+					}
+					else{
+						patientString = `
+							<div class="row">
+								<div class="col-md-12">
+									No patient record yet.
+								</div>
+							</div>
+						`;
+					}
+
+					let prevBtn = "";
+					let nextBtn = "";
+
+					if(page > 0){
+						prevBtn += `
+							<button class="btn btn-outline-primary btn-sm" id="prevBtn" onclick="goPrev()">
+								<i class="fas fa-chevron-left"></i> Previous
+							</button>
+						`;
+					}
+
+					console.log(page, (tc / limit));
+					if(page < (tc / limit) - 1){
+						nextBtn += `
+							<button class="btn btn-outline-primary btn-sm" id="nextBtn" onclick="goNext()">
+								Next <i class="fas fa-chevron-right"></i>
+							</button>
+						`;
+					}
+
+					$('#table tbody').html(`
+						${patientString}
+
+						<div class="d-flex justify-content-left align-items-center mt-3 gap-3 mt-3 flex-wrap">
+							<span class="text-muted small" id="pageInfo">Page ${page+1} of ${Math.ceil(tc / limit)}</span>
+							&nbsp;
+							&nbsp;
+							${prevBtn}
+							${nextBtn}
+						</div>
+						<br>
+					`);
+				}
+			})
+		}
+
+		function goPrev(){
+			page--;
+			getPatients();
+		}
+
+		function goNext(){
+			page++;
+			getPatients();
+		}
 
 		function create(){
 			let imageData = null;

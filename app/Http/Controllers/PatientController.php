@@ -17,7 +17,8 @@ class PatientController extends Controller
     }
 
     public function get(Request $req){
-        $array = Patient::select($req->select);
+        $array = Patient::select($req->select ?? "*");
+        $tc = 0;
 
         // IF HAS SORT PARAMETER $ORDER
         if($req->order){
@@ -40,6 +41,44 @@ class PatientController extends Controller
             $array = $array->join("$req->join as $alias", "$alias.fid", '=', "$this->table.id");
         }
 
+        if(isset($req->filters)){
+            $search = $req->search;
+
+            $array = $array->join('users as u', 'u.id', '=', "$this->table.user_id");
+
+            // Search filter: case-insensitive match on fname/lname (supports multi-word and reversed order)
+            $array = $array->where(function($q) use($search) {
+                $parts = preg_split('/\s+/', strtolower(trim($search)));
+
+                if (count($parts) > 1) {
+                    // Try both interpretations:
+                    // (1) first = first word(s), last = last word
+                    // (2) first = first word, last = remaining words
+                    $firstPart = $parts[0];
+                    $lastPart = end($parts);
+                    $middle = implode(' ', array_slice($parts, 1, -1)); // anything in between
+
+                    $q->where(function($q2) use ($firstPart, $middle, $lastPart) {
+                        // Build possible full-name combinations (lowercased)
+                        $q2->whereRaw("LOWER(CONCAT(u.fname, ' ', u.lname)) LIKE ?", ["%{$firstPart} {$middle} {$lastPart}%"])
+                           ->orWhereRaw("LOWER(CONCAT(u.lname, ' ', u.fname)) LIKE ?", ["%{$firstPart} {$middle} {$lastPart}%"]);
+
+                        // Extra fallback: handle multi-word first OR last names
+                        $q2->orWhereRaw("LOWER(CONCAT(u.fname, ' ', u.lname)) LIKE ?", ["%{$firstPart} {$lastPart}%"])
+                           ->orWhereRaw("LOWER(CONCAT(u.lname, ' ', u.fname)) LIKE ?", ["%{$firstPart} {$lastPart}%"]);
+                    });
+                } else {
+                    // single-word fallback (lname or fname)
+                    $q->whereRaw("LOWER(u.fname) LIKE ?", ["%{$search}%"])
+                      ->orWhereRaw("LOWER(u.lname) LIKE ?", ["%{$search}%"]);
+                }
+
+            });
+            
+            $tc = $array->count();
+            $array = $array->limit($req->limit)->offset($req->offset);
+        }
+
         $array = $array->get();
 
         // IF HAS LOAD
@@ -52,6 +91,11 @@ class PatientController extends Controller
         // IF HAS GROUP
         if($req->group){
             $array = $array->groupBy($req->group);
+        }
+
+        // IF REQUEST IS ON PATIENT RECORD
+        if($req->filters){
+            $array = ["patients" => $array, "tc" => $tc];
         }
 
         echo json_encode($array);
