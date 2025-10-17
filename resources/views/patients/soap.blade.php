@@ -6,6 +6,13 @@
 
         <div class="row">
             <section class="col-lg-12 connectedSortable">
+
+
+
+                @include('patients.includes.toolbar2')
+
+                <br>
+
                 <div class="row">
 
 				<!-- LEFT COLUMN -->
@@ -151,14 +158,14 @@
 				    <div class="card shadow-sm mb-3">
 				        <div class="card-header bg-info text-white" style="font-size: 24px; font-weight: bold;">Charts</div>
 				        <div class="card-body d-flex flex-wrap align-items-center gap-2">
-		                    <img src="{{ asset('images/icons/med_history.png') }}" class="action-icon" title="Medical History"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                    <img src="{{ asset('images/icons/clinic_history.png') }}" class="action-icon" title="Clinic History"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                    <img src="{{ asset('images/icons/vital_sign.png') }}" class="action-icon" title="Vital Signs"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                    <img src="{{ asset('images/icons/prescription.png') }}" class="action-icon" title="Prescription"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                    <img src="{{ asset('images/icons/lab_request.png') }}" class="action-icon" title="Lab Request"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                    <img src="{{ asset('images/icons/imaging.png') }}" class="action-icon" title="Imaging"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                    <img src="{{ asset('images/icons/files.png') }}" class="action-icon" title="Files"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		                    <img src="{{ asset('images/icons/vaccine.png') }}" class="action-icon" title="Vaccine">
+		                    <img src="{{ asset('images/icons/med_history.png') }}" class="action-icon" title="Medical History" onclick="medicalHistoryChart()"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                    <img src="{{ asset('images/icons/clinic_history.png') }}" class="action-icon" title="Clinic History" onclick="clinicHistoryChart()"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                    <img src="{{ asset('images/icons/vital_sign.png') }}" class="action-icon" title="Vital Signs" onclick="vitalSignsChart()"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                    <img src="{{ asset('images/icons/prescription.png') }}" class="action-icon" title="Prescription" onclick="prescriptionChart()"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                    <img src="{{ asset('images/icons/lab_request.png') }}" class="action-icon" title="Lab Request" onclick="labRequestChart()"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                    <img src="{{ asset('images/icons/imaging.png') }}" class="action-icon" title="Imaging" onclick="imagingChart()"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                    <img src="{{ asset('images/icons/files.png') }}" class="action-icon" title="Files" onclick="filesChart()"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		                    <img src="{{ asset('images/icons/vaccine.png') }}" class="action-icon" title="Vaccine" onclick="vaccineChart()">
 				        </div>
 				    </div>
 				    <!-- SOAP -->
@@ -526,6 +533,31 @@
 			transform: translateY(-4px);
 			filter: brightness(1.3);
 		}
+
+	    .header-row			{ border-left: 4px solid #FAFAFA !important; background-color: #FAFAFA !important; }
+	    .section-subjective { border-left: 4px solid #E6F4EA !important; background-color: #E6F4EA !important; }
+	    .section-objective  { border-left: 4px solid #E7F0FA !important; background-color: #E7F0FA !important; }
+	    .section-assessment { border-left: 4px solid #F2E8F9 !important; background-color: #F2E8F9 !important; }
+	    .section-plan       { border-left: 4px solid #FFF2E6 !important; background-color: #FFF2E6 !important; }
+
+	    #vital_signs .card {
+			background-color: #f7fdfc;
+			border: none;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(180, 180, 180, 0.2);
+		}
+		#vital_signs th {
+			background-color: #d5f4e6; /* pastel green */
+			color: #333;
+		}
+		#vital_signs  td {
+			background-color: #fef9e7; /* pastel yellow */
+			color: #555;
+		}
+		#vital_signs .table > :not(caption) > * > * {
+			vertical-align: middle;
+			text-align: center;
+		}
 	</style>
 @endpush
 
@@ -544,7 +576,39 @@
 		var search = null;
 		var page = 0;
 
+		var uid = null;
+		uid = 3; //for testing
+
 		$(document).ready(()=> {
+
+			$('#searchInput').select2({
+				placeholder: 'Search patient...',
+				ajax: {
+					url: '{{ route("user.get") }}',
+					dataType: 'json',
+					delay: 250, // delay for typing
+					data: params => ({
+						q: params.term, // search term
+						page: params.page || 1,
+						select: "*",
+						where: ['clinic_id', "{{ auth()->user()->clinic_id }}"],
+						where2: ['role', 'Patient']
+					}),
+					processResults: data => ({
+						results: data.map(item => ({
+							id: item.id,
+							text: `${item.lname}, ${item.fname} ${item.mname}`
+						}))
+					})
+				}
+			});
+
+			$('#searchInput').on('select2:select', function (e) {
+				let data = e.params.data; // contains the selected item
+				uid = data.id;
+				getPatientData();
+			});
+
 			let canvas = document.getElementById('canvas');
 			let ctx = canvas.getContext('2d');
 		    let colorPicker = document.getElementById('colorPicker');
@@ -669,1285 +733,367 @@
 					});
             	}
             });
+
+            getPatientData();
 		});
 
-		function proceedSearch() {
-			search = document.getElementById('searchInput').value;
-			console.log(search);
-			getPatients();
-		}
-
-		function soap(uid){
-			subjective = [], objective = [], assessment = [], plan = [];
-
-			Swal.fire({
-    			confirmButtonText: "Save",
-				allowEscapeKey: false,
-				allowOutsideClick: false,
-				showCancelButton: true,
-				cancelButtonColor: errorColor,
-				cancelButtonText: 'Cancel',
-				position: 'top',
-				html: `
-	                <div class="row">
-                    	<section class="col-lg-12">
-                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
-                    		    <li class="nav-item">
-                    		        <a class="nav-link active" href="#charts" data-toggle="tab">
-                    		            Charts
-                    		        </a>
-                    		    </li>
-                    		    &nbsp;
-                    		    <li class="nav-item">
-                    		        <a class="nav-link" href="#soap" data-toggle="tab" data-href="subjective">
-                    		            SOAP
-                    		        </a>
-                    		    </li>
-                    		</ul>
-
-        					<br>
-
-        					{{-- CONTENT START --}}
-        					<div class="tab-content p-0">
-
-        						{{-- CHARTS START --}}
-        					    <div class="chart tab-pane active" id="charts" style="position: relative;">
-		    	                    <div class="card">
-		    	                        <div class="card-header row">
-		    	                            <div class="col-md-12">
-		    	                                <h3 class="card-title" style="width: 100%; text-align: left;">
-		    	                                    <i class="fas fa-chart-user mr-1"></i>
-
-		    	                                    Charts
-
-		    	                                </h3>
-		    	                            </div>
-		    	                        </div>
-
-		    	                        <div class="card-body">
-				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;" style="text-align: center;">
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link active" href="#history" data-toggle="tab" data-href="history">
-				                    		            <img src="{{ asset('images/icons/med_history.png') }}" width="30px">
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#clinic_history" data-toggle="tab" data-href="clinic_history">
-				                    		            <img src="{{ asset('images/icons/clinic_history.png') }}" width="30px">
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#vital_signs" data-toggle="tab" data-href="vital_signs">
-				                    		            <img src="{{ asset('images/icons/vital_sign.png') }}" width="30px">
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#prescriptions" data-toggle="tab" data-href="prescriptions">
-				                    		            <img src="{{ asset('images/icons/prescription.png') }}" width="30px">
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#laboratory" data-toggle="tab" data-href="laboratory">
-				                    		            <img src="{{ asset('images/icons/lab_request.png') }}" width="30px">
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#imaging" data-toggle="tab" data-href="imaging">
-				                    		            <img src="{{ asset('images/icons/imaging.png') }}" width="30px">
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#files" data-toggle="tab" data-href="files">
-				                    		            <img src="{{ asset('images/icons/files.png') }}" width="30px">
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#vaccine" data-toggle="tab" data-href="vaccine">
-				                    		            <img src="{{ asset('images/icons/vaccine.png') }}" width="30px">
-				                    		        </a>
-				                    		    </li>
-				                    		</ul>
-
-				        					<br>
-
-				        					<div class="tab-content p-0">
-				        					    <div class="chart tab-pane active" id="history" style="position: relative;"></div>
-												<div class="chart tab-pane" id="clinic_history" style="position: relative;"></div>
-												<div class="chart tab-pane" id="vital_signs" style="position: relative;"></div>
-
-				        					    <div class="chart tab-pane" id="prescriptions" style="position: relative;">
-				        					    	Prescriptions
-				        					    </div>
-
-				        					    <div class="chart tab-pane" id="laboratory" style="position: relative;">
-				        					    	Laboratory
-				        					    </div>
-
-				        					    <div class="chart tab-pane" id="imaging" style="position: relative;">
-				        					    	Imaging
-				        					    </div>
-
-				        					    <div class="chart tab-pane" id="files" style="position: relative;"></div>
-
-				        					    <div class="chart tab-pane" id="vaccine" style="position: relative;">
-				        					    	Vaccine
-				        					    </div>
-				        					</div>
-		    	                        </div>
-		    	                    </div>
-        					    </div>
-        					    {{-- CHARTS END --}}
-
-        					    {{-- SOAP START --}}
-        					    <div class="chart tab-pane" id="soap" style="position: relative;">
-		    	                    <div class="card">
-		    	                        <div class="card-header row">
-		    	                            <div class="col-md-12">
-		    	                                <h3 class="card-title" style="width: 100%; text-align: left;">
-		    	                                    <i class="fas fa-notes-medical mr-1"></i>
-
-		    	                                    SOAP
-
-		    	                                </h3>
-		    	                            </div>
-		    	                        </div>
-
-		    	                        <div class="card-body">
-				                    		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link active" href="#subjective" data-toggle="tab" data-href="subjective">
-				                    		            Subjective
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#objective" data-toggle="tab" data-href="objective">
-				                    		            Objective
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#assessment" data-toggle="tab" data-href="assessment">
-				                    		            Assessment
-				                    		        </a>
-				                    		    </li>
-				                    		    &nbsp;
-				                    		    <li class="nav-item">
-				                    		        <a class="nav-link" href="#plan" data-toggle="tab" data-href="plan">
-				                    		            Plan
-				                    		        </a>
-				                    		    </li>
-				                    		</ul>
-
-				        					<br>
-
-				        					<div class="tab-content p-0">
-				        					    <div class="chart tab-pane active" id="subjective" style="position: relative;">
-				        					    </div>
-
-				        					    <div class="chart tab-pane" id="objective" style="position: relative;">
-				        					    </div>
-
-				        					    <div class="chart tab-pane" id="assessment" style="position: relative;">
-				        					    </div>
-
-				        					    <div class="chart tab-pane" id="plan" style="position: relative;">
-				        					    </div>
-				        					</div>
-		    	                        </div>
-		    	                    </div>
-		    	                    {{-- SOAP END --}}
-        					    </div>
-        					</div>
-    	                </section>
-	                </div>
-				`,
-				width: '1200px',
-				didOpen: () => {
-					$('.pInfo').parent().css('text-align', 'left');
-					$('#swal2-html-container .card-header').css('margin', "1px");
-					$('#swal2-html-container .card-header').css('background-color', "#83c8e5");
-					$('#swal2-html-container .card-body').css('border', "1px solid rgba(0,0,0,0.125)");
-
-					$('[data-toggle="tab"').on('show.bs.tab', e => {
-						let target = $(e.target).data('href');
-						$(`#${target}`).prepend('<div class="preloader"></div>');
+		function getPatientData(){
+			if(uid){
+				$.ajax({
+					url: "{{ route('patient.get') }}",
+					data: {
+						where: ["user_id", uid],
+						load: ["user"]
+					},
+					success: patient => {
+						patient = JSON.parse(patient)[0];
 						
-						if(target == "history"){
-							getHistory(uid);
-						}
-						else if(target == "clinic_history"){
-							getClinicHistory(uid);
-						}
-						else if(target == "vital_signs"){
-							getVitalSigns(uid);
-						}
-						else if(target == "files"){
-							getFiles(uid);
-						}
-						else if(target == "subjective"){
-							getSubjective(uid);
-						}
-						else if(target == "objective"){
-							getObjective(uid);
-						}
-						else if(target == "assessment"){
-							getAssessment(uid);
-						}
-						else if(target == "plan"){
-							getPlan(uid);
-						}
-					});
-					$('.swal2-html-container .tab-pane').css('min-height', '100px');
-					$('[data-href="history"]').trigger('show.bs.tab');
-				},
-				preConfirm: () => {
-				    swal.showLoading();
-				    return new Promise(resolve => {
-				    	let bool = true;
+						$('#pid').html(patient.patient_id);
+						$('#pname').html(patient.user.lname + ", " + patient.user.fname + " " + patient.user.mname);
+						$('#pcontact').html(patient.user.contact);
+						$('#pgender').html(patient.user.gender);
+						$('#pcivilstatus').html(patient.civil_status);
+						$('#paddress').html(patient.user.address);
+						$('#pnationality').html(patient.nationality);
+						$('#phmo').html(patient.hmo_provider);
+						$('#preligion').html(patient.religion);
 
-				    	{{-- let check = ["fname","lname","gender","contact"];
-				    	let flag = false;
-
-				    	check.forEach(field => {
-				    		$(`#${field}`).removeClass('border-danger');
-				    		if($(`#${field}`).val() == ""){
-				    			$(`#${field}`).addClass('border-danger');
-				    			flag = true;
-				    		}
-				    	});
-
-			            if(flag){
-			                Swal.showValidationMessage('Highlighted fields are required');
-			            } --}}
-			            
-			            bool ? setTimeout(() => {resolve()}, 500) : "";
-				    });
-				},
-			}).then(result => {
-				if(result.value){
-					swal.showLoading();
-
-					let formData = new FormData();
-
-					let soapS = {
-						's_type_of_visit': $('#type_of_visit').val(),
-						's_chief_complaint': $('#chief_complaint').val(),
-						's_history_of_present_illness': $('#history_of_present_illness').val(),
-					};
-
-					let soapO = {
-						'o_systolic': $('#bp_systolic').val(),
-						'o_diastolic': $('#bp_diastolic').val(),
-						'o_pulse': $('#pulse_rate').val(),
-						'o_pulse_type': $('#pulse_type').val(),
-						'o_temperature': $('#temperature').val(),
-						'o_temperature_unit': $('#temp_unit').val(),
-						'o_temperature_location': $('#temp_location').val(),
-						'o_respiration_rate': $('#respiration_rate').val(),
-						'o_respiration_type': $('#respiration_type').val(),
-						'o_weight': $('#weight').val(),
-						'o_weight_unit': $('#weight_unit').val(),
-						'o_height': $('#height').val(),
-						'o_height_unit': $('#height_unit').val(),
-						'o_o2_sat': $('#o2_sat').val(),
-						'o_drawing': (history.length ? canvas.toDataURL("image/png") : null),
-						'o_physical_examination': $('#physical_examination').val(),
-					};
-
-					let soapA = {
-						'a_diagnosis': $('#diagnosis').val(),
-					};
-
-					let soapP = {
-						'p_diagnosis_care_plan': $('#diagnosis_care_plan').val(),
-						'p_therapeutic_care_plan': $('#therapeutic_care_plan').val(),
-						'p_doctors_note': $('#doctors_note').val(),
-					};
-
-					formData.append('uid', uid);
-					formData.append('soapS', JSON.stringify(soapS));
-					formData.append('soapO', JSON.stringify(soapO));
-					formData.append('soapA', JSON.stringify(soapA));
-					formData.append('soapP', JSON.stringify(soapP));
-
-					let fileInput = document.getElementById("p_files");
-				    for (let i = 0; i < fileInput.files.length; i++) {
-				        formData.append("files[]", fileInput.files[i]);
-				    }
-
-		    		formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
-
-				    fetch("{{ route('soap.store') }}", {
-			            method: "POST",
-			            body: formData
-			        }).then(result => {
-			        	console.log(result);
-			        	ss('Successfully saved SOAP');
-			        	setTimeout(() => {
-			        		soap(uid);
-			        	}, 1000);
-			        })
-				}
-			});
+						$('#pbirthday').html(moment(patient.birthday).format("MMM DD, YYYY"));
+						$('#page').html(moment().diff(moment(patient.birthday), 'years'));
+					}
+				})
+			}
 		}
 
-		function getHistory(uid){
-			$.ajax({
-				url: "{{ route('user.get') }}",
-				data: {
-					select: "*",
-					where: ['id', uid],
-					load: ['patient.mhr']
-				},
-				success: result => {
-					result = JSON.parse(result)[0];
-					let mhr = result.patient.mhr;
-					let qwa = JSON.parse(mhr.qwa);
+		function medicalHistoryChart(){
+			if(uid){
+				$.ajax({
+					url: "{{ route('user.get') }}",
+					data: {
+						select: "*",
+						where: ['id', uid],
+						load: ['patient.mhr']
+					},
+					success: result => {
+						result = JSON.parse(result)[0];
+						let mhr = result.patient.mhr;
+						let qwa = JSON.parse(mhr.qwa);
 
-					let string = "";
-					let bool = false;
+						let string = "";
+						let bool = false;
 
-					qwa.forEach(row => {
-						if(row.type == "Category"){
-							if(bool){
+						qwa.forEach(row => {
+							if(row.type == "Category"){
+								if(bool){
+									string += `
+										</tbody>
+										</table>
+									`;
+								}
+
 								string += `
-									</tbody>
-									</table>
+									<div class="row ">
+	                                    <div class="col-md-12" style="text-align: left;">
+	                                        <b style="font-size: 1.5rem;">${row.question}</b>
+	                                    </div>
+	                                </div>
+
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th style="width: 40%;">Name</th>
+												<th style="width: 30%;">Answer</th>
+												<th style="width: 30%;">Remark</th>
+											</tr>
+										</thead>
+										<tbody>
+								`;
+
+								bool = true;
+							}
+							else{
+								string += `
+									<tr>
+										<td style="text-align: left;">${row.question}</td>
+										<td>${row.answer ?? "-"}</td>
+										<td>${row.remark ?? "-"}</td>
+									</tr>
 								`;
 							}
+						});
 
-							string += `
-								<div class="row ">
-                                    <div class="col-md-12" style="text-align: left;">
-                                        <b style="font-size: 1.5rem;">${row.question}</b>
-                                    </div>
-                                </div>
-
-								<table class="table table-hover">
-									<thead>
-										<tr>
-											<th style="width: 40%;">Name</th>
-											<th style="width: 30%;">Answer</th>
-											<th style="width: 30%;">Remark</th>
-										</tr>
-									</thead>
-									<tbody>
-							`;
-
-							bool = true;
-						}
-						else{
-							string += `
-								<tr>
-									<td style="text-align: left;">${row.question}</td>
-									<td>${row.answer ?? "-"}</td>
-									<td>${row.remark ?? "-"}</td>
-								</tr>
-							`;
-						}
-					});
-
-					$(`#history`).append(string);
-				}
-			});
-
-			removeLoader();
+						Swal.fire({
+							title: "Personal Medical History",
+							html: `<hr>${string}`,
+							showClass: { popup: '' },
+							hideClass: { popup: '' },
+							width: '1000px',
+						})
+					}
+				});
+			}
+			else{
+				se('No selected patient');
+			}
 		}
 
-		function getClinicHistory(uid){
-			$.ajax({
-				url: "{{ route('soap.get') }}",
-				data: {
-					select: "*",
-					where: ['user_id', uid]
-				}, 
-				success: result => {
-					result = JSON.parse(result);
+		function clinicHistoryChart(){
+			if(uid){
+				$.ajax({
+					url: "{{ route('soap.get') }}",
+					data: {
+						select: "*",
+						where: ['user_id', uid]
+					}, 
+					success: result => {
+						result = JSON.parse(result);
 
-					let string = "";
+						let string = "";
 
-					result.forEach(soap => {
+						result.forEach(soap => {
+							string += `
+								<div class="container my-4">
+								    <!-- Header Row -->
+								    <div class="d-flex justify-content-between align-items-center border p-2 rounded header-row">
+								        <div>
+								            <strong>Date:</strong> ${toDate(soap.created_at, 'ddd MMM DD, YYYY hh:MM A')}
+								        </div>
+								        <button class="btn btn-sm btn-info caret-soap" data-bs-toggle="collapse" data-bs-target="#soapDetails${soap.id}" aria-expanded="true">
+								            <i class='fas fa-caret-up'></i>
+								        </button>
+								    </div>
+								    <!-- Collapsible SOAP Section -->
+								    <div class="collapse mt-3 soapDetails" id="soapDetails${soap.id}">
+								        <div class="row g-3">
+								            <!-- Subjective -->
+								            <div class="col-12">
+								                <div class="card border-start border-4 border-success">
+								                    <div class="card-header fw-bold section-subjective">Subjective</div>
+								                    <div class="card-body">
+								                        <p><strong>Type of Visit:</strong> ${soap.s_type_of_visit}</p>
+								                        <p><strong>Chief Complaint:</strong> ${soap.s_chief_complaint}</p>
+								                    </div>
+								                </div>
+								            </div>
+								            <!-- Objective -->
+								            <div class="col-12">
+								                <div class="card border-start border-4 border-primary">
+								                    <div class="card-header fw-bold section-objective">Objective</div>
+								                    <div class="card-body">
+								                    	<div class="row" style="width: 100%;">
+								                    		<div class="col-md-6">
+										                        <p><strong>Vitals:</strong> ${soap.o_systolic}/${soap.o_diastolic}</p>
+										                        <p><strong>Pulse:</strong> ${soap.o_pulse} ${soap.o_pulse_type}</p>
+										                        <p><strong>Temperature:</strong> ${soap.o_temperature} ${soap.o_temperature_unit} (${soap.o_temperature_location})</p>
+										                        <p><strong>Respiration:</strong> ${soap.o_respiration_rate} ${soap.o_respiration_type}</p>
+										                    </div>
+								                    		<div class="col-md-6">
+										                        <p><strong>O2 Sat:</strong> ${soap.o_o2_sat}</p>
+										                        <p><strong>Height:</strong> ${soap.o_height} ${soap.o_height_unit}</p>
+										                        <p><strong>Weight:</strong> ${soap.o_weight} ${soap.o_weight_unit}</p>
+										                    </div>
+										                </div>
+								                    </div>
+								                </div>
+								            </div>
+								            <!-- Assessment -->
+								            <div class="col-12">
+								                <div class="card border-start border-4 border-warning">
+								                    <div class="card-header fw-bold section-assessment">Assessment</div>
+								                    <div class="card-body">
+								                        <p><strong>Diagnosis:</strong> ${soap.a_diagnosis}</p>
+								                    </div>
+								                </div>
+								            </div>
+								            <!-- Plan -->
+								            <div class="col-12">
+								                <div class="card border-start border-4 border-info">
+								                    <div class="card-header fw-bold section-plan">Plan</div>
+								                    <div class="card-body">
+								                        <p><strong>Diagnostic Care Plan:</strong> ${soap.p_diagnosis_care_plan}</p>
+								                        <p><strong>Therapeutic Care Plan:</strong> ${soap.p_therapeutic_care_plan}</p>
+								                        <p><strong>Doctor's Note:</strong> ${soap.p_doctors_note}</p>
+								                    </div>
+								                </div>
+								            </div>
+								        </div>
+								    </div>
+								</div>
+							`;
+						});
+
+						Swal.fire({
+							title: "Clinic History",
+							html: `<hr>${string}`,
+							showClass: { popup: '' },
+							hideClass: { popup: '' },
+							width: '1000px',
+						})
+					}
+				})
+			}
+			else{
+				se('No selected patient');
+			}
+		}
+
+		function vitalSignsChart(){
+			if(uid){
+				$.ajax({
+					url: "{{ route('soap.get') }}",
+					data: {
+						select: "*",
+						where: ['user_id', uid]
+					}, 
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = `
+							<div id="vital_signs">
+							<table class="table table-bordered rounded">
+							    <thead>
+							        <tr>
+							            <th>Date</th>
+							            <th>Blood Pressure</th>
+							            <th>Pulse Rate</th>
+							            <th>Temperature</th>
+							            <th>Respiratory Rate</th>
+							            <th>O2 SAT</th>
+							            <th>Weight</th>
+							            <th>Height</th>
+							        </tr>
+							    </thead>
+							    <tbody>
+						`;
+
+						result.forEach(soap => {
+							string += `
+						        <tr>
+						            <td>${toDate(soap.created_at)}</td>
+						            <td>${soap.o_systolic}/${soap.o_diastolic}</td>
+						            <td>${soap.o_pulse}</td>
+						            <td>${soap.o_temperature}</td>
+						            <td>${soap.o_respiration_rate}</td>
+						            <td>${soap.o_o2_sat}</td>
+						            <td>${soap.o_weight} ${soap.o_weight_unit}</td>
+						            <td>${soap.o_height} ${soap.o_height_unit}</td>
+						        </tr>
+							`;
+						});
+
 						string += `
-							<div class="container my-4">
-							    <!-- Header Row -->
-							    <div class="d-flex justify-content-between align-items-center border p-2 rounded header-row">
-							        <div>
-							            <strong>Date:</strong> ${toDate(soap.created_at, 'ddd MMM DD, YYYY hh:MM A')}
-							        </div>
-							        <button class="btn btn-sm btn-info caret-soap" data-bs-toggle="collapse" data-bs-target="#soapDetails${soap.id}" aria-expanded="true">
-							            <i class='fas fa-caret-up'></i>
-							        </button>
-							    </div>
-							    <!-- Collapsible SOAP Section -->
-							    <div class="collapse mt-3 soapDetails" id="soapDetails${soap.id}">
-							        <div class="row g-3">
-							            <!-- Subjective -->
-							            <div class="col-12">
-							                <div class="card border-start border-4 border-success">
-							                    <div class="card-header fw-bold section-subjective">Subjective</div>
-							                    <div class="card-body">
-							                        <p><strong>Type of Visit:</strong> ${soap.s_type_of_visit}</p>
-							                        <p><strong>Chief Complaint:</strong> ${soap.s_chief_complaint}</p>
-							                    </div>
-							                </div>
-							            </div>
-							            <!-- Objective -->
-							            <div class="col-12">
-							                <div class="card border-start border-4 border-primary">
-							                    <div class="card-header fw-bold section-objective">Objective</div>
-							                    <div class="card-body">
-							                    	<div class="row" style="width: 100%;">
-							                    		<div class="col-md-6">
-									                        <p><strong>Vitals:</strong> ${soap.o_systolic}/${soap.o_diastolic}</p>
-									                        <p><strong>Pulse:</strong> ${soap.o_pulse} ${soap.o_pulse_type}</p>
-									                        <p><strong>Temperature:</strong> ${soap.o_temperature} ${soap.o_temperature_unit} (${soap.o_temperature_location})</p>
-									                        <p><strong>Respiration:</strong> ${soap.o_respiration_rate} ${soap.o_respiration_type}</p>
-									                    </div>
-							                    		<div class="col-md-6">
-									                        <p><strong>O2 Sat:</strong> ${soap.o_o2_sat}</p>
-									                        <p><strong>Height:</strong> ${soap.o_height} ${soap.o_height_unit}</p>
-									                        <p><strong>Weight:</strong> ${soap.o_weight} ${soap.o_weight_unit}</p>
-									                    </div>
-									                </div>
-							                    </div>
-							                </div>
-							            </div>
-							            <!-- Assessment -->
-							            <div class="col-12">
-							                <div class="card border-start border-4 border-warning">
-							                    <div class="card-header fw-bold section-assessment">Assessment</div>
-							                    <div class="card-body">
-							                        <p><strong>Diagnosis:</strong> ${soap.a_diagnosis}</p>
-							                    </div>
-							                </div>
-							            </div>
-							            <!-- Plan -->
-							            <div class="col-12">
-							                <div class="card border-start border-4 border-info">
-							                    <div class="card-header fw-bold section-plan">Plan</div>
-							                    <div class="card-body">
-							                        <p><strong>Diagnostic Care Plan:</strong> ${soap.p_diagnosis_care_plan}</p>
-							                        <p><strong>Therapeutic Care Plan:</strong> ${soap.p_therapeutic_care_plan}</p>
-							                        <p><strong>Doctor's Note:</strong> ${soap.p_doctors_note}</p>
-							                    </div>
-							                </div>
-							            </div>
-							        </div>
-							    </div>
+							    </tbody>
+							</table>
 							</div>
 						`;
-					});
 
-					$('#clinic_history').html(string);
-				}
-			})
+						$('#vital_signs').html(string);
+
+						Swal.fire({
+							title: "Vital Signs",
+							html: `<hr>${string}`,
+							showClass: { popup: '' },
+							hideClass: { popup: '' },
+							width: '1000px',
+						})
+					}
+				})
+			}
+			else{
+				se('No selected patient');
+			}
 		}
 
-		function getVitalSigns(uid){
-			$.ajax({
-				url: "{{ route('soap.get') }}",
-				data: {
-					select: "*",
-					where: ['user_id', uid]
-				}, 
-				success: result => {
-					result = JSON.parse(result);
+		function filesChart(){
+			if(uid){
+				$.ajax({
+					url: "{{ route('soap.get') }}",
+					data: {
+						select: "*",
+						where: ['user_id', uid]
+					}, 
+					success: result => {
+						result = JSON.parse(result);
 
-					let string = `
-						<table class="table table-bordered rounded">
-						    <thead>
-						        <tr>
-						            <th>Date</th>
-						            <th>Blood Pressure</th>
-						            <th>Pulse Rate</th>
-						            <th>Temperature</th>
-						            <th>Respiratory Rate</th>
-						            <th>O2 SAT</th>
-						            <th>Weight</th>
-						            <th>Height</th>
-						        </tr>
-						    </thead>
-						    <tbody>
-					`;
-
-					result.forEach(soap => {
-						string += `
+						let string = `
+							<table class="table table-bordered rounded">
+							    <thead>
 							        <tr>
-							            <td>${toDate(soap.created_at)}</td>
-							            <td>${soap.o_systolic}/${soap.o_diastolic}</td>
-							            <td>${soap.o_pulse}</td>
-							            <td>${soap.o_temperature}</td>
-							            <td>${soap.o_respiration_rate}</td>
-							            <td>${soap.o_o2_sat}</td>
-							            <td>${soap.o_weight} ${soap.o_weight_unit}</td>
-							            <td>${soap.o_height} ${soap.o_height_unit}</td>
+							            <th>File</th>
+							            <th>Date</th>
+							            <th>Actions</th>
 							        </tr>
-						`;
-					});
-
-					string += `
-						    </tbody>
-						</table>
-					`;
-
-					$('#vital_signs').html(string);
-				}
-			})
-		}
-
-		function getFiles(uid){
-			$.ajax({
-				url: "{{ route('soap.get') }}",
-				data: {
-					select: "*",
-					where: ['user_id', uid]
-				}, 
-				success: result => {
-					result = JSON.parse(result);
-
-					let string = `
-						<table class="table table-bordered rounded">
-						    <thead>
-						        <tr>
-						            <th>File</th>
-						            <th>Date</th>
-						            <th>Actions</th>
-						        </tr>
-						    </thead>
-						    <tbody>
-					`;
-
-					result.forEach(soap => {
-						let fn = soap.o_drawing.split("/").pop();
-						string += `
-							        <tr>
-							            <td>${fn}</td>
-							            <td>${moment.unix(fn.match(/(\d{10})/)[0]).format("MMM DD, YYYY")}</td>
-							            <td>
-							            	<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" href="${soap.o_drawing}" target="_blank">
-							            		<i class="fas fa-search"></i>
-							            	</a>
-							            </td>
-							        </tr>
+							    </thead>
+							    <tbody>
 						`;
 
-						let files = JSON.parse(soap.p_files);
-						if(files.length){
-							files.forEach(file => {
-								let fn = file.split("/").pop();
-								
-								string += `
-									<tr>
-									    <td>${fn}</td>
-									    <td>${moment.unix(fn.match(/(\d{10})/)[0]).format("MMM DD, YYYY")}</td>
-									    <td>
-									    	<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" href="${file}" target="_blank">
-									    		<i class="fas fa-search"></i>
-									    	</a>
-									    </td>
-									</tr>
-								`;
-							});
-						}
-					});
-
-					string += `
-						    </tbody>
-						</table>
-					`;
-
-					$('#files').html(string);
-				}
-			})
-		}
-		
-		function getSubjective(uid){
-			// do not proceed if already initiated
-			if(subjective.length){
-				removeLoader();
-				return;
-			}
-
-			let string = "";
-
-			let complaints = [
-				"Abdominal pain and watery stool for 3 days",
-				"Abdominal pain with an acidic feel of vomiting",
-				"Cataract",
-				"Check up",
-				"Chest pain during activity exertion",
-				"Consultation",
-				"Vaccine schedule"
-			];
-
-			string += `
-				<div class="row iRow" style="margin-bottom: 10px;">
-				    <div class="col-md-3 iLabel">
-				        Type of Visit
-				    </div>
-				    <div class="col-md-9 iInput">
-				        <select id="type_of_visit" style="width: 100%;">
-				        	<option value="">Select One</option>
-				        	<option value="Walk-in Patient">Walk-in Patient</option>
-				        	<option value="Referral Patient">Referral Patient</option>
-				        	<option value="Follow-up Patient">Follow-up Patient</option>
-				        </select>
-				    </div>
-				</div>
-
-				<div class="row iRow" style="margin-bottom: 10px;">
-				    <div class="col-md-3 iLabel">
-				        Chief Complaint
-				    </div>
-				    <div class="col-md-9 iInput">
-				        <select id="chief_complaint" style="width: 100%;">
-				        	<option value="">Select One</option>
-				        </select>
-				    </div>
-				</div>
-
-				<div class="row iRow">
-				    <div class="col-md-3 iLabel">
-				        History of Present Illness
-				    </div>
-				    <div class="col-md-9 iInput">
-				        <textarea id="history_of_present_illness" class="form-control" rows="7"></textarea>
-				    </div
-				</div>
-			`;
-
-			$('#subjective').append(string);
-			$('#type_of_visit').select2();
-			$('#chief_complaint').select2({
-				data: complaints,
-				tags: true
-			});
-
-			subjective['type_of_visit'] = null;
-			subjective['chief_complaint'] = null;
-			subjective['history_of_present_illness'] = null;
-			subjective.length = 1;
-
-			removeLoader();
-		}
-
-		function getObjective(uid){
-			// do not proceed if already initiated
-			if(objective.length){
-				removeLoader();
-				return;
-			}
-
-			let string = "";
-
-			string += `
-                <div class="row">
-                	<section class="col-lg-12">
-                		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
-                		    <li class="nav-item" style="width: 30%;">
-                		        <a class="nav-link active" href="#vitals" data-toggle="tab">
-                		            Vitals
-                		        </a>
-                		    </li>
-                		    &nbsp;
-                		    <li class="nav-item" style="width: 30%;">
-                		        <a class="nav-link" href="#drawing" data-toggle="tab">
-                		            Drawing
-                		        </a>
-                		    </li>
-                		    &nbsp;
-                		    <li class="nav-item" style="width: 30%;">
-                		        <a class="nav-link" href="#exam" data-toggle="tab">
-                		            Exam
-                		        </a>
-                		    </li>
-                		</ul>
-
-    					<br>
-
-    					{{-- CONTENT START --}}
-    					<div class="tab-content p-0">
-
-    					    <div class="chart tab-pane active" id="vitals" style="position: relative;">
-	    	                    <div class="card">
-	    	                        <div class="card-body">
-
-			                    		<div class="row">
-			                    			<div class="col-md-6">
-												<label class="form-label" style="float: left;">Blood Pressure</label>
-												<div class="input-group">
-													<input type="text" class="form-control" id="bp_systolic" placeholder="Systolic">
-													<strong class="input-group-text">/</strong>
-													<input type="text" class="form-control" id="bp_diastolic" placeholder="Diastolic">
-												</div>
-			                    			</div>
-
-											<div class="col-md-6">
-												<label class="form-label" style="float: left;">Pulse</label>
-												<div class="input-group">
-												    <input type="text" class="form-control" id="pulse_rate" placeholder="Pulse">
-												    <select class="form-control" id="pulse_type">
-												        <option>Regular</option>
-												        <option>Irregular</option>
-												    </select>
-												</div>
-											</div>
-			                    		</div>
-
-			                    		<div class="row" style="margin-top: 15px;">
-			                    			<div class="col-md-6">
-												<label class="form-label" style="float: left;">Temperature</label>
-												<div class="input-group">
-												    <input type="text" class="form-control" id="temperature" placeholder="Temp">
-												    <select class="form-control" id="temp_unit">
-												        <option>Celsius</option>
-												        <option>Farenheit</option>
-												    </select>
-												    <select class="form-control" id="temp_location">
-												        <option>Underarm</option>
-												        <option>Mouth</option>
-												        <option>Rectal</option>
-												        <option>Skin</option>
-												        <option>Ear</option>
-												    </select>
-												</div>
-			                    			</div>
-
-											<div class="col-md-6">
-												<label class="form-label" style="float: left;">Respiration Rate</label>
-												<div class="input-group">
-												    <input type="text" class="form-control" id="respiration_rate" placeholder="Rate">
-												    <select class="form-control" id="respiration_type">
-												        <option>Regular</option>
-												        <option>Irregular</option>
-												    </select>
-												</div>
-											</div>
-			                    		</div>
-
-			                    		<div class="row" style="margin-top: 15px;">
-			                    			<div class="col-md-6">
-												<label class="form-label" style="float: left;">Weight</label>
-												<div class="input-group">
-												    <input type="text" class="form-control" id="weight" placeholder="Weight">
-												    <select class="form-control" id="weight_unit">
-												        <option>Kg</option>
-												        <option>Lbs</option>
-												    </select>
-												</div>
-			                    			</div>
-
-											<div class="col-md-6">
-												<label class="form-label" style="float: left;">O2 SAT</label>
-											    <input type="text" class="form-control" id="o2_sat" placeholder="O2 SAT">
-											</div>
-			                    		</div>
-
-			                    		<div class="row" style="margin-top: 15px;">
-			                    			<div class="col-md-6">
-												<label class="form-label" style="float: left;">Height</label>
-												<div class="input-group">
-												    <input type="text" class="form-control" id="height" placeholder="Height">
-												    <select class="form-control" id="height_unit">
-												        <option>Cm</option>
-												        <option>Ft</option>
-												    </select>
-												</div>
-			                    			</div>
-			                    		</div>
-
-			                    	</div>
-	    	                    </div>
-    					    </div>
-
-    					    <div class="chart tab-pane" id="drawing" style="position: relative;">
-	    	                    <div class="card">
-	    	                        <div class="card-body">
-	    	                        	<div class="row">
-	    	                        		<div class="col-md-2" style="overflow-y: scroll;" id="drawing_templates">
-	    	                        		</div>
-
-	    	                        		<div class="col-md-10">
-			                    				<canvas style="border: 1px solid black; cursor: crosshair;" id="canvas"></canvas>
-	    	                        		</div>
-	    	                        	</div>
-			                    		
-										<div id="controls">
-											<label>Color:
-											    <input type="color" id="colorPicker" value="#FF0000">
-											</label>
-											<label>Brush Size:
-											    <input type="range" id="brushSize" min="1" max="50" value="3">
-											    <span id="sizeDisplay">3</span> px
-											</label>
-										</div>
-
-										<br>
-
-										<button id="undoBtn" class="btn btn-primary">Undo</button>
-									    <button id="clearBtn" class="btn btn-warning">Clear</button>
-									    <button id="saveBtn" class="btn btn-success">Save</button>
-
-			                    	</div>
-	    	                    </div>
-    					    </div>
-
-    					    <div class="chart tab-pane" id="exam" style="position: relative;">
-	    	                    <div class="card">
-	    	                        <div class="card-body">
-			                    		<div class="row">
-			                    			<div class="col-md-12">
-												<label class="form-label" style="float: left;">(Physical Examination)</label>
-												<div class="input-group">
-													<textarea id="physical_examination" class="form-control" rows="7"></textarea>
-												</div>
-			                    			</div>
-			                    		</div>
-			                    	</div>
-	    	                    </div>
-    					    </div>
-
-    					</div>
-	                </section>
-                </div>
-			`;
-
-			$('#objective').append(string);
-			let canvas = document.getElementById('canvas');
-			let ctx = canvas.getContext('2d');
-		    let colorPicker = document.getElementById('colorPicker');
-		    let brushSize = document.getElementById('brushSize');
-		    let sizeDisplay = document.getElementById('sizeDisplay');
-
-		    let undoBtn = document.getElementById('undoBtn');
-	        let clearBtn = document.getElementById('clearBtn');
-	        let saveBtn = document.getElementById('saveBtn');
-
-		    let drawing = false;
-		    let prevX = 0, prevY = 0;
-    		let history = [];
-
-		    canvas.width = 800;
-  			canvas.height = 400;
-
-		    canvas.addEventListener('mousedown', (e) => {
-		    	saveState(); //Save before drawing
-				drawing = true;
-				const rect = canvas.getBoundingClientRect();
-				prevX = e.clientX - rect.left;
-				prevY = e.clientY - rect.top;
-		    });
-
-	        canvas.addEventListener('mouseup', () => drawing = false);
-	        canvas.addEventListener('mouseleave', () => drawing = false);
-
-	        brushSize.addEventListener('input', () => {
-	        	sizeDisplay.textContent = brushSize.value;
-	        });
-
-	        canvas.addEventListener('mousemove', (e) => {
-				if (!drawing) return;
-
-				const rect = canvas.getBoundingClientRect();
-				const x = e.clientX - rect.left;
-				const y = e.clientY - rect.top;
-
-				ctx.lineWidth = brushSize.value;
-				ctx.lineCap = 'round';
-				ctx.strokeStyle = colorPicker.value;
-
-				ctx.beginPath();
-				ctx.moveTo(prevX, prevY);
-				ctx.lineTo(x, y);
-				ctx.stroke();
-
-				prevX = x;
-				prevY = y;
-            });
-
-            {{-- FOR UNDO --}}
-            function saveState() {
-				if (history.length >= 50) history.shift(); // Limit to 50 states
-				history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-            }
-
-		    // Restore previous state
-		    function undo() {
-				if (history.length > 0) {
-					const imageData = history.pop();
-					ctx.putImageData(imageData, 0, 0);
-				}
-		    }
-
-		    // Undo button
-			undoBtn.addEventListener('click', undo);
-
-		    // Clear canvas
-		    clearBtn.addEventListener('click', () => {
-				saveState();
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-		    });
-
-		    // Save as PNG
-		    saveBtn.addEventListener('click', () => {
-				const link = document.createElement('a');
-				link.download = 'drawing.png';
-				link.href = canvas.toDataURL('image/png');
-				link.click();
-		    });
-
-            // Reset path when mouse is up
-            canvas.addEventListener('mouseup', () => ctx.beginPath());
-
-            {{-- LOAD DRAWINGS
-            $.ajax({
-            	url: "{{ route('template.getDrawing') }}",
-            	success: result => {
-            		result = JSON.parse(result);
-
-            		let string = "";
-
-            		result.forEach(drawing => {
-            			string += `
-            				<div class="row shadow" style="margin-bottom: 10px; cursor: pointer;">
-            					<div class="col-md-12">
-            						<img src="${drawing.image}" width="100%" class="imageToCanvas">
-            					</div>
-            				</div>
-            			`;
-            		});
-
-            		$('#drawing_templates').append(string);
-            		$('.imageToCanvas').on('click', e => {
-            			base_image = new Image();
-            			base_image.onload = function(){
-            				// Compute scale to fit height
-            				const scale = canvas.height / base_image.height;
-            				const newWidth = base_image.width * scale;
-            				const newHeight = canvas.height;
-
-            				// Optional: Center horizontally
-            				const x = (canvas.width - newWidth) / 2;
-            				const y = 0;
-
-            				// Draw scaled image
-            				ctx.drawImage(base_image, x, y, newWidth, newHeight);
-            			}
-            			base_image.src = $(e.target).attr('src');
-					});
-            	}
-            }); --}}
-
-			objective['bp_systolic'] = null;
-			objective['bp_diastolic'] = null;
-			objective['pulse_rate'] = null;
-			objective['pulse_type'] = null;
-			objective['temperature'] = null;
-			objective['temp_unit'] = null;
-			objective['temp_location'] = null;
-			objective['respiration_rate'] = null;
-			objective['respiration_type'] = null;
-			objective['weight'] = null;
-			objective['weight_unit'] = null;
-			objective['o2_sat'] = null;
-			objective['height'] = null;
-			objective['height_unit'] = null;
-			objective.length = 1;
-
-			removeLoader();
-		}
-
-		function getAssessment(uid){
-			// do not proceed if already initiated
-			if(assessment.length){
-				removeLoader();
-				return;
-			}
-
-			let string = "";
-
-			string += `
-                <div class="card">
-                    <div class="card-body">
-                		<div class="row">
-                			<div class="col-md-12">
-								<label class="form-label" style="float: left;">Previous Diagnosis</label>
-								
-								<textarea class="form-control" rows="4" disabled></textarea>
-                			</div>
-                		</div>
-
-                		<br>
-
-                		<div class="row">
-                			<div class="col-md-12">
-								<label class="form-label" style="float: left;">
-									Diagnosis
-								</label>
-
-								<div style="float: right;">
-									<button class="btn btn-primary" id="callPreviousDiagnosis">Previous Diagnosis</button>
-									<button class="btn btn-primary" id="callDiagnosis">Diagnosis</button>
-									<button class="btn btn-primary" id="callICD">ICD</button>
-								</div>
-
-								<br>
-								<br>
-
-								<textarea id="diagnosis" class="form-control" rows="7"></textarea>
-                			</div>
-                		</div>
-                	</div>
-                </div>
-			`;
-
-			assessment['diagnosis'] = null;
-			assessment.length = 1;
-
-			$('#assessment').append(string);
-			removeLoader();
-
-			$('#callDiagnosis').on('click', e => {
-				modalOne = new bootstrap.Modal(document.getElementById('bs-diagnosis'), {
-					backdrop: 'static',
-					keyboard: false
-				});
-				modalOne.show();
-
-				$.ajax({
-					url: "{{ route('template.getDiagnosis') }}",
-					success: result => {
-						result = JSON.parse(result);
-
-						let string = "";
-						if(result.length){
-							result.forEach(temp => {
-								string += `
-									<tr>
-										<td>${temp.name}</td>
-										<td>
-											<input type="checkbox" value="${temp.name}">
-										</td>
-									</tr>
-								`;
-							});
-						}
-						else{
+						result.forEach(soap => {
+							let fn = soap.o_drawing.split("/").pop();
 							string += `
-								<tr>
-									<td colspan="2">No entry. Check in Template Manager</td>
-								</tr>
+								        <tr>
+								            <td>${fn}</td>
+								            <td>${moment.unix(fn.match(/(\d{10})/)[0]).format("MMM DD, YYYY")}</td>
+								            <td>
+								            	<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" href="${soap.o_drawing}" target="_blank">
+								            		<i class="fas fa-search"></i>
+								            	</a>
+								            </td>
+								        </tr>
 							`;
-						}
 
-						$('#bs-diagnosis table tbody').html(string);
+							let files = JSON.parse(soap.p_files);
+							if(files.length){
+								files.forEach(file => {
+									let fn = file.split("/").pop();
+									
+									string += `
+										<tr>
+										    <td>${fn}</td>
+										    <td>${moment.unix(fn.match(/(\d{10})/)[0]).format("MMM DD, YYYY")}</td>
+										    <td>
+										    	<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" href="${file}" target="_blank">
+										    		<i class="fas fa-search"></i>
+										    	</a>
+										    </td>
+										</tr>
+									`;
+								});
+							}
+						});
+
+						string += `
+							    </tbody>
+							</table>
+						`;
+				
+						Swal.fire({
+							title: "Uploaded Files",
+							html: `<hr>${string}`,
+							showClass: { popup: '' },
+							hideClass: { popup: '' },
+							width: '1000px',
+						})
 					}
 				})
-
-				document.getElementById('bs-diagnosis-submit').onclick = function () {
-					$('#bs-diagnosis [type="checkbox"]:checked').each((i, cbox) => {
-						$('#diagnosis').val($('#diagnosis').val() + ($('#diagnosis').val() ? ", " : "") + cbox.value);
-					});
-
-					modalOne.hide();
-				};
-			});
-
-			$('#callICD').on('click', e => {
-				modalTwo = new bootstrap.Modal(document.getElementById('bs-icd'), {
-					backdrop: 'static',
-					keyboard: false
-				});
-				modalTwo.show();
-
-				$.ajax({
-					url: "{{ route('template.getICD') }}",
-					success: result => {
-						result = JSON.parse(result);
-
-						let string = "";
-						if(result.length){
-							result.forEach(temp => {
-								string += `
-									<tr>
-										<td>${temp.code}</td>
-										<td>${temp.description}</td>
-										<td>
-											<input type="checkbox" value="${temp.code + " " + temp.description}">
-										</td>
-									</tr>
-								`;
-							});
-						}
-						else{
-							string += `
-								<tr>
-									<td colspan="2">No entry. Check in Template Manager</td>
-								</tr>
-							`;
-						}
-
-						$('#bs-icd table tbody').html(string);
-					}
-				})
-
-				document.getElementById('bs-icd-submit').onclick = function () {
-					$('#bs-icd [type="checkbox"]:checked').each((i, cbox) => {
-						$('#diagnosis').val($('#diagnosis').val() + ($('#diagnosis').val() ? "\n" : "") + cbox.value);
-					});
-
-					modalTwo.hide();
-				};
-			});
-		}
-
-		function getPlan(uid){
-			// do not proceed if already initiated
-			if(plan.length){
-				removeLoader();
-				return;
 			}
-
-			let string = "";
-
-			string += `
-                <div class="card">
-                    <div class="card-body">
-                		<div class="row">
-                			<div class="col-md-12">
-								<label class="form-label" style="float: left;">
-									Diagnosis Care Plan
-								</label>
-
-								<div style="float: right;">
-									<button class="btn btn-primary">Laboratory Request</button>
-									<button class="btn btn-primary">Imaging Request</button>
-								</div>
-
-								<br>
-								<br>
-
-								<textarea id="diagnosis_care_plan" class="form-control" rows="7"></textarea>
-                			</div>
-                		</div>
-
-						<br>
-
-                		<div class="row">
-                			<div class="col-md-12">
-								<label class="form-label" style="float: left;">
-									Therapeutic Care Plan
-								</label>
-
-								<div style="float: right;">
-									<button class="btn btn-primary" id="callPreviousMedication">Previous Medication</button>
-									<button class="btn btn-primary" id="callPrescription">Prescription</button>
-									<button class="btn btn-primary" id="callCertificate">Certificate</button>
-									<button class="btn btn-primary" id="callRVU">RVU</button>
-									<button class="btn btn-primary" id="callPediaVaccine">Pedia Vaccine</button>
-								</div>
-
-								<br>
-								<br>
-
-								<textarea id="therapeutic_care_plan" class="form-control" rows="7"></textarea>
-                			</div>
-                		</div>
-						
-						<br>
-                		<div class="row">
-                			<div class="col-md-12">
-								<label class="form-label" style="float: left;">
-									File Upload
-								</label>
-
-								<input type="file" id="p_files" class="form-control" multiple>
-                			</div>
-                		</div>
-						
-						<br>
-                		<div class="row">
-                			<div class="col-md-12">
-								<label class="form-label" style="float: left;">
-									Doctors Note
-								</label>
-
-								<textarea id="doctors_note" class="form-control" rows="7"></textarea>
-                			</div>
-                		</div>
-                	</div>
-                </div>
-			`;
-
-			plan['diagnosis_care_plan'] = null;
-			plan['therapeutic_care_plan'] = null;
-			plan['file'] = null;
-			plan['doctors_note'] = null;
-			plan.length = 1;
-
-			$('#plan').append(string);
-			removeLoader();
-
-			$('#callRVU').on('click', e => {
-				modalThree = new bootstrap.Modal(document.getElementById('bs-rvu'), {
-					backdrop: 'static',
-					keyboard: false
-				});
-				modalThree.show();
-
-				$.ajax({
-					url: "{{ route('template.getRVU') }}",
-					success: result => {
-						result = JSON.parse(result);
-
-						let string = "";
-						if(result.length){
-							result.forEach(temp => {
-								string += `
-									<tr>
-										<td>${temp.code}</td>
-										<td>${temp.description}</td>
-										<td>
-											<input type="checkbox" value="${temp.code + " " + temp.description}">
-										</td>
-									</tr>
-								`;
-							});
-						}
-						else{
-							string += `
-								<tr>
-									<td colspan="2">No entry. Check in Template Manager</td>
-								</tr>
-							`;
-						}
-
-						$('#bs-rvu table tbody').html(string);
-					}
-				})
-
-				document.getElementById('bs-rvu-submit').onclick = function () {
-					$('#bs-rvu [type="checkbox"]:checked').each((i, cbox) => {
-						$('#therapeutic_care_plan').val($('#therapeutic_care_plan').val() + ($('#therapeutic_care_plan').val() ? "\n" : "") + cbox.value);
-					});
-
-					modalThree.hide();
-				};
-			});
+			else{
+				se('No selected patient');
+			}
 		}
 
-		function removeLoader(){
-			setTimeout(() => {
-				$('.preloader').remove();
-			}, 500);
+		function template(){
+			if(uid){
+				Swal.fire({
+					title: "Personal Medical History",
+					html: `<hr>${string}`,
+					showClass: { popup: '' },
+					hideClass: { popup: '' },
+					width: '1000px',
+				})
+			}
+			else{
+				se('No selected patient');
+			}
 		}
 	</script>
 @endpush
