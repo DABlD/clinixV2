@@ -180,8 +180,8 @@
 		    }
 		    .visit-link:hover { text-decoration: underline; }
 		    .action-icon {
-		      width: 40px;
-		      height: 40px;
+		      width: 50px;
+		      height: 50px;
 		      border-radius: 8px;
 		      border: 1px solid #ddd;
 		      padding: 5px;
@@ -223,7 +223,7 @@
 		    const actions = link.nextElementSibling;
 		    const isVisible = actions.style.display === 'block';
 		    actions.style.display = isVisible ? 'none' : 'block';
-		    link.textContent = isVisible ? 'visit ↑' : 'visit ↓';
+		    link.textContent = isVisible ? 'Visit ↑' : 'Visit ↓';
 		  }
 
 		function getPatients(){
@@ -249,7 +249,6 @@
 
 					if(patients.length){
 						patients.forEach(patient => {
-							console.log(patient);
 							patientString += `
 								<div class="patient-card d-flex align-items-center justify-content-between flex-wrap">
 								    <div class="d-flex align-items-center">
@@ -261,10 +260,14 @@
 								            <a class="visit-link" onclick="toggleVisit(this)">visit ↑</a>
 								            <div class="visit-actions">
 								                <div class="d-flex gap-2 mt-2 flex-wrap">
-								                    <img src="https://placehold.co/40?text=H" class="action-icon" title="History">
-								                    <img src="https://placehold.co/40?text=V" class="action-icon" title="Vitals">
-								                    <img src="https://placehold.co/40?text=P" class="action-icon" title="Prescription">
-								                    <img src="https://placehold.co/40?text=L" class="action-icon" title="Lab">
+								                    <img src="{{ asset('images/icons/med_history.png') }}" class="action-icon" title="Medical History"> &nbsp;
+								                    <img src="{{ asset('images/icons/clinic_history.png') }}" class="action-icon" title="Clinic History"> &nbsp;
+								                    <img src="{{ asset('images/icons/vital_sign.png') }}" class="action-icon" title="Vital Signs"> &nbsp;
+								                    <img src="{{ asset('images/icons/prescription.png') }}" class="action-icon" title="Prescription"> &nbsp;
+								                    <img src="{{ asset('images/icons/lab_request.png') }}" class="action-icon" title="Lab Request"> &nbsp;
+								                    <img src="{{ asset('images/icons/imaging.png') }}" class="action-icon" title="Imaging"> &nbsp;
+								                    <img src="{{ asset('images/icons/files.png') }}" class="action-icon" title="Files"> &nbsp;
+								                    <img src="{{ asset('images/icons/vaccine.png') }}" class="action-icon" title="Vaccine">
 								                </div>
 								            </div>
 								        </div>
@@ -313,7 +316,7 @@
 					$('#table tbody').html(`
 						${patientString}
 
-						<div class="d-flex justify-content-left align-items-center mt-3 gap-3 mt-3 flex-wrap">
+						<div class="d-flex justify-content-end align-items-center mt-3 gap-3 mt-3 flex-wrap">
 							<span class="text-muted small" id="pageInfo">Page ${page+1} of ${Math.ceil(tc / limit)}</span>
 							&nbsp;
 							&nbsp;

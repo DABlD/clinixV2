@@ -194,14 +194,12 @@ class SoapController extends Controller
     }
 
     public function index(){
-        $companies = User::where('role', 'Company')->distinct()->pluck('fname');
-
-        return $this->_view('index', [
+        return $this->_view('patients.soap', [
             'title' => ucfirst($this->table)
         ]);
     }
 
     private function _view($view, $data = array()){
-        return view("$this->table.$view", $data);
+        return view("$view", $data);
     }
 }

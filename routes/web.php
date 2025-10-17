@@ -111,7 +111,7 @@ Route::group([
             }
         );
 
-        // PATIENT ROUTES
+        // APPOINTMENT ROUTES
         $cname = "appointment";
         Route::group([
                 'as' => "$cname.",
@@ -131,6 +131,24 @@ Route::group([
                 Route::post("store/", ucfirst($cname) . "Controller@store")->name('store');
                 Route::post("delete/", ucfirst($cname) . "Controller@delete")->name('delete');
                 Route::post("update/", ucfirst($cname) . "Controller@update")->name('update');
+            }
+        );
+
+        // SOAP ROUTE
+        $cname = "soap";
+        Route::group([
+                'as' => "$cname.",
+                'prefix' => "$cname/"
+            ], function () use($cname){
+
+                Route::get("/", ucfirst($cname) . "Controller@index")
+                    ->defaults("sidebar", 1)
+                    ->defaults("icon", "fas fa-notebook")
+                    ->defaults("name", ucfirst($cname) . " Note")
+                    ->defaults("roles", array("Admin", "Doctor"))
+                    // ->defaults("group", "Settings")
+                    ->name($cname)
+                    ->defaults("href", "/$cname");
             }
         );
 
