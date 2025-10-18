@@ -19,36 +19,6 @@
                     <div class="card-body table-responsive">
                     	<table id="table" class="table table-hover" style="width: 100%;">
                     		<tbody>
-
-                    			<!-- Patient 1 -->
-								{{-- <div class="patient-card d-flex align-items-center justify-content-between flex-wrap">
-								    <div class="d-flex align-items-center">
-								        <img src="https://placehold.co/64" class="avatar me-3" alt="Avatar">
-								        <div>
-								            <h6 class="mb-0 text-uppercase fw-bold">Doe, John</h6>
-								            <div class="text-muted small">Male</div>
-								            <div class="text-secondary small">PATIENT_ID</div>
-								            <a class="visit-link" onclick="toggleVisit(this)">visit ↑</a>
-								            <div class="visit-actions">
-								                <div class="d-flex gap-2 mt-2 flex-wrap">
-								                    <img src="https://placehold.co/40?text=H" class="action-icon" title="History">
-								                    <img src="https://placehold.co/40?text=V" class="action-icon" title="Vitals">
-								                    <img src="https://placehold.co/40?text=P" class="action-icon" title="Prescription">
-								                    <img src="https://placehold.co/40?text=L" class="action-icon" title="Lab">
-								                </div>
-								            </div>
-								        </div>
-								    </div>
-								    <div class="text-end">
-								        <button class="btn btn-primary btn-sm mb-2">SOAP Note</button><br>
-								        <div class="form-check form-switch d-inline-flex align-items-center">
-								            <input class="form-check-input" type="checkbox" checked>
-								            <label class="form-check-label small ms-1">Active Patient</label>
-								        </div>
-								    </div>
-								</div> --}}
-
-
                     		</tbody>
                     	</table>
                     </div>

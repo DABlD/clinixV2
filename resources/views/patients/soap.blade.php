@@ -7,14 +7,10 @@
         <div class="row">
             <section class="col-lg-12 connectedSortable">
 
-
-
                 @include('patients.includes.toolbar2')
 
                 <br>
-
                 <div class="row">
-
 				<!-- LEFT COLUMN -->
 				<div class="col-md-4">
 				    <!-- Patient Card -->
@@ -131,23 +127,24 @@
 				        <div class="card-header bg-info text-white" style="font-size: 24px; font-weight: bold;">Calendar</div>
 				        <div class="card-body">
 				            <div class="d-flex justify-content-between align-items-center mb-2">
-				                      <button class="btn btn-outline-primary btn-sm">Prev</button>
-				                      <span><strong>October 2025</strong></span>
-				                      <button class="btn btn-outline-primary btn-sm">Next</button>
-				                    </div>
-				                    <table class="table table-bordered text-center mb-0 small">
-				                      <thead>
-				                        <tr class="bg-light">
-				                          <th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
-				                        </tr>
-				                      </thead>
-				                      <tbody>
-				                        <tr><td></td><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
-				                        <tr><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
-				                        <tr><td>13</td><td>14</td><td>15</td><td class="bg-primary text-white rounded">16</td><td>17</td><td>18</td><td>19</td></tr>
-				                        <tr><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td></tr>
-				                      </tbody>
-				                    </table>
+								<button class="btn btn-outline-primary btn-sm">Prev</button>
+								<span><strong>October 2025</strong></span>
+								<button class="btn btn-outline-primary btn-sm">Next</button>
+							</div>
+
+							<table class="table table-bordered text-center mb-0 small">
+								<thead>
+									<tr class="bg-light">
+										<th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
+									</tr>
+								</thead>
+							<tbody>
+								<tr><td></td><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+								<tr><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
+								<tr><td>13</td><td>14</td><td>15</td><td class="bg-primary text-white rounded">16</td><td>17</td><td>18</td><td>19</td></tr>
+								<tr><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td></tr>
+							</tbody>
+							</table>
 				        </div>
 				    </div>
 				</div><!-- /LEFT -->
@@ -221,277 +218,276 @@
 			                    </div>
 			                </div>
 			                <div class="tab-pane fade" id="obj">
-			                	                <div class="row">
-			                	                	<section class="col-lg-12">
-			                	                		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
-			                	                		    <li class="nav-item" style="width: 30%;">
-			                	                		        <a class="nav-link active" href="#vitals" data-toggle="tab">
-			                	                		            Vitals
-			                	                		        </a>
-			                	                		    </li>
-			                	                		    &nbsp;
-			                	                		    <li class="nav-item" style="width: 30%;">
-			                	                		        <a class="nav-link" href="#drawing" data-toggle="tab">
-			                	                		            Drawing
-			                	                		        </a>
-			                	                		    </li>
-			                	                		    &nbsp;
-			                	                		    <li class="nav-item" style="width: 30%;">
-			                	                		        <a class="nav-link" href="#exam" data-toggle="tab">
-			                	                		            Exam
-			                	                		        </a>
-			                	                		    </li>
-			                	                		</ul>
+            	                <div class="row">
+            	                	<section class="col-lg-12">
+            	                		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
+            	                		    <li class="nav-item" style="width: 30%;">
+            	                		        <a class="nav-link active" href="#vitals" data-toggle="tab">
+            	                		            Vitals
+            	                		        </a>
+            	                		    </li>
+            	                		    &nbsp;
+            	                		    <li class="nav-item" style="width: 30%;">
+            	                		        <a class="nav-link" href="#drawing" data-toggle="tab">
+            	                		            Drawing
+            	                		        </a>
+            	                		    </li>
+            	                		    &nbsp;
+            	                		    <li class="nav-item" style="width: 30%;">
+            	                		        <a class="nav-link" href="#exam" data-toggle="tab">
+            	                		            Exam
+            	                		        </a>
+            	                		    </li>
+            	                		</ul>
 
-			                	    					<br>
+            	    					<br>
 
-			                	    					{{-- CONTENT START --}}
-			                	    					<div class="tab-content p-0">
+            	    					{{-- CONTENT START --}}
+            	    					<div class="tab-content p-0">
 
-			                	    					    <div class="chart tab-pane active" id="vitals" style="position: relative;">
-			                		    	                    <div class="card">
-			                		    	                        <div class="card-body">
+            	    					    <div class="chart tab-pane active" id="vitals" style="position: relative;">
+            		    	                    <div class="card">
+            		    	                        <div class="card-body">
 
-			                				                    		<div class="row">
-			                				                    			<div class="col-md-6">
-			                													<label class="form-label" style="float: left;">Blood Pressure</label>
-			                													<div class="input-group">
-			                														<input type="text" class="form-control" id="bp_systolic" placeholder="Systolic">
-			                														<strong class="input-group-text">/</strong>
-			                														<input type="text" class="form-control" id="bp_diastolic" placeholder="Diastolic">
-			                													</div>
-			                				                    			</div>
+            				                    		<div class="row">
+            				                    			<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Blood Pressure</label>
+            													<div class="input-group">
+            														<input type="text" class="form-control" id="bp_systolic" placeholder="Systolic">
+            														<strong class="input-group-text">/</strong>
+            														<input type="text" class="form-control" id="bp_diastolic" placeholder="Diastolic">
+            													</div>
+            				                    			</div>
 
-			                												<div class="col-md-6">
-			                													<label class="form-label" style="float: left;">Pulse</label>
-			                													<div class="input-group">
-			                													    <input type="text" class="form-control" id="pulse_rate" placeholder="Pulse">
-			                													    <select class="form-control" id="pulse_type">
-			                													        <option>Regular</option>
-			                													        <option>Irregular</option>
-			                													    </select>
-			                													</div>
-			                												</div>
-			                				                    		</div>
+            												<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Pulse</label>
+            													<div class="input-group">
+            													    <input type="text" class="form-control" id="pulse_rate" placeholder="Pulse">
+            													    <select class="form-control" id="pulse_type">
+            													        <option>Regular</option>
+            													        <option>Irregular</option>
+            													    </select>
+            													</div>
+            												</div>
+            				                    		</div>
 
-			                				                    		<div class="row" style="margin-top: 15px;">
-			                				                    			<div class="col-md-6">
-			                													<label class="form-label" style="float: left;">Temperature</label>
-			                													<div class="input-group">
-			                													    <input type="text" class="form-control" id="temperature" placeholder="Temp">
-			                													    <select class="form-control" id="temp_unit">
-			                													        <option>Celsius</option>
-			                													        <option>Farenheit</option>
-			                													    </select>
-			                													    <select class="form-control" id="temp_location">
-			                													        <option>Underarm</option>
-			                													        <option>Mouth</option>
-			                													        <option>Rectal</option>
-			                													        <option>Skin</option>
-			                													        <option>Ear</option>
-			                													    </select>
-			                													</div>
-			                				                    			</div>
+            				                    		<div class="row" style="margin-top: 15px;">
+            				                    			<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Temperature</label>
+            													<div class="input-group">
+            													    <input type="text" class="form-control" id="temperature" placeholder="Temp">
+            													    <select class="form-control" id="temp_unit">
+            													        <option>Celsius</option>
+            													        <option>Farenheit</option>
+            													    </select>
+            													    <select class="form-control" id="temp_location">
+            													        <option>Underarm</option>
+            													        <option>Mouth</option>
+            													        <option>Rectal</option>
+            													        <option>Skin</option>
+            													        <option>Ear</option>
+            													    </select>
+            													</div>
+            				                    			</div>
 
-			                												<div class="col-md-6">
-			                													<label class="form-label" style="float: left;">Respiration Rate</label>
-			                													<div class="input-group">
-			                													    <input type="text" class="form-control" id="respiration_rate" placeholder="Rate">
-			                													    <select class="form-control" id="respiration_type">
-			                													        <option>Regular</option>
-			                													        <option>Irregular</option>
-			                													    </select>
-			                													</div>
-			                												</div>
-			                				                    		</div>
+            												<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Respiration Rate</label>
+            													<div class="input-group">
+            													    <input type="text" class="form-control" id="respiration_rate" placeholder="Rate">
+            													    <select class="form-control" id="respiration_type">
+            													        <option>Regular</option>
+            													        <option>Irregular</option>
+            													    </select>
+            													</div>
+            												</div>
+            				                    		</div>
 
-			                				                    		<div class="row" style="margin-top: 15px;">
-			                				                    			<div class="col-md-6">
-			                													<label class="form-label" style="float: left;">Weight</label>
-			                													<div class="input-group">
-			                													    <input type="text" class="form-control" id="weight" placeholder="Weight">
-			                													    <select class="form-control" id="weight_unit">
-			                													        <option>Kg</option>
-			                													        <option>Lbs</option>
-			                													    </select>
-			                													</div>
-			                				                    			</div>
+            				                    		<div class="row" style="margin-top: 15px;">
+            				                    			<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Weight</label>
+            													<div class="input-group">
+            													    <input type="text" class="form-control" id="weight" placeholder="Weight">
+            													    <select class="form-control" id="weight_unit">
+            													        <option>Kg</option>
+            													        <option>Lbs</option>
+            													    </select>
+            													</div>
+            				                    			</div>
 
-			                												<div class="col-md-6">
-			                													<label class="form-label" style="float: left;">O2 SAT</label>
-			                												    <input type="text" class="form-control" id="o2_sat" placeholder="O2 SAT">
-			                												</div>
-			                				                    		</div>
+            												<div class="col-md-6">
+            													<label class="form-label" style="float: left;">O2 SAT</label>
+            												    <input type="text" class="form-control" id="o2_sat" placeholder="O2 SAT">
+            												</div>
+            				                    		</div>
 
-			                				                    		<div class="row" style="margin-top: 15px;">
-			                				                    			<div class="col-md-6">
-			                													<label class="form-label" style="float: left;">Height</label>
-			                													<div class="input-group">
-			                													    <input type="text" class="form-control" id="height" placeholder="Height">
-			                													    <select class="form-control" id="height_unit">
-			                													        <option>Cm</option>
-			                													        <option>Ft</option>
-			                													    </select>
-			                													</div>
-			                				                    			</div>
-			                				                    		</div>
+            				                    		<div class="row" style="margin-top: 15px;">
+            				                    			<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Height</label>
+            													<div class="input-group">
+            													    <input type="text" class="form-control" id="height" placeholder="Height">
+            													    <select class="form-control" id="height_unit">
+            													        <option>Cm</option>
+            													        <option>Ft</option>
+            													    </select>
+            													</div>
+            				                    			</div>
+            				                    		</div>
 
-			                				                    	</div>
-			                		    	                    </div>
-			                	    					    </div>
+            				                    	</div>
+            		    	                    </div>
+            	    					    </div>
 
-			                	    					    <div class="chart tab-pane" id="drawing" style="position: relative;">
-			                		    	                    <div class="card">
-			                		    	                        <div class="card-body">
-			                		    	                        	<div class="row">
-			                		    	                        		<div class="col-md-2" style="overflow-y: scroll;" id="drawing_templates">
-			                		    	                        		</div>
+            	    					    <div class="chart tab-pane" id="drawing" style="position: relative;">
+            		    	                    <div class="card">
+            		    	                        <div class="card-body">
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2" style="overflow-y: scroll;" id="drawing_templates">
+            		    	                        		</div>
 
-			                		    	                        		<div class="col-md-10">
-			                				                    				<canvas style="border: 1px solid black; cursor: crosshair;" id="canvas"></canvas>
-			                		    	                        		</div>
-			                		    	                        	</div>
-			                				                    		
-			                											<div id="controls">
-			                												<label>Color:
-			                												    <input type="color" id="colorPicker" value="#FF0000">
-			                												</label>
-			                												<label>Brush Size:
-			                												    <input type="range" id="brushSize" min="1" max="50" value="3">
-			                												    <span id="sizeDisplay">3</span> px
-			                												</label>
-			                											</div>
+            		    	                        		<div class="col-md-10">
+            				                    				<canvas style="border: 1px solid black; cursor: crosshair;" id="canvas"></canvas>
+            		    	                        		</div>
+            		    	                        	</div>
+            				                    		
+            											<div id="controls">
+            												<label>Color:
+            												    <input type="color" id="colorPicker" value="#FF0000">
+            												</label>
+            												<label>Brush Size:
+            												    <input type="range" id="brushSize" min="1" max="50" value="3">
+            												    <span id="sizeDisplay">3</span> px
+            												</label>
+            											</div>
 
-			                											<br>
+            											<br>
 
-			                											<button id="undoBtn" class="btn btn-primary">Undo</button>
-			                										    <button id="clearBtn" class="btn btn-warning">Clear</button>
-			                										    <button id="saveBtn" class="btn btn-success">Save</button>
+            											<button id="undoBtn" class="btn btn-primary">Undo</button>
+            										    <button id="clearBtn" class="btn btn-warning">Clear</button>
+            										    <button id="saveBtn" class="btn btn-success">Save</button>
 
-			                				                    	</div>
-			                		    	                    </div>
-			                	    					    </div>
+            				                    	</div>
+            		    	                    </div>
+            	    					    </div>
 
-			                	    					    <div class="chart tab-pane" id="exam" style="position: relative;">
-			                		    	                    <div class="card">
-			                		    	                        <div class="card-body">
-			                				                    		<div class="row">
-			                				                    			<div class="col-md-12">
-			                													<label class="form-label" style="float: left;">(Physical Examination)</label>
-			                													<div class="input-group">
-			                														<textarea id="physical_examination" class="form-control" rows="7"></textarea>
-			                													</div>
-			                				                    			</div>
-			                				                    		</div>
-			                				                    	</div>
-			                		    	                    </div>
-			                	    					    </div>
-
-			                	    					</div>
-			                		                </section>
-			                	                </div>
+            	    					    <div class="chart tab-pane" id="exam" style="position: relative;">
+            		    	                    <div class="card">
+            		    	                        <div class="card-body">
+            				                    		<div class="row">
+            				                    			<div class="col-md-12">
+            													<label class="form-label" style="float: left;">(Physical Examination)</label>
+            													<div class="input-group">
+            														<textarea id="physical_examination" class="form-control" rows="7"></textarea>
+            													</div>
+            				                    			</div>
+            				                    		</div>
+            				                    	</div>
+            		    	                    </div>
+            	    					    </div>
+            	    					</div>
+            		                </section>
+            	                </div>
 			                </div>
 			                <div class="tab-pane fade" id="assess">
-			                	                <div class="card">
-			                	                    <div class="card-body">
-			                	                		<div class="row">
-			                	                			<div class="col-md-12">
-			                									<label class="form-label" style="float: left;">Previous Diagnosis</label>
-			                									
-			                									<textarea class="form-control" rows="4" disabled></textarea>
-			                	                			</div>
-			                	                		</div>
+            	                <div class="card">
+            	                    <div class="card-body">
+            	                		<div class="row">
+            	                			<div class="col-md-12">
+            									<label class="form-label" style="float: left;">Previous Diagnosis</label>
+            									
+            									<textarea class="form-control" rows="4" disabled></textarea>
+            	                			</div>
+            	                		</div>
 
-			                	                		<br>
+            	                		<br>
 
-			                	                		<div class="row">
-			                	                			<div class="col-md-12">
-			                									<label class="form-label" style="float: left;">
-			                										Diagnosis
-			                									</label>
+            	                		<div class="row">
+            	                			<div class="col-md-12">
+            									<label class="form-label" style="float: left;">
+            										Diagnosis
+            									</label>
 
-			                									<div style="float: right;">
-			                										<button class="btn btn-primary" id="callPreviousDiagnosis">Previous Diagnosis</button>
-			                										<button class="btn btn-primary" id="callDiagnosis">Diagnosis</button>
-			                										<button class="btn btn-primary" id="callICD">ICD</button>
-			                									</div>
+            									<div style="float: right;">
+            										<button class="btn btn-primary" id="callPreviousDiagnosis">Previous Diagnosis</button>
+            										<button class="btn btn-primary" id="callDiagnosis">Diagnosis</button>
+            										<button class="btn btn-primary" id="callICD">ICD</button>
+            									</div>
 
-			                									<br>
-			                									<br>
+            									<br>
+            									<br>
 
-			                									<textarea id="diagnosis" class="form-control" rows="7"></textarea>
-			                	                			</div>
-			                	                		</div>
-			                	                	</div>
-			                	                </div>
+            									<textarea id="diagnosis" class="form-control" rows="7"></textarea>
+            	                			</div>
+            	                		</div>
+            	                	</div>
+            	                </div>
 			                </div>
 			                <div class="tab-pane fade" id="plan">
-			                	                <div class="card">
-			                	                    <div class="card-body">
-			                	                		<div class="row">
-			                	                			<div class="col-md-12">
-			                									<label class="form-label" style="float: left;">
-			                										Diagnosis Care Plan
-			                									</label>
+            	                <div class="card">
+            	                    <div class="card-body">
+            	                		<div class="row">
+            	                			<div class="col-md-12">
+            									<label class="form-label" style="float: left;">
+            										Diagnosis Care Plan
+            									</label>
 
-			                									<div style="float: right;">
-			                										<button class="btn btn-primary">Laboratory Request</button>
-			                										<button class="btn btn-primary">Imaging Request</button>
-			                									</div>
+            									<div style="float: right;">
+            										<button class="btn btn-primary">Laboratory Request</button>
+            										<button class="btn btn-primary">Imaging Request</button>
+            									</div>
 
-			                									<br>
-			                									<br>
+            									<br>
+            									<br>
 
-			                									<textarea id="diagnosis_care_plan" class="form-control" rows="7"></textarea>
-			                	                			</div>
-			                	                		</div>
+            									<textarea id="diagnosis_care_plan" class="form-control" rows="7"></textarea>
+            	                			</div>
+            	                		</div>
 
-			                							<br>
+            							<br>
 
-			                	                		<div class="row">
-			                	                			<div class="col-md-12">
-			                									<label class="form-label" style="float: left;">
-			                										Therapeutic Care Plan
-			                									</label>
+            	                		<div class="row">
+            	                			<div class="col-md-12">
+            									<label class="form-label" style="float: left;">
+            										Therapeutic Care Plan
+            									</label>
 
-			                									<div style="float: right;">
-			                										<button class="btn btn-primary" id="callPreviousMedication">Previous Medication</button>
-			                										<button class="btn btn-primary" id="callPrescription">Prescription</button>
-			                										<button class="btn btn-primary" id="callCertificate">Certificate</button>
-			                										<button class="btn btn-primary" id="callRVU">RVU</button>
-			                										<button class="btn btn-primary" id="callPediaVaccine">Pedia Vaccine</button>
-			                									</div>
+            									<div style="float: right;">
+            										<button class="btn btn-primary" id="callPreviousMedication">Previous Medication</button>
+            										<button class="btn btn-primary" id="callPrescription">Prescription</button>
+            										<button class="btn btn-primary" id="callCertificate">Certificate</button>
+            										<button class="btn btn-primary" id="callRVU">RVU</button>
+            										<button class="btn btn-primary" id="callPediaVaccine">Pedia Vaccine</button>
+            									</div>
 
-			                									<br>
-			                									<br>
+            									<br>
+            									<br>
 
-			                									<textarea id="therapeutic_care_plan" class="form-control" rows="7"></textarea>
-			                	                			</div>
-			                	                		</div>
-			                							
-			                							<br>
-			                	                		<div class="row">
-			                	                			<div class="col-md-12">
-			                									<label class="form-label" style="float: left;">
-			                										File Upload
-			                									</label>
+            									<textarea id="therapeutic_care_plan" class="form-control" rows="7"></textarea>
+            	                			</div>
+            	                		</div>
+            							
+            							<br>
+            	                		<div class="row">
+            	                			<div class="col-md-12">
+            									<label class="form-label" style="float: left;">
+            										File Upload
+            									</label>
 
-			                									<input type="file" id="p_files" class="form-control" multiple>
-			                	                			</div>
-			                	                		</div>
-			                							
-			                							<br>
-			                	                		<div class="row">
-			                	                			<div class="col-md-12">
-			                									<label class="form-label" style="float: left;">
-			                										Doctors Note
-			                									</label>
+            									<input type="file" id="p_files" class="form-control" multiple>
+            	                			</div>
+            	                		</div>
+            							
+            							<br>
+            	                		<div class="row">
+            	                			<div class="col-md-12">
+            									<label class="form-label" style="float: left;">
+            										Doctors Note
+            									</label>
 
-			                									<textarea id="doctors_note" class="form-control" rows="7"></textarea>
-			                	                			</div>
-			                	                		</div>
-			                	                	</div>
-			                	                </div>
+            									<textarea id="doctors_note" class="form-control" rows="7"></textarea>
+            	                			</div>
+            	                		</div>
+            	                	</div>
+            	                </div>
 			                </div>
 			            </div>
 			        </div>
