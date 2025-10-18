@@ -747,19 +747,21 @@
 					},
 					success: patient => {
 						patient = JSON.parse(patient)[0];
+
+						console.log(patient);
 						
 						$('#pid').html(patient.patient_id);
 						$('#pname').html(patient.user.lname + ", " + patient.user.fname + " " + patient.user.mname);
 						$('#pcontact').html(patient.user.contact);
 						$('#pgender').html(patient.user.gender);
-						$('#pcivilstatus').html(patient.civil_status);
-						$('#paddress').html(patient.user.address);
-						$('#pnationality').html(patient.nationality);
-						$('#phmo').html(patient.hmo_provider);
-						$('#preligion').html(patient.religion);
+						$('#pcivilstatus').html((patient.civil_status != "null" && patient.civil_status != null) ? patient.civil_status : "-");
+						$('#paddress').html((patient.user.address != "null" && patient.user.address != null) ? patient.user.address : "-");
+						$('#pnationality').html((patient.nationality != "null" && patient.nationality != null) ? patient.nationality : "-");
+						$('#phmo').html((patient.hmo_provider != "null" && patient.hmo_provider != null) ? patient.hmo_provider : "-");
+						$('#preligion').html((patient.religion != "null" && patient.religion != null) ? patient.religion : "-");
 
 						$('#pbirthday').html(moment(patient.birthday).format("MMM DD, YYYY"));
-						$('#page').html(moment().diff(moment(patient.birthday), 'years'));
+						$('#page').html(moment().diff(moment(patient.user.birthday), 'years'));
 					}
 				})
 			}
