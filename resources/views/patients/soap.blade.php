@@ -169,7 +169,7 @@
 				        </div>
 				    </div>
 				    <!-- SOAP -->
-				    <div class="card shadow-sm">
+				    <div class="card shadow-sm" id="soapCard">
 				        <div class="card-header bg-info text-white justify-content-between align-items-center">
 				            <span style="font-size: 24px; font-weight: bold;">SOAP</span>
 				            <div style="float: right;">
@@ -558,6 +558,15 @@
 			vertical-align: middle;
 			text-align: center;
 		}
+
+		#soapCard .nav-pills>li>a {
+	    	border-top: 3px solid !important;
+	    }
+
+	    #soapCard .nav-link.active {
+	    	color: #fff !important;
+	    	background-color: #337ab7 !important;
+	    }
 	</style>
 @endpush
 
@@ -576,7 +585,7 @@
 		var search = null;
 		var page = 0;
 
-		var uid = null;
+		var uid = {{ $userid }};
 		{{-- uid = 3; //for testing --}}
 
 		$(document).ready(()=> {

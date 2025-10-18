@@ -141,7 +141,7 @@ Route::group([
                 'prefix' => "$cname/"
             ], function () use($cname){
 
-                Route::get("/", ucfirst($cname) . "Controller@index")
+                Route::get("/{userid?}", ucfirst($cname) . "Controller@index")
                     ->defaults("sidebar", 1)
                     ->defaults("icon", "fas fa-notebook")
                     ->defaults("name", ucfirst($cname) . " Note")

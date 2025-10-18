@@ -273,7 +273,7 @@
 								        </div>
 								    </div>
 								    <div class="text-end">
-								        <button class="btn btn-primary btn-sm mb-2">SOAP Note</button><br>
+								        <a class="btn btn-primary btn-sm mb-2" href="{{ url('soap') }}?userid=${patient.user_id}">SOAP Note</a><br>
 								        <div class="form-check form-switch d-inline-flex align-items-center">
 								            <input class="form-check-input" type="checkbox">
 								            <label class="form-check-label small ms-1">Active Patient</label>

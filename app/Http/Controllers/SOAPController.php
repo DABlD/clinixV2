@@ -193,9 +193,10 @@ class SoapController extends Controller
         Helper::log(auth()->user()->id, 'deleted patient', $req->id);
     }
 
-    public function index(){
+    public function index(Request $req){
         return $this->_view('patients.soap', [
-            'title' => ucfirst($this->table)
+            'title' => ucfirst($this->table),
+            'userid' => $req->userid ?? "null"
         ]);
     }
 
