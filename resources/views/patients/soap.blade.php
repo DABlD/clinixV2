@@ -577,7 +577,7 @@
 		var page = 0;
 
 		var uid = null;
-		uid = 3; //for testing
+		{{-- uid = 3; //for testing --}}
 
 		$(document).ready(()=> {
 
