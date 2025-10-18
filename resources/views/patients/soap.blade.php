@@ -851,7 +851,7 @@
 		function clinicHistoryChart(){
 			if(uid){
 				$.ajax({
-					url: "{{ route('soap.get') }}",
+					url: "{{ route('patient.get') }}",
 					data: {
 						select: "*",
 						where: ['user_id', uid]
@@ -951,7 +951,7 @@
 		function vitalSignsChart(){
 			if(uid){
 				$.ajax({
-					url: "{{ route('soap.get') }}",
+					url: "{{ route('patient.get') }}",
 					data: {
 						select: "*",
 						where: ['user_id', uid]
@@ -1018,7 +1018,7 @@
 		function filesChart(){
 			if(uid){
 				$.ajax({
-					url: "{{ route('soap.get') }}",
+					url: "{{ route('patient.get') }}",
 					data: {
 						select: "*",
 						where: ['user_id', uid]

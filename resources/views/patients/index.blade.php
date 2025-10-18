@@ -191,6 +191,60 @@
 		    .action-icon:hover {
 		      background: #e8f0ff;
 		    }
+
+		.action-icon {
+			width: 40px;
+			height: 40px;
+			border-radius: 8px;
+			transition: transform 0.25s ease, box-shadow 0.25s ease;
+		}
+
+		.action-icon:hover {
+			transform: scale(1.15);
+			box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+		}
+
+		.action-icon {
+			transition: transform 0.25s ease, filter 0.25s ease;
+		}
+
+		.action-icon:hover {
+			transform: translateY(-4px);
+			filter: brightness(1.3);
+		}
+		#vital_signs .card {
+			background-color: #f7fdfc;
+			border: none;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(180, 180, 180, 0.2);
+		}
+		#vital_signs th {
+			background-color: #d5f4e6; /* pastel green */
+			color: #333;
+		}
+		#vital_signs  td {
+			background-color: #fef9e7; /* pastel yellow */
+			color: #555;
+		}
+		#vital_signs .table > :not(caption) > * > * {
+			vertical-align: middle;
+			text-align: center;
+		}
+
+		#soapCard .nav-pills>li>a {
+	    	border-top: 3px solid !important;
+	    }
+
+	    #soapCard .nav-link.active {
+	    	color: #fff !important;
+	    	background-color: #337ab7 !important;
+	    }
+
+	    .header-row			{ border-left: 4px solid #FAFAFA !important; background-color: #FAFAFA !important; }
+	    .section-subjective { border-left: 4px solid #E6F4EA !important; background-color: #E6F4EA !important; }
+	    .section-objective  { border-left: 4px solid #E7F0FA !important; background-color: #E7F0FA !important; }
+	    .section-assessment { border-left: 4px solid #F2E8F9 !important; background-color: #F2E8F9 !important; }
+	    .section-plan       { border-left: 4px solid #FFF2E6 !important; background-color: #FFF2E6 !important; }
 	</style>
 @endpush
 
@@ -260,14 +314,14 @@
 								            <a class="visit-link" onclick="toggleVisit(this)">visit ↑</a>
 								            <div class="visit-actions">
 								                <div class="d-flex gap-2 mt-2 flex-wrap">
-								                    <img src="{{ asset('images/icons/med_history.png') }}" class="action-icon" title="Medical History"> &nbsp;
-								                    <img src="{{ asset('images/icons/clinic_history.png') }}" class="action-icon" title="Clinic History"> &nbsp;
-								                    <img src="{{ asset('images/icons/vital_sign.png') }}" class="action-icon" title="Vital Signs"> &nbsp;
-								                    <img src="{{ asset('images/icons/prescription.png') }}" class="action-icon" title="Prescription"> &nbsp;
-								                    <img src="{{ asset('images/icons/lab_request.png') }}" class="action-icon" title="Lab Request"> &nbsp;
-								                    <img src="{{ asset('images/icons/imaging.png') }}" class="action-icon" title="Imaging"> &nbsp;
-								                    <img src="{{ asset('images/icons/files.png') }}" class="action-icon" title="Files"> &nbsp;
-								                    <img src="{{ asset('images/icons/vaccine.png') }}" class="action-icon" title="Vaccine">
+								                    <img src="{{ asset('images/icons/med_history.png') }}" class="action-icon" onclick="medicalHistoryChart(${patient.user_id})" title="Medical History"> &nbsp;
+								                    <img src="{{ asset('images/icons/clinic_history.png') }}" class="action-icon" onclick="clinicHistoryChart(${patient.user_id})" title="Clinic History"> &nbsp;
+								                    <img src="{{ asset('images/icons/vital_sign.png') }}" class="action-icon" onclick="vitalSignsChart(${patient.user_id})" title="Vital Signs"> &nbsp;
+								                    <img src="{{ asset('images/icons/prescription.png') }}" class="action-icon" onclick="prescriptionChart(${patient.user_id})" title="Prescription"> &nbsp;
+								                    <img src="{{ asset('images/icons/lab_request.png') }}" class="action-icon" onclick="labRequestChart(${patient.user_id})" title="Lab Request"> &nbsp;
+								                    <img src="{{ asset('images/icons/imaging.png') }}" class="action-icon" onclick="imagingChart(${patient.user_id})" title="Imaging"> &nbsp;
+								                    <img src="{{ asset('images/icons/files.png') }}" class="action-icon" onclick="filesChart(${patient.user_id})" title="Files"> &nbsp;
+								                    <img src="{{ asset('images/icons/vaccine.png') }}" class="action-icon" onclick="vaccineChart(${patient.user_id})" title="Vaccine">
 								                </div>
 								            </div>
 								        </div>
@@ -337,6 +391,322 @@
 		function goNext(){
 			page++;
 			getPatients();
+		}
+
+		function medicalHistoryChart(uid){
+			if(uid){
+				$.ajax({
+					url: "{{ route('user.get') }}",
+					data: {
+						select: "*",
+						where: ['id', uid],
+						load: ['patient.mhr']
+					},
+					success: result => {
+						result = JSON.parse(result)[0];
+						let mhr = result.patient.mhr;
+						let qwa = JSON.parse(mhr.qwa);
+
+						let string = "";
+						let bool = false;
+
+						qwa.forEach(row => {
+							if(row.type == "Category"){
+								if(bool){
+									string += `
+										</tbody>
+										</table>
+									`;
+								}
+
+								string += `
+									<div class="row ">
+	                                    <div class="col-md-12" style="text-align: left;">
+	                                        <b style="font-size: 1.5rem;">${row.question}</b>
+	                                    </div>
+	                                </div>
+
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th style="width: 40%;">Name</th>
+												<th style="width: 30%;">Answer</th>
+												<th style="width: 30%;">Remark</th>
+											</tr>
+										</thead>
+										<tbody>
+								`;
+
+								bool = true;
+							}
+							else{
+								string += `
+									<tr>
+										<td style="text-align: left;">${row.question}</td>
+										<td>${row.answer ?? "-"}</td>
+										<td>${row.remark ?? "-"}</td>
+									</tr>
+								`;
+							}
+						});
+
+						Swal.fire({
+							title: "Personal Medical History",
+							html: `<hr>${string}`,
+							showClass: { popup: '' },
+							hideClass: { popup: '' },
+							width: '1000px',
+						})
+					}
+				});
+			}
+			else{
+				se('No selected patient');
+			}
+		}
+
+		function clinicHistoryChart(uid){
+			if(uid){
+				$.ajax({
+					url: "{{ route('patient.get') }}",
+					data: {
+						select: "*",
+						where: ['user_id', uid]
+					}, 
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = "";
+
+						result.forEach(soap => {
+							string += `
+								<div class="container my-4">
+								    <!-- Header Row -->
+								    <div class="d-flex justify-content-between align-items-center border p-2 rounded header-row">
+								        <div>
+								            <strong>Date:</strong> ${toDate(soap.created_at, 'ddd MMM DD, YYYY hh:MM A')}
+								        </div>
+								        <button class="btn btn-sm btn-info caret-soap" data-bs-toggle="collapse" data-bs-target="#soapDetails${soap.id}" aria-expanded="true">
+								            <i class='fas fa-caret-up'></i>
+								        </button>
+								    </div>
+								    <!-- Collapsible SOAP Section -->
+								    <div class="collapse mt-3 soapDetails" id="soapDetails${soap.id}">
+								        <div class="row g-3">
+								            <!-- Subjective -->
+								            <div class="col-12">
+								                <div class="card border-start border-4 border-success">
+								                    <div class="card-header fw-bold section-subjective">Subjective</div>
+								                    <div class="card-body">
+								                        <p><strong>Type of Visit:</strong> ${soap.s_type_of_visit}</p>
+								                        <p><strong>Chief Complaint:</strong> ${soap.s_chief_complaint}</p>
+								                    </div>
+								                </div>
+								            </div>
+								            <!-- Objective -->
+								            <div class="col-12">
+								                <div class="card border-start border-4 border-primary">
+								                    <div class="card-header fw-bold section-objective">Objective</div>
+								                    <div class="card-body">
+								                    	<div class="row" style="width: 100%;">
+								                    		<div class="col-md-6">
+										                        <p><strong>Vitals:</strong> ${soap.o_systolic}/${soap.o_diastolic}</p>
+										                        <p><strong>Pulse:</strong> ${soap.o_pulse} ${soap.o_pulse_type}</p>
+										                        <p><strong>Temperature:</strong> ${soap.o_temperature} ${soap.o_temperature_unit} (${soap.o_temperature_location})</p>
+										                        <p><strong>Respiration:</strong> ${soap.o_respiration_rate} ${soap.o_respiration_type}</p>
+										                    </div>
+								                    		<div class="col-md-6">
+										                        <p><strong>O2 Sat:</strong> ${soap.o_o2_sat}</p>
+										                        <p><strong>Height:</strong> ${soap.o_height} ${soap.o_height_unit}</p>
+										                        <p><strong>Weight:</strong> ${soap.o_weight} ${soap.o_weight_unit}</p>
+										                    </div>
+										                </div>
+								                    </div>
+								                </div>
+								            </div>
+								            <!-- Assessment -->
+								            <div class="col-12">
+								                <div class="card border-start border-4 border-warning">
+								                    <div class="card-header fw-bold section-assessment">Assessment</div>
+								                    <div class="card-body">
+								                        <p><strong>Diagnosis:</strong> ${soap.a_diagnosis}</p>
+								                    </div>
+								                </div>
+								            </div>
+								            <!-- Plan -->
+								            <div class="col-12">
+								                <div class="card border-start border-4 border-info">
+								                    <div class="card-header fw-bold section-plan">Plan</div>
+								                    <div class="card-body">
+								                        <p><strong>Diagnostic Care Plan:</strong> ${soap.p_diagnosis_care_plan}</p>
+								                        <p><strong>Therapeutic Care Plan:</strong> ${soap.p_therapeutic_care_plan}</p>
+								                        <p><strong>Doctor's Note:</strong> ${soap.p_doctors_note}</p>
+								                    </div>
+								                </div>
+								            </div>
+								        </div>
+								    </div>
+								</div>
+							`;
+						});
+
+						Swal.fire({
+							title: "Clinic History",
+							html: `<hr>${string}`,
+							showClass: { popup: '' },
+							hideClass: { popup: '' },
+							width: '1000px',
+						})
+					}
+				})
+			}
+			else{
+				se('No selected patient');
+			}
+		}
+
+		function vitalSignsChart(uid){
+			if(uid){
+				$.ajax({
+					url: "{{ route('patient.get') }}",
+					data: {
+						select: "*",
+						where: ['user_id', uid]
+					}, 
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = `
+							<div id="vital_signs">
+							<table class="table table-bordered rounded">
+							    <thead>
+							        <tr>
+							            <th>Date</th>
+							            <th>Blood Pressure</th>
+							            <th>Pulse Rate</th>
+							            <th>Temperature</th>
+							            <th>Respiratory Rate</th>
+							            <th>O2 SAT</th>
+							            <th>Weight</th>
+							            <th>Height</th>
+							        </tr>
+							    </thead>
+							    <tbody>
+						`;
+
+						result.forEach(soap => {
+							string += `
+						        <tr>
+						            <td>${toDate(soap.created_at)}</td>
+						            <td>${soap.o_systolic}/${soap.o_diastolic}</td>
+						            <td>${soap.o_pulse}</td>
+						            <td>${soap.o_temperature}</td>
+						            <td>${soap.o_respiration_rate}</td>
+						            <td>${soap.o_o2_sat}</td>
+						            <td>${soap.o_weight} ${soap.o_weight_unit}</td>
+						            <td>${soap.o_height} ${soap.o_height_unit}</td>
+						        </tr>
+							`;
+						});
+
+						string += `
+							    </tbody>
+							</table>
+							</div>
+						`;
+
+						$('#vital_signs').html(string);
+
+						Swal.fire({
+							title: "Vital Signs",
+							html: `<hr>${string}`,
+							showClass: { popup: '' },
+							hideClass: { popup: '' },
+							width: '1000px',
+						})
+					}
+				})
+			}
+			else{
+				se('No selected patient');
+			}
+		}
+
+		function filesChart(uid){
+			if(uid){
+				$.ajax({
+					url: "{{ route('patient.get') }}",
+					data: {
+						select: "*",
+						where: ['user_id', uid]
+					}, 
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = `
+							<table class="table table-bordered rounded">
+							    <thead>
+							        <tr>
+							            <th>File</th>
+							            <th>Date</th>
+							            <th>Actions</th>
+							        </tr>
+							    </thead>
+							    <tbody>
+						`;
+
+						result.forEach(soap => {
+							let fn = soap.o_drawing.split("/").pop();
+							string += `
+								        <tr>
+								            <td>${fn}</td>
+								            <td>${moment.unix(fn.match(/(\d{10})/)[0]).format("MMM DD, YYYY")}</td>
+								            <td>
+								            	<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" href="${soap.o_drawing}" target="_blank">
+								            		<i class="fas fa-search"></i>
+								            	</a>
+								            </td>
+								        </tr>
+							`;
+
+							let files = JSON.parse(soap.p_files);
+							if(files.length){
+								files.forEach(file => {
+									let fn = file.split("/").pop();
+									
+									string += `
+										<tr>
+										    <td>${fn}</td>
+										    <td>${moment.unix(fn.match(/(\d{10})/)[0]).format("MMM DD, YYYY")}</td>
+										    <td>
+										    	<a class="btn btn-success btn-sm" data-toggle="tooltip" title="View" href="${file}" target="_blank">
+										    		<i class="fas fa-search"></i>
+										    	</a>
+										    </td>
+										</tr>
+									`;
+								});
+							}
+						});
+
+						string += `
+							    </tbody>
+							</table>
+						`;
+				
+						Swal.fire({
+							title: "Uploaded Files",
+							html: `<hr>${string}`,
+							showClass: { popup: '' },
+							hideClass: { popup: '' },
+							width: '1000px',
+						})
+					}
+				})
+			}
+			else{
+				se('No selected patient');
+			}
 		}
 
 		function create(){
