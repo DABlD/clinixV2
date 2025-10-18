@@ -851,7 +851,7 @@
 		function clinicHistoryChart(){
 			if(uid){
 				$.ajax({
-					url: "{{ route('patient.get') }}",
+					url: "{{ route('soap.get') }}",
 					data: {
 						select: "*",
 						where: ['user_id', uid]
@@ -951,7 +951,7 @@
 		function vitalSignsChart(){
 			if(uid){
 				$.ajax({
-					url: "{{ route('patient.get') }}",
+					url: "{{ route('soap.get') }}",
 					data: {
 						select: "*",
 						where: ['user_id', uid]
@@ -1018,10 +1018,10 @@
 		function filesChart(){
 			if(uid){
 				$.ajax({
-					url: "{{ route('patient.get') }}",
+					url: "{{ route('soap.get') }}",
 					data: {
 						select: "*",
-						where: ['user_id', uid]
+						where: ['id', uid]
 					}, 
 					success: result => {
 						result = JSON.parse(result);
@@ -1039,6 +1039,7 @@
 						`;
 
 						result.forEach(soap => {
+							console.log(soap);
 							let fn = soap.o_drawing.split("/").pop();
 							string += `
 								        <tr>
