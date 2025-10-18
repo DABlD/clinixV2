@@ -39,6 +39,16 @@ class UserController extends Controller
             $array = $array->where($req->where2[0], isset($req->where2[2]) ? $req->where2[1] : "=", $req->where2[2] ?? $req->where2[1]);
         }
 
+        // WHERE FOR SELECT
+        if($req->q){
+            $filter = $req->q;
+
+            $array = $array->where(function($q) use($filter){
+                $q->where('fname', 'LIKE', "%" . $filter . "%");
+                $q->orWhere('lname', 'LIKE', "%" . $filter . "%");
+            });
+        }
+
         // IF HAS JOIN
         if($req->join){
             $alias = substr($req->join, 1);

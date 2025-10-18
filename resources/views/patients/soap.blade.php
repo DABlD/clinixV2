@@ -593,11 +593,11 @@
 					dataType: 'json',
 					delay: 250, // delay for typing
 					data: params => ({
-						q: params.term, // search term
 						page: params.page || 1,
 						select: "*",
 						where: ['clinic_id', "{{ auth()->user()->clinic_id }}"],
-						where2: ['role', 'Patient']
+						where2: ['role', 'Patient'],
+						q: params.term // search term
 					}),
 					processResults: data => ({
 						results: data.map(item => ({
