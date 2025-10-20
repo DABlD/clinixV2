@@ -582,6 +582,7 @@
 		{{-- uid = 3; //for testing --}}
 
 		const { Calendar } = window.VanillaCalendarPro;
+		var eventDates = [];
 
 		$(document).ready(()=> {
 			$('#searchInput').select2({
@@ -613,25 +614,9 @@
 			});
 
 			initDrawingCanvas();
-
             getPatientData();
 
-			const eventDates = ["2025-10-21", "2025-10-25", "2025-10-29"];
-
-			const calendar = new Calendar('#calendar', {
-				selectedTheme: 'light',
-				onCreateDateEls(self, dateEl) {
-					if (eventDates.includes($(dateEl).data("vc-date"))) {
-						const btn = dateEl.querySelector('.vc-date__btn');
-						const day = btn.textContent.trim();
-						btn.innerHTML = `${day} <span style="color:#0000FF; font-size:10px;">●</span>`;
-						btn.style.display = "flex";
-						btn.style.alignItems = "top";
-						btn.style.gap = "3px"; // small space between number and dot
-					}
-				},
-			});
-
+			calendar = new Calendar('#calendar', {selectedTheme: 'light'});
   			calendar.init();
 		});
 
@@ -763,6 +748,8 @@
 		}
 
 		function getPatientData(){
+			eventDates = [];
+
 			if(uid){
 				$.ajax({
 					url: "{{ route('patient.get') }}",
@@ -772,8 +759,6 @@
 					},
 					success: patient => {
 						patient = JSON.parse(patient)[0];
-
-						console.log(patient);
 						
 						$('#pid').html(patient.patient_id);
 						$('#pname').html(patient.user.lname + ", " + patient.user.fname + " " + patient.user.mname);
@@ -788,8 +773,41 @@
 						$('#pbirthday').html(moment(patient.birthday).format("MMM DD, YYYY"));
 						$('#page').html(moment().diff(moment(patient.user.birthday), 'years'));
 					}
-				})
+				});
 			}
+
+			$.ajax({
+				url: "{{ route('soap.get') }}",
+				data: {
+					select: 'created_at',
+					where: ["user_id", uid]
+				},
+				success: result => {
+					result = JSON.parse(result);
+
+					result.forEach(soap => {
+						eventDates.push(toDate(soap.created_at, dateFormat));
+					});
+
+					console.log(eventDates);
+
+					calendar = new Calendar('#calendar', {
+						selectedTheme: 'light',
+						onCreateDateEls(self, dateEl) {
+							if (eventDates.includes($(dateEl).data("vc-date"))) {
+								const btn = dateEl.querySelector('.vc-date__btn');
+								const day = btn.textContent.trim();
+								btn.innerHTML = `${day} <span style="color:#0000FF; font-size:10px;">●</span>`;
+								btn.style.display = "flex";
+								btn.style.alignItems = "top";
+								btn.style.gap = "3px"; // small space between number and dot
+							}
+						},
+					});
+
+		  			calendar.init();
+				}
+			})
 		}
 
 		function medicalHistoryChart(){
