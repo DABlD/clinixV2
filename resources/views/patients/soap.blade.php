@@ -126,25 +126,7 @@
 				    <div class="card shadow-sm">
 				        <div class="card-header bg-info text-white" style="font-size: 24px; font-weight: bold;">Calendar</div>
 				        <div class="card-body">
-				            <div class="d-flex justify-content-between align-items-center mb-2">
-								<button class="btn btn-outline-primary btn-sm">Prev</button>
-								<span><strong>October 2025</strong></span>
-								<button class="btn btn-outline-primary btn-sm">Next</button>
-							</div>
-
-							<table class="table table-bordered text-center mb-0 small">
-								<thead>
-									<tr class="bg-light">
-										<th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>
-									</tr>
-								</thead>
-							<tbody>
-								<tr><td></td><td></td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
-								<tr><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
-								<tr><td>13</td><td>14</td><td>15</td><td class="bg-primary text-white rounded">16</td><td>17</td><td>18</td><td>19</td></tr>
-								<tr><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>26</td></tr>
-							</tbody>
-							</table>
+				            <div id="calendar"></div>
 				        </div>
 				    </div>
 				</div><!-- /LEFT -->
@@ -503,6 +485,7 @@
 
 @push('styles')
 	<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('css/vanilla-calendar.min.css') }}">
 
 	<style>
 		#patient-card .col-md-3{
@@ -563,6 +546,19 @@
 	    	color: #fff !important;
 	    	background-color: #337ab7 !important;
 	    }
+
+	    /* highlight style for event dates */
+	     .has-event button::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: #ff4444;
+    border-radius: 50%;
+  }
 	</style>
 @endpush
 
@@ -573,6 +569,7 @@
 	{{-- <script src="{{ asset('js/datatables.bootstrap4.min.js') }}"></script> --}}
 	{{-- <script src="{{ asset('js/datatables-jquery.min.js') }}"></script> --}}
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="{{ asset('js/vanilla-calendar.min.js') }}"></script>
 
 	<script>
 		var subjective = [], objective = [], assessment = [], plan = [];
@@ -584,8 +581,9 @@
 		var uid = {{ $userid }};
 		{{-- uid = 3; //for testing --}}
 
-		$(document).ready(()=> {
+		const { Calendar } = window.VanillaCalendarPro;
 
+		$(document).ready(()=> {
 			$('#searchInput').select2({
 				placeholder: 'Search patient...',
 				ajax: {
@@ -614,6 +612,30 @@
 				getPatientData();
 			});
 
+			initDrawingCanvas();
+
+            getPatientData();
+
+			const eventDates = ["2025-10-21", "2025-10-25", "2025-10-29"];
+
+			const calendar = new Calendar('#calendar', {
+				selectedTheme: 'light',
+				onCreateDateEls(self, dateEl) {
+					if (eventDates.includes($(dateEl).data("vc-date"))) {
+						const btn = dateEl.querySelector('.vc-date__btn');
+						const day = btn.textContent.trim();
+						btn.innerHTML = `${day} <span style="color:#0000FF; font-size:10px;">●</span>`;
+						btn.style.display = "flex";
+						btn.style.alignItems = "top";
+						btn.style.gap = "3px"; // small space between number and dot
+					}
+				},
+			});
+
+  			calendar.init();
+		});
+
+		function initDrawingCanvas(){
 			let canvas = document.getElementById('canvas');
 			let ctx = canvas.getContext('2d');
 		    let colorPicker = document.getElementById('colorPicker');
@@ -738,9 +760,7 @@
 					});
             	}
             });
-
-            getPatientData();
-		});
+		}
 
 		function getPatientData(){
 			if(uid){
