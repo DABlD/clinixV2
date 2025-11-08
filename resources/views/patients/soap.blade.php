@@ -571,7 +571,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="bs-checkout" tabindex="-1" aria-labelledby="chargesModalLabel" aria-hidden="true">
+    <div class="modal fade" id="bs-checkout" tabindex="-1" data-bs-focus="false" aria-labelledby="chargesModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content border-0">
           <div class="modal-header border-0">
@@ -1918,7 +1918,8 @@
 
 		$('#cash-amount').on('keyup', e => {
 			$('#checkout-cash-amount').text(`₱${numeral(e.target.value).format('0,0.00')}`);
-			$('#checkout-change').text(`₱${numeral(e.target.value - numeral($('#checkout-subtotal').val()).value()).format('0,0.00')}`);
+			$('#checkout-change').text(`₱${numeral(e.target.value - stringToNumeral($('#checkout-subtotal').text()) - stringToNumeral($('#checkout-vat').text())).format('0,0.00')}`);
+			console.log(e.target.value, stringToNumeral($('#checkout-subtotal').text()), stringToNumeral($('#checkout-vat').text()))
 		});
 
 		function addService(){
@@ -1976,7 +1977,7 @@
 									<a class="btn btn-warning btn-xs" data-toggle="tooltip" title="Edit" onclick="editService("${service.dataset.type}", ${service.dataset.amount}">
 										<i class="fas fa-pencil fa-sm"></i>
 									</a>
-									<a class="btn btn-danger btn-xs" data-toggle="tooltip" title="Delete" onclick="deleteService(this">
+									<a class="btn btn-danger btn-xs" data-toggle="tooltip" title="Delete" onclick="deleteService(this)">
 										<i class="fas fa-trash fa-sm"></i>
 									</a>
 								</td>
@@ -1984,8 +1985,8 @@
 						`;
 					})
 
-					$('#list-of-services tbody').append(servicesString);
 					$('#list-of-services .text-center').remove();
+					$('#list-of-services tbody').append(servicesString);
 					
 					computeTotal();
 				}
@@ -1993,7 +1994,53 @@
 		}
 
 		function otherService(){
+			Swal.fire({
+				title: "Other Services",
+				html: `
+					<div class="row">
+						<div class="mb-3 col-12 text-left">
+						    <label for="other-service-name" class="form-label">Service Name</label>
+						    <input type="text" class="form-control" id="other-service-name" name="other-service-name">
+						</div>
+						<div class="mb-3 col-6 text-left">
+						    <label for="other-service-fee" class="form-label">Fee</label>
+						    <input type="number" class="form-control" id="other-service-fee" name="other-service-fee">
+						</div>
+					</div>
+				`,
+				confirmButtonText: "Add Service",
+				showCancelButton: true,
+				cancelButtonColor: errorColor,
+				preConfirm: () => {
+					let osName = $('#other-service-name').val();
+					let osFee = $('#other-service-fee').val();
 
+					if(osName == "" || osFee == ""){
+						Swal.showValidationMessage('Fill all fields');
+						return false;
+					}
+					else{
+						$('#list-of-services .text-center').remove();
+						$('#list-of-services tbody').append(`
+							<tr>
+								<td>${osName}</td>
+								<td class="service-amount" data-amount="${osFee}">₱${numeral(osFee).format('0,0.00')}</td>
+								<td class="text-right">
+									<a class="btn btn-warning btn-xs" data-toggle="tooltip" title="Edit" onclick="editService("${osName}", ${osFee}">
+										<i class="fas fa-pencil fa-sm"></i>
+									</a>
+									<a class="btn btn-danger btn-xs" data-toggle="tooltip" title="Delete" onclick="deleteService(this)">
+										<i class="fas fa-trash fa-sm"></i>
+									</a>
+								</td>
+							</tr>
+						`);
+					}
+
+				}
+			}).then(result => {
+				ss("Successfully added service");
+			})
 		}
 
 		function deleteService(elem){
@@ -2008,6 +2055,10 @@
 
 			$('#checkout-subtotal').text(`₱${numeral(total).format('0,0.00')}`)
 			$('#checkout-vat').text(`₱${numeral(total * .12).format('0,0.00')}`)
+		}
+
+		function stringToNumeral(amount) {
+			return parseFloat(amount.replace(/[₱,]/g, '').trim());
 		}
 	</script>
 @endpush
