@@ -50,4 +50,8 @@ class Patient extends Model
     public function mhr(){
         return $this->hasOne('App\Models\MHR');
     }
+
+    public function latestSoap(){
+        return $this->hasOne('App\Models\SOAP');
+    }
 }
