@@ -152,8 +152,8 @@
 				        <div class="card-header bg-info text-white justify-content-between align-items-center">
 				            <span style="font-size: 24px; font-weight: bold;">SOAP</span>
 				            <div style="float: right;">
-				                <button class="btn btn-outline-light btn-sm" onclick="saveSOAP()"><i class="fas fa-save"></i></button>
-				                <button class="btn btn-outline-light btn-sm"><i class="fas fa-cog"></i></button>
+				                <button class="btn btn-outline-dark btn-sm" onclick="saveSOAP()"><i class="fas fa-save"></i></button>
+				                <button class="btn btn-outline-dark btn-sm" onclick="openCheckout()">Fees</button>
 				            </div>
 				        </div>
 				        <div class="card-body">
@@ -571,6 +571,160 @@
         </div>
     </div>
 
+    <div class="modal fade" id="bs-checkout" tabindex="-1" aria-labelledby="chargesModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="chargesModalLabel"> </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body pt-0">
+
+            <!-- Top info -->
+            <div class="mb-3">
+              <div class="text-muted small">
+              	Patient ID
+              	<div class="fw-semibold" id="m_patient_id">-</div>
+              </div>
+
+              <div class="text-muted small mt-2">
+              	Name
+              	<div class="fw-semibold" id="m_patient_name">-</div>
+              </div>
+            </div>
+
+            <!-- Charges + buttons row -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="mb-0">Charges</h4>
+              <div class="d-flex gap-2">
+                <button class="btn btn-primary btn-sm" onclick="addService()">Add Services</button>
+                &nbsp;
+                <button class="btn btn-primary btn-sm" onclick="otherService()">Add Services</button>
+                &nbsp;
+              </div>
+            </div>
+
+            <!-- Charges list / search box -->
+            <div class="mb-3">
+            	<table id="list-of-services" class="table">
+            		<tbody>
+            			<tr>
+            				<td class="text-center" colspan="3">No Charges</td>
+            			</tr>
+            		</tbody>
+            	</table>
+            </div>
+
+            <!-- Payment card -->
+            <div class="card shadow-sm border-0">
+              <div class="card-header bg-white border-0 pt-3 pb-0">
+                <h5 class="fw-semibold mb-2" style="color:#1f54a5;">Payment</h5>
+                <!-- tabs -->
+                <ul class="nav nav-tabs border-0" id="payTab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="cash-tab" data-bs-toggle="tab" data-bs-target="#cash" type="button" role="tab">Cash</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="card-tab" data-bs-toggle="tab" data-bs-target="#card" type="button" role="tab">Credit/Debit Card</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="hmo-tab" data-bs-toggle="tab" data-bs-target="#hmo" type="button" role="tab">HMO</button>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body bg-light" style="background:#f3f6fc;">
+                <div class="tab-content" id="payTabContent">
+                  <div class="tab-pane fade show" id="cash" role="tabpanel" aria-labelledby="cash-tab">
+                    <h4>Cash Checkout</h4>
+                    <label for="">Cash Amount</label>
+                    <input type="number" class="form-control" id="cash-amount">
+                  </div>
+                  <div class="tab-pane fade" id="card" role="tabpanel" aria-labelledby="card-tab">
+                    <div class="row">
+                        <h4>Credit/Debit Card Checkout</h4>
+                        <div class="mb-3 col-12">
+                            <label for="card-name" class="form-label">Card Name</label>
+                            <input type="text" class="form-control" id="card-name" name="card-name" required="">
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label for="card-number" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="card-number" name="card-number" required="">
+                        </div>
+                        <div class="mb-3 col-6 text-nowrap">
+                            <label for="card-expiry" class="form-label">Card Number Expiration</label>
+                            <input type="text" class="form-control" id="card-expiry" name="card-expiry" required="">
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="card-code" class="form-label">Approval Code</label>
+                            <input type="text" class="form-control" id="card-code" name="card-code" required="">
+                        </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="hmo" role="tabpanel" aria-labelledby="hmo-tab">
+                    <div class="row">
+                        <h4>HMO Checkout</h4>
+                        <div class="mb-3 col-12">
+                            <label for="hmo-name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="hmo-name" name="hmo-name" required="">
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label for="hmo-id" class="form-label">HMO Member ID</label>
+                            <input type="text" class="form-control" id="hmo-id" name="hmo-id" required="">
+                        </div>
+                        <div class="mb-3 col-3">
+                            <label for="hmo-code" class="form-label">Approval Code</label>
+                            <input type="text" class="form-control" id="hmo-code" name="hmo-code" required="">
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- payment summary -->
+                <div class="row mt-4">
+                  <div class="col-md-4 offset-md-8">
+                    <div class="d-flex justify-content-between">
+                      	<span class="text-primary fw-semibold">Payment Method</span>
+                    	<span id="selected-payment-method" class="text-dark">-</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <span class="text-primary fw-semibold">Subtotal</span>
+                      <span id="checkout-subtotal">₱0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <span class="text-primary fw-semibold">VAT(%12)</span>
+                      <span id="checkout-vat">₱0.00</span>
+                    </div>
+                    <div class="d-none justify-content-between">
+                      <span class="text-primary fw-semibold">Cash</span>
+                      <span id="checkout-cash-amount">₱0.00</span>
+                    </div>
+                    <div class="d-none justify-content-between">
+                      <span class="text-primary fw-semibold">Change</span>
+                      <span id="checkout-change">₱0.00</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- footer pay bar -->
+                <div class="d-flex align-items-center justify-content-between mt-4 rounded-3 px-4 py-2" style="background:#11b55a;">
+                  <div class="fw-bold text-white fs-5">₱0.00</div>
+                  <button class="btn btn-link text-white text-decoration-none fw-semibold" id="bs-checkout-submit">
+                    Checkout <i class="fas fa-arrow-right ms-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div> <!-- /modal-body -->
+
+          <div class="modal-footer border-0">
+            <!-- optional footer buttons -->
+          </div>
+        </div>
+      </div>
+    </div>
+
 </section>
 
 @endsection
@@ -641,16 +795,16 @@
 
 	    /* highlight style for event dates */
 	     .has-event button::after {
-    content: '';
-    position: absolute;
-    bottom: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    background: #ff4444;
-    border-radius: 50%;
-  }
+		    content: '';
+		    position: absolute;
+		    bottom: 4px;
+		    left: 50%;
+		    transform: translateX(-50%);
+		    width: 6px;
+		    height: 6px;
+		    background: #ff4444;
+		    border-radius: 50%;
+		  }
 	</style>
 @endpush
 
@@ -662,6 +816,7 @@
 	{{-- <script src="{{ asset('js/datatables-jquery.min.js') }}"></script> --}}
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="{{ asset('js/vanilla-calendar.min.js') }}"></script>
+	<script src="{{ asset('js/numeral.min.js') }}"></script>
 
 	<script>
 		var subjective = [], objective = [], assessment = [], plan = [];
@@ -826,8 +981,8 @@
 
 			$('#callRVU').on('click', e => {
 				modalThree = new bootstrap.Modal(document.getElementById('bs-rvu'), {
-					backdrop: 'static',
-					keyboard: false
+					backdrop: 'true',
+					keyboard: true
 				});
 				modalThree.show();
 
@@ -1729,5 +1884,36 @@
 	        	ss('Successfully saved SOAP');
 	        })
 		}
+
+		function openCheckout(){
+			modalFour = new bootstrap.Modal(document.getElementById('bs-checkout'), {
+				backdrop: 'true',
+				keyboard: true
+			});
+			modalFour.show();
+		}
+
+		$('#cash-tab').on('click', () => {
+			$('#checkout-cash-amount, #checkout-change').parent().removeClass('d-none');
+			$('#checkout-cash-amount, #checkout-change').parent().addClass('d-flex');
+			$('#selected-payment-method').text('Cash');
+		});
+
+		$('#card-tab').on('click', () => {
+			$('#checkout-cash-amount, #checkout-change').parent().addClass('d-none');
+			$('#checkout-cash-amount, #checkout-change').parent().removeClass('d-flex');
+			$('#selected-payment-method').text('Card');
+		});
+
+		$('#hmo-tab').on('click', () => {
+			$('#checkout-cash-amount, #checkout-change').parent().addClass('d-none');
+			$('#checkout-cash-amount, #checkout-change').parent().removeClass('d-flex');
+			$('#selected-payment-method').text('HMO');
+		});
+
+		$('#cash-amount').on('keyup', e => {
+			$('#checkout-cash-amount').text(`₱${numeral(e.target.value).format('0,0.00')}`);
+			$('#checkout-change').text(`₱${numeral(e.target.value - numeral($('#checkout-subtotal').val()).value()).format('0,0.00')}`);
+		});
 	</script>
 @endpush
