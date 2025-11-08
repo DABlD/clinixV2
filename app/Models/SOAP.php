@@ -50,4 +50,8 @@ class SOAP extends Model
         'updated_at' => "datetime", 
         'deleted_at' => "datetime"
     ];
+
+    public function patient(){
+        return $this->belongsTo('App\Models\Patient');
+    }
 }

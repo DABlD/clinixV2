@@ -193,6 +193,16 @@ class SoapController extends Controller
         Helper::log(auth()->user()->id, 'deleted patient', $req->id);
     }
 
+    public function print(Request $req){
+        $soap = SOAP::find($req->id);
+        $soap->load('patient.user');
+
+        return $this->_view('patients.printSoap', [
+            'title' => "SOAP",
+            'soap' => $soap
+        ]);
+    }
+
     public function index(Request $req){
         return $this->_view('patients.soap', [
             'title' => ucfirst($this->table),
