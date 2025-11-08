@@ -2044,7 +2044,7 @@
 		}
 
 		function deleteService(elem){
-			$(elem).remove();
+			$(elem).parent().parent().remove();
 		}
 
 		function computeTotal(){
