@@ -203,21 +203,33 @@
             	                <div class="row">
             	                	<section class="col-lg-12">
             	                		<ul class="nav nav-pills ml-auto" style="padding-left: revert;">
-            	                		    <li class="nav-item" style="width: 30%;">
+            	                		    <li class="nav-item" style="width: 19%;">
             	                		        <a class="nav-link active" href="#vitals" data-toggle="tab">
             	                		            Vitals
             	                		        </a>
             	                		    </li>
             	                		    &nbsp;
-            	                		    <li class="nav-item" style="width: 30%;">
+            	                		    <li class="nav-item" style="width: 19%;">
             	                		        <a class="nav-link" href="#drawing" data-toggle="tab">
             	                		            Drawing
             	                		        </a>
             	                		    </li>
             	                		    &nbsp;
-            	                		    <li class="nav-item" style="width: 30%;">
+            	                		    <li class="nav-item" style="width: 19%;">
             	                		        <a class="nav-link" href="#exam" data-toggle="tab">
             	                		            Exam
+            	                		        </a>
+            	                		    </li>
+            	                		    &nbsp;
+            	                		    <li class="nav-item" style="width: 19%;">
+            	                		        <a class="nav-link" href="#obgyne" data-toggle="tab">
+            	                		            OB-Gyne
+            	                		        </a>
+            	                		    </li>
+            	                		    &nbsp;
+            	                		    <li class="nav-item" style="width: 19%;">
+            	                		        <a class="nav-link" href="#bloodGlucose" data-toggle="tab">
+            	                		            Blood Glucose
             	                		        </a>
             	                		    </li>
             	                		</ul>
@@ -373,6 +385,91 @@
             				                    	</div>
             		    	                    </div>
             	    					    </div>
+
+            	    					    <div class="chart tab-pane" id="obgyne" style="position: relative;">
+            		    	                    <div class="card">
+            		    	                        <div class="card-body">
+
+            				                    		<div class="row">
+            				                    			<div class="col-md-4">
+            													<label class="form-label" style="float: left;">LMP</label>
+            													<input type="text" class="form-control" id="ob-lmp" placeholder="LMP">
+            				                    			</div>
+            				                    			<div class="col-md-4">
+            													<label class="form-label" style="float: left;">EDC</label>
+            													<input type="text" class="form-control" id="ob-edc" placeholder="EDC">
+            				                    			</div>
+
+            				                    			<div class="col-md-4">
+            													<button class="btn btn-primary" style="margin-top: 30px;">Calculate EDC</button>
+            				                    			</div>
+            				                    		</div>
+            		    	                        	
+            				                    		<div class="row">
+            				                    			<div class="col-md-4">
+            													<label class="form-label" style="float: left;">AOG</label>
+            													<input type="text" class="form-control" id="ob-aog" placeholder="AOG">
+            				                    			</div>
+            				                    			<div class="col-md-4">
+            													<label class="form-label" style="float: left;">FH</label>
+            													<input type="text" class="form-control" id="ob-fh" placeholder="FH">
+            				                    			</div>
+            				                    		</div>
+            		    	                        	
+            				                    		<div class="row">
+            				                    			<div class="col-md-4">
+            													<label class="form-label" style="float: left;">FHT</label>
+            													<input type="text" class="form-control" id="ob-fht" placeholder="FHT">
+            				                    			</div>
+            				                    			<div class="col-md-4">
+            													<label class="form-label" style="float: left;">IE</label>
+            													<input type="text" class="form-control" id="ob-ie" placeholder="IE">
+            				                    			</div>
+            				                    		</div>
+
+            				                    	</div>
+            		    	                    </div>
+            	    					    </div>
+
+            	    					    <div class="chart tab-pane" id="bloodGlucose" style="position: relative;">
+            		    	                    <div class="card">
+            		    	                        <div class="card-body">
+
+            				                    		<div class="row">
+            				                    			<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Blood Glucose</label>
+            													<input type="text" class="form-control" id="ob-blood-glucose" placeholder="(mg/dL)">
+            				                    			</div>
+            				                    			<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Test Type</label>
+            													{{-- <input type="text" class="form-control" id="ob-edc" placeholder="EDC"> --}}
+            													<select class="form-control" id="ob-bg-testType">
+            														<option>Select Type</option>
+            														<option value="fasting">Fasting</option>
+            														<option value="random">Random</option>
+            														<option value="postpriandal">2-Hr Postprandial</option>
+            													</select>
+            				                    			</div>
+            				                    		</div>
+            		    	                        	
+            				                    		<div class="row">
+            				                    			<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Remarks</label>
+            													<input type="text" class="form-control" id="ob-bg-remarks" placeholder="Remarks">
+            				                    			</div>
+            				                    		</div>
+            		    	                        	
+            				                    		<div class="row">
+            				                    			<div class="col-md-6">
+            													<label class="form-label" style="float: left;">Date Taken</label>
+            													<input type="text" class="form-control" id="ob-bg-date" placeholder="Date">
+            				                    			</div>
+            				                    		</div>
+
+            				                    	</div>
+            		    	                    </div>
+            	    					    </div>
+
             	    					</div>
             		                </section>
             	                </div>
@@ -1024,6 +1121,21 @@
 
 					modalThree.hide();
 				};
+			});
+
+			$('#ob-bg-date').flatpickr({
+				altInput: true,
+				altFormat: "M j, Y",
+				dateFormat: "Y-m-d",
+				maxDate: moment().format("YYYY-MM-DD"),
+				defaultDate: moment().format("YYYY-MM-DD")
+			});
+
+			$('#ob-lmp').flatpickr({
+				altInput: true,
+				altFormat: "M j, Y",
+				dateFormat: "Y-m-d",
+				maxDate: moment().format("YYYY-MM-DD")
 			});
 		}
 
