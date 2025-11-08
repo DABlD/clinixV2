@@ -488,7 +488,7 @@
     </div>
 
     {{-- MODALS --}}
-    <div class="modal fade" id="bs-icd" tabindex="-1">
+    <div class="modal fade" id="bs-icd" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -706,8 +706,8 @@
 
 			$('#callICD').on('click', e => {
 				modalTwo = new bootstrap.Modal(document.getElementById('bs-icd'), {
-					backdrop: 'static',
-					keyboard: false
+					backdrop: 'true',
+					keyboard: true
 				});
 				modalTwo.show();
 
