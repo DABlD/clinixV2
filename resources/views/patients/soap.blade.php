@@ -230,6 +230,14 @@
             	    					    <div class="chart tab-pane active" id="vitals" style="position: relative;">
             		    	                    <div class="card">
             		    	                        <div class="card-body">
+            		    	                    	    <div class="row" style="padding-top: 0px;">
+            		    	                    	    	<div class="col-md-12 text-right">
+	            		    	                    	        <button class="btn btn-primary btn-sm" onclick="bmiChart()">BMI Chart</button>
+	            		    	                    	        <button class="btn btn-primary btn-sm" onclick="computeECC()">ECC</button>
+            		    	                    	    	</div>
+            		    	                    	    </div>
+
+            		    	                    	    <br>
 
             				                    		<div class="row">
             				                    			<div class="col-md-6">
@@ -636,6 +644,7 @@
 		var page = 0;
 
 		var uid = {{ $userid }};
+		var pDetails = null;
 		{{-- uid = 3; //for testing --}}
 
 		const { Calendar } = window.VanillaCalendarPro;
@@ -925,10 +934,11 @@
 					url: "{{ route('patient.get') }}",
 					data: {
 						where: ["user_id", uid],
-						load: ["user"]
+						load: ["user", 'latestSoap']
 					},
 					success: patient => {
 						patient = JSON.parse(patient)[0];
+						pDetails = patient;
 						
 						$('#pid').html(patient.patient_id);
 						$('#pname').html(patient.user.lname + ", " + patient.user.fname + " " + patient.user.mname);
@@ -1311,6 +1321,174 @@
 			else{
 				se('No selected patient');
 			}
+		}
+
+		function bmiChart(){
+			let bmi = "No Data";
+			let weight = null;
+			let height = null;
+
+			if(pDetails != undefined && pDetails.latest_soap != undefined){
+				weight = pDetails.latest_soap.o_weight;
+				height = pDetails.latest_soap.o_height;
+
+				if(height && weight){
+					bmi = (weight / ((height / 100) ** 2)).toFixed(2);
+
+					let category = null;
+
+					if (bmi < 18.5) {
+						category = "Underweight";
+					} else if (bmi < 25) {
+						category = "Normal weight";
+					} else if (bmi < 30) {
+						category = "Overweight";
+					} else {
+						category = "Obesity";
+					}
+
+					bmi = bmi + ` (${category})`;
+				}
+				else{
+					bmi = "Invalid Data";
+				}
+			}
+
+			Swal.fire({
+				title: "Body Mass Index(BMI)",
+				html: `
+					<div class="row" style="text-align: center; color: red;">
+						<div class="col-md-6">
+							Height: ${height ?? "-"} cm
+						</div>
+						<div class="col-md-6">
+							Weight: ${weight ?? "-"} kg
+						</div>
+					</div>
+
+					<div class="row" style="margin-top: 5px;">
+						<div class="col-md-12" style="font-weight: bold; text-align: center;">
+							Standard Measurement
+						</div>
+					</div>
+
+					<div class="row" style="margin-top: 10px;">
+						<div class="col-md-12" style="text-align: left;">
+							BMI Categories:<br>
+							Underweight = < 18.5<br>
+							Normal weight = 18.5-24.9<br>
+							Overweight = 25-29.9<br>
+							Obesity = BMI of 30 or greater<br>
+						</div>
+					</div>
+
+					<div class="row" style="margin-top: 10px;">
+						<div class="col-md-12" style="font-weight: bold; text-align: center;">
+							BMI = ${bmi}
+						</div>
+					</div>
+				`
+			})
+		}
+
+		function computeECC(){
+			let result = null;
+		    let total_serum = null;
+		    let age = null;
+
+			Swal.fire({
+				title: "Estimated Creatinine Clearance",
+				html: `
+					<div class="row">
+						<div class="col-md-4 text-left">
+							Age:
+						</div>
+						<div class="col-md-8">
+							<input type="text" class="form-control" disabled value="${age ?? "No Data"}">
+						</div>
+					</div>
+
+					<br>
+
+					<div class="row">
+						<div class="col-md-4 text-left">
+							Serum Crea:
+						</div>
+						<div class="col-md-8">
+							<input type="number" class="form-control" id="serum">
+						</div>
+					</div>
+
+					<br>
+
+					<div class="row">
+						<div class="col-md-4 text-left">
+							Result:
+						</div>
+						<div class="col-md-8">
+							<input type="text" class="form-control" id="serum_result" disabled>
+						</div>
+					</div>
+				`,
+				confirmButtonText: "Compute",
+				showCancelButton: true,
+				cancelButtonColor: errorColor,
+				preConfirm: () => {
+					if(pDetails != undefined && pDetails.latest_soap != undefined){
+				    	age = moment().diff(moment(pDetails.user.birthday, "YYYY-MM-DD"), 'years');
+						let serum = $('#serum').val();
+						let weight = pDetails.latest_soap.o_weight;
+						let weight_unit = pDetails.latest_soap.o_weight_unit;
+
+						if(!serum){
+							Swal.showValidationMessage('No crea input');
+							return false;
+						}
+
+					    if (weight_unit == 'Lbs') {
+					        weight = weight * 0.453592;
+					    }
+
+					    result = 140 - age;
+					    result *= weight;
+					    total_serum = 72 * serum;
+					    result = result / total_serum;
+
+					    if (pDetails.user.gender == 'Female')
+					        result *= 0.85;
+					    	result = result.toFixed(2);
+
+					    if(result){
+						    if (result <= 15)
+						        result = result + ' mL/min Stage 5(Close to or at kidney failure)';
+						    else if (result >= 15 && result <= 29)
+						        result = result + ' mL/min Stage 4(Advanced kidney disease)';
+						    else if (result >= 30 && result <= 44)
+						        result = result + ' mL/min Stage 3b(Moderate kidney disease)';
+						    else if (result >= 45 && result <= 59)
+						        result = result + ' mL/minStage 3a(Mild kidney disease)';
+						    else if (result >= 60 && result <= 89)
+						        result = result + ' mL/min Stage 2';
+						    else if (result >= 90)
+						        result = result + ' mL/min Stage 1(Normal kidney function)';
+					    }
+					    else{
+					    	if(!age){
+								Swal.showValidationMessage('No age data ⚠️');
+								return false;
+					    	}
+					    }
+					}
+					else{
+						Swal.showValidationMessage('No selected patient');
+						result = "No Data";
+					}
+
+					$('#serum_result').val(result);
+
+					return false;
+				}
+			})
 		}
 	</script>
 @endpush
