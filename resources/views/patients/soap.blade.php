@@ -479,6 +479,63 @@
         </div>
     </div>
 
+    {{-- MODALS --}}
+    <div class="modal fade" id="bs-icd" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Select an ICD</h5>
+                </div>
+
+                <div class="modal-body">
+                	<table class="table table-hover">
+                		<thead>
+                			<tr>
+                				<th>Code</th>
+                				<th>ICD</th>
+                				<th>Action</th>
+                			</tr>
+                		</thead>
+                		<tbody>
+                		</tbody>
+                	</table>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="bs-icd-submit" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="bs-rvu" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Select an RVU</h5>
+                </div>
+
+                <div class="modal-body">
+                	<table class="table table-hover">
+                		<thead>
+                			<tr>
+                				<th>Code</th>
+                				<th>RVU</th>
+                				<th>Action</th>
+                			</tr>
+                		</thead>
+                		<tbody>
+                		</tbody>
+                	</table>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="bs-rvu-submit" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
 
 @endsection
@@ -615,10 +672,123 @@
 
 			initDrawingCanvas();
             getPatientData();
+            initSoapForm();
 
 			calendar = new Calendar('#calendar', {selectedTheme: 'light'});
   			calendar.init();
 		});
+
+		function initSoapForm(){
+			let complaints = [
+				"Abdominal pain and watery stool for 3 days",
+				"Abdominal pain with an acidic feel of vomiting",
+				"Cataract",
+				"Check up",
+				"Chest pain during activity exertion",
+				"Consultation",
+				"Vaccine schedule"
+			];
+
+			$('#type_of_visit').select2();
+			$('#chief_complaint').select2({
+				data: complaints,
+				tags: true
+			});
+
+			$('#callICD').on('click', e => {
+				modalTwo = new bootstrap.Modal(document.getElementById('bs-icd'), {
+					backdrop: 'static',
+					keyboard: false
+				});
+				modalTwo.show();
+
+				$.ajax({
+					url: "{{ route('template.getICD') }}",
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = "";
+						if(result.length){
+							result.forEach(temp => {
+								string += `
+									<tr>
+										<td>${temp.code}</td>
+										<td>${temp.description}</td>
+										<td>
+											<input type="checkbox" value="${temp.code + " " + temp.description}">
+										</td>
+									</tr>
+								`;
+							});
+						}
+						else{
+							string += `
+								<tr>
+									<td colspan="2">No entry. Check in Template Manager</td>
+								</tr>
+							`;
+						}
+
+						$('#bs-icd table tbody').html(string);
+					}
+				})
+
+				document.getElementById('bs-icd-submit').onclick = function () {
+					$('#bs-icd [type="checkbox"]:checked').each((i, cbox) => {
+						$('#diagnosis').val($('#diagnosis').val() + ($('#diagnosis').val() ? "\n" : "") + cbox.value);
+					});
+
+					modalTwo.hide();
+				};
+			});
+
+			$('#callRVU').on('click', e => {
+				modalThree = new bootstrap.Modal(document.getElementById('bs-rvu'), {
+					backdrop: 'static',
+					keyboard: false
+				});
+				modalThree.show();
+
+				$.ajax({
+					url: "{{ route('template.getRVU') }}",
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = "";
+						if(result.length){
+							result.forEach(temp => {
+								string += `
+									<tr>
+										<td>${temp.code}</td>
+										<td>${temp.description}</td>
+										<td>
+											<input type="checkbox" value="${temp.code + " " + temp.description}">
+										</td>
+									</tr>
+								`;
+							});
+						}
+						else{
+							string += `
+								<tr>
+									<td colspan="2">No entry. Check in Template Manager</td>
+								</tr>
+							`;
+						}
+
+						$('#bs-rvu table tbody').html(string);
+					}
+				})
+
+				document.getElementById('bs-rvu-submit').onclick = function () {
+					$('#bs-rvu [type="checkbox"]:checked').each((i, cbox) => {
+						$('#therapeutic_care_plan').val($('#therapeutic_care_plan').val() + ($('#therapeutic_care_plan').val() ? "\n" : "") + cbox.value);
+					});
+
+					modalThree.hide();
+				};
+			});
+		}
 
 		function initDrawingCanvas(){
 			let canvas = document.getElementById('canvas');
@@ -1050,12 +1220,13 @@
 		}
 
 		function filesChart(){
+			console.log(uid);
 			if(uid){
 				$.ajax({
 					url: "{{ route('soap.get') }}",
 					data: {
 						select: "*",
-						where: ['id', uid]
+						where: ['user_id', uid]
 					}, 
 					success: result => {
 						result = JSON.parse(result);
