@@ -516,6 +516,33 @@
         </div>
     </div>
 
+    <div class="modal fade" id="bs-diagnosis" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Select a Diagnosis</h5>
+                </div>
+
+                <div class="modal-body">
+                	<table class="table table-hover">
+                		<thead>
+                			<tr>
+                				<th>Name</th>
+                				<th>Action</th>
+                			</tr>
+                		</thead>
+                		<tbody>
+                		</tbody>
+                	</table>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="bs-diagnosis-submit" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="bs-rvu" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -702,6 +729,52 @@
 			$('#chief_complaint').select2({
 				data: complaints,
 				tags: true
+			});
+
+			$('#callDiagnosis').on('click', e => {
+				modalOne = new bootstrap.Modal(document.getElementById('bs-diagnosis'), {
+					backdrop: 'true',
+					keyboard: true
+				});
+				modalOne.show();
+
+				$.ajax({
+					url: "{{ route('template.getDiagnosis') }}",
+					success: result => {
+						result = JSON.parse(result);
+
+						let string = "";
+						if(result.length){
+							result.forEach(temp => {
+								string += `
+									<tr>
+										<td>${temp.name}</td>
+										<td>
+											<input type="checkbox" value="${temp.name}">
+										</td>
+									</tr>
+								`;
+							});
+						}
+						else{
+							string += `
+								<tr>
+									<td colspan="2">No entry. Check in Template Manager</td>
+								</tr>
+							`;
+						}
+
+						$('#bs-diagnosis table tbody').html(string);
+					}
+				})
+
+				document.getElementById('bs-diagnosis-submit').onclick = function () {
+					$('#bs-diagnosis [type="checkbox"]:checked').each((i, cbox) => {
+						$('#diagnosis').val($('#diagnosis').val() + ($('#diagnosis').val() ? ", " : "") + cbox.value);
+					});
+
+					modalOne.hide();
+				};
 			});
 
 			$('#callICD').on('click', e => {
