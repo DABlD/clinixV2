@@ -600,14 +600,14 @@
               <div class="d-flex gap-2">
                 <button class="btn btn-primary btn-sm" onclick="addService()">Add Services</button>
                 &nbsp;
-                <button class="btn btn-primary btn-sm" onclick="otherService()">Add Services</button>
+                <button class="btn btn-primary btn-sm" onclick="otherService()">Other Services</button>
                 &nbsp;
               </div>
             </div>
 
             <!-- Charges list / search box -->
             <div class="mb-3">
-            	<table id="list-of-services" class="table">
+            	<table id="list-of-services" class="table text-left table-sm small">
             		<tbody>
             			<tr>
             				<td class="text-center" colspan="3">No Charges</td>
@@ -1891,6 +1891,11 @@
 				keyboard: true
 			});
 			modalFour.show();
+
+			if(pDetails != undefined){
+				$('#m_patient_id').text(pDetails.patient_id);
+				$('#m_patient_name').text(`${pDetails.user.lname}, ${pDetails.user.fname} ${pDetails.user.mname}`);
+			}
 		}
 
 		$('#cash-tab').on('click', () => {
@@ -1915,5 +1920,94 @@
 			$('#checkout-cash-amount').text(`₱${numeral(e.target.value).format('0,0.00')}`);
 			$('#checkout-change').text(`₱${numeral(e.target.value - numeral($('#checkout-subtotal').val()).value()).format('0,0.00')}`);
 		});
+
+		function addService(){
+			Swal.fire({
+				title: "List of services",
+				html: `
+					<table class="table text-left">
+						<tbody>
+							<tr>
+								<td>Medical Certificate</td>
+								<td>₱100.00</td>
+								<td><input type="checkbox" data-amount="100" data-type="Medical Certificate"></td>
+							</tr>
+							<tr>
+								<td>Tele Consult</td>
+								<td>₱800.00</td>
+								<td><input type="checkbox" data-amount="800" data-type="Tele Consult"></td>
+							</tr>
+							<tr>
+								<td>Online Rx</td>
+								<td>₱100.00</td>
+								<td><input type="checkbox" data-amount="100" data-type="Online Rx"></td>
+							</tr>
+							<tr>
+								<td>Medicine</td>
+								<td>₱100.00</td>
+								<td><input type="checkbox" data-amount="100" data-type="Medicine"></td>
+							</tr>
+							<tr>
+								<td>Consultation</td>
+								<td>₱900.00</td>
+								<td><input type="checkbox" data-amount="900" data-type="Consultation"></td>
+							</tr>
+							<tr>
+								<td>Discount</td>
+								<td>₱-100.00</td>
+								<td><input type="checkbox" data-amount="-100" data-type="Discount"></td>
+							</tr>
+						</tbody>
+					</table>
+				`,
+				confirmButtonText: "Add Services",
+				showCancelButton: true,
+				cancelButtonColor: errorColor
+			}).then(result => {
+				if(result.value){
+					let servicesString = "";
+
+					$('[type="checkbox"]:checked').each((a,service) => {
+						servicesString += `
+							<tr>
+								<td>${service.dataset.type}</td>
+								<td class="service-amount" data-amount="${service.dataset.amount}">₱${numeral(service.dataset.amount).format('0,0.00')}</td>
+								<td class="text-right">
+									<a class="btn btn-warning btn-xs" data-toggle="tooltip" title="Edit" onclick="editService("${service.dataset.type}", ${service.dataset.amount}">
+										<i class="fas fa-pencil fa-sm"></i>
+									</a>
+									<a class="btn btn-danger btn-xs" data-toggle="tooltip" title="Delete" onclick="deleteService(this">
+										<i class="fas fa-trash fa-sm"></i>
+									</a>
+								</td>
+							</tr>
+						`;
+					})
+
+					$('#list-of-services tbody').append(servicesString);
+					$('#list-of-services .text-center').remove();
+					
+					computeTotal();
+				}
+			})
+		}
+
+		function otherService(){
+
+		}
+
+		function deleteService(elem){
+			$(elem).remove();
+		}
+
+		function computeTotal(){
+			let total = 0;
+			$('.service-amount').each((a,amount) => {
+				total += parseFloat(amount.dataset.amount);
+			});
+
+			$('#checkout-subtotal').text(`₱${numeral(total).format('0,0.00')}`)
+			$('#checkout-vat').text(`₱${numeral(total * .12).format('0,0.00')}`)
+		}
 	</script>
 @endpush
