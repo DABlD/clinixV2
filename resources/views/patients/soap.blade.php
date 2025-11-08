@@ -1046,6 +1046,7 @@
 
 					calendar = new Calendar('#calendar', {
 						selectedTheme: 'light',
+						dateMax: moment().format("YYYY-MM-DD"),
 						onCreateDateEls(self, dateEl) {
 							if (eventDates.includes($(dateEl).data("vc-date"))) {
 								const btn = dateEl.querySelector('.vc-date__btn');
@@ -1056,9 +1057,112 @@
 								btn.style.gap = "3px"; // small space between number and dot
 							}
 						},
+						onClickDate(self) {
+							const date = self.context.selectedDates[0];
+							if(date){
+								let text = $(`[data-vc-date="${date}"] .vc-date__btn`).text();
+
+								if (text.includes("●")) {
+									Swal.fire({
+										icon: 'question',
+										title: "Load SOAP details for this date?",
+										confirmButtonText: "Yes",
+										showCancelButton: true,
+										cancelButtonText: "Cancel",
+										cancelButtonColor: errorColor,
+									}).then(result => {
+										if(result.value){
+											loadSoap(date);
+										}
+									})
+								}
+							}
+						},
 					});
 
 		  			calendar.init();
+				}
+			})
+		}
+
+		function loadSoap(date){
+			$.ajax({
+				url: "{{ route('soap.get') }}",
+				data: {
+					select: "*",
+					where: ['user_id', uid],
+					where2: ['created_at', 'like', date + "%"]
+				},
+				success: soapData => {
+					soapData = JSON.parse(soapData)[0];
+
+					$('#type_of_visit').val(soapData.s_type_of_visit).trigger('change');
+					$('#chief_complaint').val(soapData.s_chief_complaint).trigger('change');
+					$('#history_of_present_illness').val(soapData.s_history_of_present_illness).trigger('change');
+					$('#bp_systolic').val(soapData.o_systolic);
+					$('#bp_diastolic').val(soapData.o_diastolic);
+					$('#pulse_rate').val(soapData.o_pulse);
+					$('#pulse_type').val(soapData.o_pulse_type);
+					$('#temperature').val(soapData.o_temperature);
+					$('#temp_unit').val(soapData.o_temperature_unit);
+					$('#temp_location').val(soapData.o_temperature_location);
+					$('#respiration_rate').val(soapData.o_respiration_rate);
+					$('#respiration_type').val(soapData.o_respiration_type);
+					$('#weight').val(soapData.o_weight);
+					$('#weight_unit').val(soapData.o_weight_unit);
+					$('#height').val(soapData.o_height);
+					$('#height_unit').val(soapData.o_height_unit);
+					$('#o2_sat').val(soapData.o_o2_sat);
+					$('#physical_examination').val(soapData.o_physical_examination);
+					$('#diagnosis').val(soapData.a_diagnosis);
+					$('#diagnosis_care_plan').val(soapData.p_diagnosis_care_plan);
+					$('#therapeutic_care_plan').val(soapData.p_therapeutic_care_plan);
+					$('#doctors_note').val(soapData.p_doctors_note);
+
+					$('#type_of_visit').attr('disabled', 'disabled');
+					$('#chief_complaint').attr('disabled', 'disabled');
+					$('#history_of_present_illness').attr('disabled', 'disabled');
+					$('#bp_systolic').attr('disabled', 'disabled');
+					$('#bp_diastolic').attr('disabled', 'disabled');
+					$('#pulse_rate').attr('disabled', 'disabled');
+					$('#pulse_type').attr('disabled', 'disabled');
+					$('#temperature').attr('disabled', 'disabled');
+					$('#temp_unit').attr('disabled', 'disabled');
+					$('#temp_location').attr('disabled', 'disabled');
+					$('#respiration_rate').attr('disabled', 'disabled');
+					$('#respiration_type').attr('disabled', 'disabled');
+					$('#weight').attr('disabled', 'disabled');
+					$('#weight_unit').attr('disabled', 'disabled');
+					$('#height').attr('disabled', 'disabled');
+					$('#height_unit').attr('disabled', 'disabled');
+					$('#o2_sat').attr('disabled', 'disabled');
+					$('#physical_examination').attr('disabled', 'disabled');
+					$('#diagnosis').attr('disabled', 'disabled');
+					$('#diagnosis_care_plan').attr('disabled', 'disabled');
+					$('#therapeutic_care_plan').attr('disabled', 'disabled');
+					$('#doctors_note').attr('disabled', 'disabled');
+					$('#p_files').attr('disabled', 'disabled');
+
+					let ctx = canvas.getContext('2d');
+
+					base_image = new Image();
+					base_image.onload = function(){
+						// Compute scale to fit height
+						const scale = canvas.height / base_image.height;
+						const newWidth = base_image.width * scale;
+						const newHeight = canvas.height;
+
+						// Optional: Center horizontally
+						const x = (canvas.width - newWidth) / 2;
+						const y = 0;
+
+						// Draw scaled image
+						ctx.drawImage(base_image, x, y, newWidth, newHeight);
+					}
+					base_image.src = soapData.o_drawing;
+
+					$('canvas').addClass('disabled');
+					$('canvas.disabled').css('pointer-events', 'none');
 				}
 			})
 		}
