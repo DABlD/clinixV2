@@ -1969,12 +1969,15 @@
 					let servicesString = "";
 
 					$('[type="checkbox"]:checked').each((a,service) => {
+
+						let rn = Math.random().toString(36).substring(2, 8);
+
 						servicesString += `
-							<tr>
+							<tr data-type="${service.dataset.type}${rn}">
 								<td>${service.dataset.type}</td>
 								<td class="service-amount" data-amount="${service.dataset.amount}">₱${numeral(service.dataset.amount).format('0,0.00')}</td>
 								<td class="text-right">
-									<a class="btn btn-warning btn-xs" data-toggle="tooltip" title="Edit" onclick="editService("${service.dataset.type}", ${service.dataset.amount}">
+									<a class="btn btn-warning btn-xs" data-toggle="tooltip" title="Edit" onclick="editService('${service.dataset.type}', ${service.dataset.amount}, '${rn}')">
 										<i class="fas fa-pencil fa-sm"></i>
 									</a>
 									<a class="btn btn-danger btn-xs" data-toggle="tooltip" title="Delete" onclick="deleteService(this)">
@@ -1985,7 +1988,7 @@
 						`;
 					})
 
-					$('#list-of-services .text-center').remove();
+					$('#list-of-services .text-center').parent().remove();
 					$('#list-of-services tbody').append(servicesString);
 					
 					computeTotal();
@@ -2021,12 +2024,14 @@
 					}
 					else{
 						$('#list-of-services .text-center').remove();
+
+						let rn = Math.random().toString(36).substring(2, 8);
 						$('#list-of-services tbody').append(`
-							<tr>
+							<tr data-type="${osName}${rn}">
 								<td>${osName}</td>
 								<td class="service-amount" data-amount="${osFee}">₱${numeral(osFee).format('0,0.00')}</td>
 								<td class="text-right">
-									<a class="btn btn-warning btn-xs" data-toggle="tooltip" title="Edit" onclick="editService("${osName}", ${osFee}">
+									<a class="btn btn-warning btn-xs" data-toggle="tooltip" title="Edit" onclick="editService('${osName}', ${osFee}, '${rn}')">
 										<i class="fas fa-pencil fa-sm"></i>
 									</a>
 									<a class="btn btn-danger btn-xs" data-toggle="tooltip" title="Delete" onclick="deleteService(this)">
@@ -2035,11 +2040,65 @@
 								</td>
 							</tr>
 						`);
+
+						computeTotal();
+					}
+				}
+			}).then(result => {
+				ss("Successfully added service");
+			})
+		}
+
+		function editService(type, fee, rn){
+			Swal.fire({
+				title: "Edit Service",
+				html: `
+					<div class="row">
+						<div class="mb-3 col-12 text-left">
+						    <label for="other-service-name" class="form-label">Service Name</label>
+						    <input type="text" class="form-control" id="other-service-name" name="other-service-name" value="${type}" disabled>
+						</div>
+						<div class="mb-3 col-6 text-left">
+						    <label for="other-service-fee" class="form-label">Fee</label>
+						    <input type="number" class="form-control" id="other-service-fee" name="other-service-fee" value="${fee}">
+						</div>
+					</div>
+				`,
+				confirmButtonText: "Update Service",
+				showCancelButton: true,
+				cancelButtonColor: errorColor,
+				preConfirm: () => {
+					let osName = $('#other-service-name').val();
+					let osFee = $('#other-service-fee').val();
+
+					if(osName == "" || osFee == ""){
+						Swal.showValidationMessage('Fill all fields');
+						return false;
+					}
+					else{
+						$('#list-of-services .text-center').parent().remove();
+
+						$(`tr[data-type="${osName}${rn}"]`).replaceWith(`
+							<tr data-type="${osName}${rn}">
+								<td>${osName}</td>
+								<td class="service-amount" data-amount="${osFee}">₱${numeral(osFee).format('0,0.00')}</td>
+								<td class="text-right">
+									<a class="btn btn-warning btn-xs" data-toggle="tooltip" title="Edit" onclick="editService('${osName}', ${osFee}, '${rn}')">
+										<i class="fas fa-pencil fa-sm"></i>
+									</a>
+									<a class="btn btn-danger btn-xs" data-toggle="tooltip" title="Delete" onclick="deleteService(this)">
+										<i class="fas fa-trash fa-sm"></i>
+									</a>
+								</td>
+							</tr>
+						`);
+
+						computeTotal();
 					}
 
 				}
 			}).then(result => {
-				ss("Successfully added service");
+				ss("Successfully updated service");
 			})
 		}
 
@@ -2053,8 +2112,9 @@
 				total += parseFloat(amount.dataset.amount);
 			});
 
-			$('#checkout-subtotal').text(`₱${numeral(total).format('0,0.00')}`)
-			$('#checkout-vat').text(`₱${numeral(total * .12).format('0,0.00')}`)
+			$('#checkout-subtotal').text(`₱${numeral(total).format('0,0.00')}`);
+			$('#checkout-vat').text(`₱${numeral(total * .12).format('0,0.00')}`);
+			$('#cash-amount').trigger('keyup');
 		}
 
 		function stringToNumeral(amount) {
