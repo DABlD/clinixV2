@@ -152,7 +152,7 @@
 				        <div class="card-header bg-info text-white justify-content-between align-items-center">
 				            <span style="font-size: 24px; font-weight: bold;">SOAP</span>
 				            <div style="float: right;">
-				                <button class="btn btn-outline-light btn-sm"><i class="fas fa-save"></i></button>
+				                <button class="btn btn-outline-light btn-sm" onclick="saveSOAP()"><i class="fas fa-save"></i></button>
 				                <button class="btn btn-outline-light btn-sm"><i class="fas fa-cog"></i></button>
 				            </div>
 				        </div>
@@ -1562,6 +1562,68 @@
 					return false;
 				}
 			})
+		}
+
+		function saveSOAP(){
+			swal.showLoading();
+
+			let formData = new FormData();
+
+			let soapS = {
+				's_type_of_visit': $('#type_of_visit').val(),
+				's_chief_complaint': $('#chief_complaint').val(),
+				's_history_of_present_illness': $('#history_of_present_illness').val(),
+			};
+
+			let soapO = {
+				'o_systolic': $('#bp_systolic').val(),
+				'o_diastolic': $('#bp_diastolic').val(),
+				'o_pulse': $('#pulse_rate').val(),
+				'o_pulse_type': $('#pulse_type').val(),
+				'o_temperature': $('#temperature').val(),
+				'o_temperature_unit': $('#temp_unit').val(),
+				'o_temperature_location': $('#temp_location').val(),
+				'o_respiration_rate': $('#respiration_rate').val(),
+				'o_respiration_type': $('#respiration_type').val(),
+				'o_weight': $('#weight').val(),
+				'o_weight_unit': $('#weight_unit').val(),
+				'o_height': $('#height').val(),
+				'o_height_unit': $('#height_unit').val(),
+				'o_o2_sat': $('#o2_sat').val(),
+				'o_drawing': (history.length ? canvas.toDataURL("image/png") : null),
+				'o_physical_examination': $('#physical_examination').val(),
+			};
+
+			let soapA = {
+				'a_diagnosis': $('#diagnosis').val(),
+			};
+
+			let soapP = {
+				'p_diagnosis_care_plan': $('#diagnosis_care_plan').val(),
+				'p_therapeutic_care_plan': $('#therapeutic_care_plan').val(),
+				'p_doctors_note': $('#doctors_note').val(),
+			};
+
+			formData.append('uid', uid);
+			formData.append('soapS', JSON.stringify(soapS));
+			formData.append('soapO', JSON.stringify(soapO));
+			formData.append('soapA', JSON.stringify(soapA));
+			formData.append('soapP', JSON.stringify(soapP));
+
+			let fileInput = document.getElementById("p_files");
+		    for (let i = 0; i < fileInput.files.length; i++) {
+		        formData.append("files[]", fileInput.files[i]);
+		    }
+
+    		formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+		    fetch("{{ route('soap.store') }}", {
+	            method: "POST",
+	            body: formData
+	        }).then(result => {
+	        	console.log(result);
+	        	ss('Successfully saved SOAP');
+	        })
 		}
 	</script>
 @endpush
