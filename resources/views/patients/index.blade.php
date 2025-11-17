@@ -456,9 +456,15 @@
 								        <div>
 								            <strong>Date:</strong> ${toDate(soap.created_at, 'ddd MMM DD, YYYY hh:MM A')}
 								        </div>
-								        <button class="btn btn-sm btn-info caret-soap" data-bs-toggle="collapse" data-bs-target="#soapDetails${soap.id}" aria-expanded="true">
-								            <i class='fas fa-caret-up'></i>
-								        </button>
+
+								        <div>
+								        	<button class="btn btn-sm btn-success" href="{{ route('soap.print') }}?id=${soap.id}" target="_blank">
+								        	    <i class='fas fa-print'></i>
+								        	</button>
+									        <button class="btn btn-sm btn-info caret-soap" data-bs-toggle="collapse" data-bs-target="#soapDetails${soap.id}" aria-expanded="true">
+									            <i class='fas fa-caret-up'></i>
+									        </button>
+									    </div>
 								    </div>
 								    <!-- Collapsible SOAP Section -->
 								    <div class="collapse mt-3 soapDetails" id="soapDetails${soap.id}">
