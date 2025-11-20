@@ -232,6 +232,12 @@
             	                		            Blood Glucose
             	                		        </a>
             	                		    </li>
+            	                		    &nbsp;
+            	                		    <li class="nav-item" style="width: 19%;">
+            	                		        <a class="nav-link" href="#refraction" data-toggle="tab">
+            	                		            Refraction
+            	                		        </a>
+            	                		    </li>
             	                		</ul>
 
             	    					<br>
@@ -391,39 +397,84 @@
             		    	                        <div class="card-body">
 
             				                    		<div class="row">
-            				                    			<div class="col-md-4">
+            				                    			<div class="col-md-6">
             													<label class="form-label" style="float: left;">LMP</label>
             													<input type="text" class="form-control" id="ob-lmp" placeholder="LMP">
             				                    			</div>
-            				                    			<div class="col-md-4">
+            				                    			<div class="col-md-6">
             													<label class="form-label" style="float: left;">EDC</label>
             													<input type="text" class="form-control" id="ob-edc" placeholder="EDC">
             				                    			</div>
+            				                    		</div>
 
-            				                    			<div class="col-md-4">
-            													<button class="btn btn-primary" style="margin-top: 30px;">Calculate EDC</button>
+            				                    		<div class="row">
+            				                    			<div class="col-md-6">
+            													<button class="btn btn-primary">Calculate EDC</button>
+            				                    			</div>
+            				                    			<div class="col-md-6" style="margin-top: 15px;">
+            				                    				<input type="radio" name="edc_source" value="LMP">
+            				                    				<label for="edc_source">LMP</label>
+            				                    				<input type="radio" name="edc_source" value="Ultrasound">
+            				                    				<label for="edc_source">Ultrasound</label>
             				                    			</div>
             				                    		</div>
+
+            				                    		<br>
             		    	                        	
             				                    		<div class="row">
-            				                    			<div class="col-md-4">
+            				                    			<div class="col-md-6">
             													<label class="form-label" style="float: left;">AOG</label>
             													<input type="text" class="form-control" id="ob-aog" placeholder="AOG">
             				                    			</div>
-            				                    			<div class="col-md-4">
+            				                    			<div class="col-md-6">
             													<label class="form-label" style="float: left;">FH</label>
             													<input type="text" class="form-control" id="ob-fh" placeholder="FH">
             				                    			</div>
             				                    		</div>
             		    	                        	
             				                    		<div class="row">
-            				                    			<div class="col-md-4">
+            				                    			<div class="col-md-6">
             													<label class="form-label" style="float: left;">FHT</label>
             													<input type="text" class="form-control" id="ob-fht" placeholder="FHT">
             				                    			</div>
-            				                    			<div class="col-md-4">
+            				                    			<div class="col-md-6">
             													<label class="form-label" style="float: left;">IE</label>
             													<input type="text" class="form-control" id="ob-ie" placeholder="IE">
+            				                    			</div>
+            				                    		</div>
+
+            				                    		<div class="row">
+            				                    			<div class="col-md-1">
+            				                    				<label class="form-label" style="float: left;">Gravida</label>
+            				                    				<input type="number" class="form-control" id="ob-gravida" min=0>
+            				                    			</div>
+            				                    			<div class="col-md-1">
+            				                    				<label class="form-label" style="float: left;">Para</label>
+            				                    				<input type="number" class="form-control" id="ob-para" min=0>
+            				                    			</div>
+            				                    			<div class="col-md-1">
+            				                    				<label class="form-label" style="float: left;">Term</label>
+            				                    				<input type="number" class="form-control" id="ob-term" min=0>
+            				                    			</div>
+            				                    			<div class="col-md-1">
+            				                    				<label class="form-label" style="float: left;">Preterm</label>
+            				                    				<input type="number" class="form-control" id="ob-preterm" min=0>
+            				                    			</div>
+            				                    			<div class="col-md-1">
+            				                    				<label class="form-label" style="float: left;">Abortion</label>
+            				                    				<input type="number" class="form-control" id="ob-abortion" min=0>
+            				                    			</div>
+            				                    			<div class="col-md-1">
+            				                    				<label class="form-label" style="float: left;">Living</label>
+            				                    				<input type="number" class="form-control" id="ob-living" min=0>
+            				                    			</div>
+            				                    			<div class="col-md-3">
+        				                    					<label class="form-label" style="float: left;">Presentation</label>
+        				                    					<input type="text" class="form-control" id="ob-presentation">
+            				                    			</div>
+            				                    			<div class="col-md-3">
+        				                    					<label class="form-label" style="float: left;">Remarks</label>
+        				                    					<input type="text" class="form-control" id="ob-remarks">
             				                    			</div>
             				                    		</div>
 
@@ -434,37 +485,75 @@
             	    					    <div class="chart tab-pane" id="bloodGlucose" style="position: relative;">
             		    	                    <div class="card">
             		    	                        <div class="card-body">
-
-            				                    		<div class="row">
-            				                    			<div class="col-md-6">
-            													<label class="form-label" style="float: left;">Blood Glucose</label>
-            													<input type="text" class="form-control" id="ob-blood-glucose" placeholder="(mg/dL)">
-            				                    			</div>
-            				                    			<div class="col-md-6">
-            													<label class="form-label" style="float: left;">Test Type</label>
-            													{{-- <input type="text" class="form-control" id="ob-edc" placeholder="EDC"> --}}
-            													<select class="form-control" id="ob-bg-testType">
-            														<option>Select Type</option>
-            														<option value="fasting">Fasting</option>
-            														<option value="random">Random</option>
-            														<option value="postpriandal">2-Hr Postprandial</option>
-            													</select>
-            				                    			</div>
-            				                    		</div>
-            		    	                        	
-            				                    		<div class="row">
-            				                    			<div class="col-md-6">
+                      	
+                        	                    		<div class="row">
+                        	                    			<div class="col-md-4">
+                        										<label class="form-label" style="float: left;">Datetime</label>
+                        										<input type="text" class="form-control" id="ob-bg-date">
+                        	                    			</div>
+                        	                    			<div class="col-md-4">
+                        	                    				<label class="form-label" style="float: left;">Value</label>
+                        	                    				<div class="input-group">
+                        	                    					<input type="text" class="form-control" id="ob-bg-value">
+                        	                    					{{-- <strong class="input-group-text">/</strong> --}}
+                        	                    					<input type="text" class="form-control input-group-text" id="ob-bg-unit" value="mg/dL" disabled>
+                        	                    				</div>
+                        	                    			</div>
+            				                    			<div class="col-md-4">
             													<label class="form-label" style="float: left;">Remarks</label>
-            													<input type="text" class="form-control" id="ob-bg-remarks" placeholder="Remarks">
+            													<input type="text" class="form-control" id="ob-bg-remarks">
             				                    			</div>
-            				                    		</div>
-            		    	                        	
-            				                    		<div class="row">
-            				                    			<div class="col-md-6">
-            													<label class="form-label" style="float: left;">Date Taken</label>
-            													<input type="text" class="form-control" id="ob-bg-date" placeholder="Date">
-            				                    			</div>
-            				                    		</div>
+                        	                    		</div>
+
+            				                    	</div>
+            		    	                    </div>
+            	    					    </div>
+
+            	    					    <div class="chart tab-pane" id="refraction" style="position: relative;">
+            		    	                    <div class="card">
+            		    	                        <div class="card-body">
+                      	
+                        	                    		<div class="row">
+                        	                    			<div class="col-md-1"></div>
+                        	                    			<div class="col-md-1">SC</div>
+                        	                    			<div class="col-md-1">OD</div>
+                        	                    			<div class="col-md-3"></div>
+                        	                    			<div class="col-md-2">Spectacles</div>
+                        	                    			<div class="col-md-5"></div>
+                        	                    		</div>
+
+                        	                    		<div class="row">
+                        	                    			<div class="col-md-1">
+                        	                    				OD
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				<input type="text" class="form-control" id="ob-r-va_sc_od">
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				<input type="text" class="form-control" id="ob-r-va_ph_od">
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				<input type="text" class="form-control" id="ob-r-va_cc_od">
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				<input type="text" class="form-control" id="ob-r-va_spec_od">
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				=
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				<input type="text" class="form-control" id="ob-r-va_spec_od_sp">
+                        	                    			</div>
+                        	                    			<div class="col-md-2">
+                        	                    				<input type="text" class="form-control" id="ob-r-va_spec_od_cy">
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				X
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				<input type="text" class="form-control" id="ob-r-va_spec_od_ax">
+                        	                    			</div>
+                        	                    		</div>
 
             				                    	</div>
             		    	                    </div>
@@ -1125,10 +1214,12 @@
 
 			$('#ob-bg-date').flatpickr({
 				altInput: true,
-				altFormat: "M j, Y",
-				dateFormat: "Y-m-d",
+				altFormat: "M j, Y H:i",
+				dateFormat: "Y-m-d H:i",
 				maxDate: moment().format("YYYY-MM-DD"),
-				defaultDate: moment().format("YYYY-MM-DD")
+  				enableTime: true,
+  				time_24hr: true,
+				defaultDate: new Date()
 			});
 
 			$('#ob-lmp').flatpickr({
