@@ -212,7 +212,31 @@
                                     </div>
 
                                     <div class="row">
-                                        {{ $col("Specialization", "specialization", $data->doctor->specialization) }}
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="specialization">
+                                                    <strong>
+                                                        Specialization
+                                                    </strong>
+                                                </label>
+
+                                                <br>
+                                                <select id="specialization" style="width: 100%; height: 35px;">
+                                                    <option value="">Select Specialization</option>
+                                                    <option value="General Practitioner">General Practitioner</option>
+                                                    <option value="Internal Medicine">Internal Medicine</option>
+                                                    <option value="Pediatrics">Pediatrics</option>
+                                                    <option value="OB-GYN">OB-GYN</option>
+                                                    <option value="Cardiology">Cardiology</option>
+                                                    <option value="Dermatology">Dermatology</option>
+                                                    <option value="Orthopedics">Orthopedics</option>
+                                                    <option value="Ophthalmology">Ophthalmology</option>
+                                                    <option value="ENT">ENT</option>
+                                                    <option value="Psychiatry">Psychiatry</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         {{ $col("Pharma Partner", "pharma_partner", $data->doctor->pharma_partner) }}
                                         {{ $col("Title", "title", $data->doctor->title) }}
                                     </div>
@@ -421,6 +445,7 @@
         #swal2-html-container .pInfo{
             color: deepskyblue;
         }
+
     </style>
 @endpush
 
@@ -476,6 +501,13 @@
                 dateFormat: 'Y-m-d',
                 maxDate: moment().format(dateFormat)
             });
+
+            @if(auth()->user()->role == "Doctor")
+                $('#specialization').select2({
+                    tags: true
+                });
+                $('#specialization').val("{{ $data->doctor->specialization }}").trigger('change');
+            @endif
 
             $('[href="#tab1"]').on('click', () => {
                 $('.hidden').hide();
