@@ -220,24 +220,30 @@
             	                		            Exam
             	                		        </a>
             	                		    </li>
+            	                		    @if(auth()->user()->role == "Admin" || (isset(auth()->user()->doctor) && auth()->user()->doctor->specialization == "OB-GYN"))
             	                		    &nbsp;
             	                		    <li class="nav-item" style="width: 19%;">
             	                		        <a class="nav-link" href="#obgyne" data-toggle="tab">
             	                		            OB-Gyne
             	                		        </a>
             	                		    </li>
+            	                		    @endif
+            	                		    @if(auth()->user()->role == "Admin" || (isset(auth()->user()->doctor) && auth()->user()->doctor->specialization == "Endocrinology"))
             	                		    &nbsp;
             	                		    <li class="nav-item" style="width: 19%;">
             	                		        <a class="nav-link" href="#bloodGlucose" data-toggle="tab">
             	                		            Blood Glucose
             	                		        </a>
             	                		    </li>
+            	                		    @endif
+            	                		    @if(auth()->user()->role == "Admin" || (isset(auth()->user()->doctor) && auth()->user()->doctor->specialization == "Ophthalmology"))
             	                		    &nbsp;
             	                		    <li class="nav-item" style="width: 19%;">
             	                		        <a class="nav-link" href="#refraction" data-toggle="tab">
             	                		            Refraction
             	                		        </a>
             	                		    </li>
+            	                		    @endif
             	                		</ul>
 
             	    					<br>
