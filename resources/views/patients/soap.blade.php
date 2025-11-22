@@ -518,8 +518,6 @@
             		    	                        			Visual Acuity
             		    	                        		</div>
             		    	                        	</div>
-
-            		    	                        	<br>
                       	
                         	                    		<div class="row">
                         	                    			<div class="col-md-1"></div>
@@ -563,8 +561,6 @@
                         	                    			</div>
                         	                    		</div>
 
-                        	                    		<br>
-
                         	                    		<div class="row">
                         	                    			<div class="col-md-1">
                         	                    				OS
@@ -597,15 +593,11 @@
                         	                    			</div>
                         	                    		</div>
 
-            		    	                        	<br>
-
             		    	                        	<div class="row">
             		    	                        		<div class="col-md-12" style="background-color: skyblue; text-align: left; font-weight: bold;">
             		    	                        			Auto Refract
             		    	                        		</div>
             		    	                        	</div>
-
-            		    	                        	<br>
 
             		    	                        	<div class="row">
             		    	                        		<div class="col-md-12">Spectacles</div>
@@ -641,15 +633,11 @@
             		    	                        		</div>
             		    	                        	</div>
 
-            		    	                        	<br>
-
             		    	                        	<div class="row">
             		    	                        		<div class="col-md-12" style="background-color: skyblue; text-align: left; font-weight: bold;">
             		    	                        			New Refract
             		    	                        		</div>
             		    	                        	</div>
-
-            		    	                        	<br>
 
             		    	                        	<div class="row">
             		    	                        		<div class="col-md-6">Spectacles</div>
@@ -699,6 +687,119 @@
             		    	                        		</div>
             		    	                        		<div class="col-md-2">
             		    	                        			<input type="number" class="form-control" id="ob-r-nr_spec_os_sh">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-1"></div>
+            		    	                        		<div class="col-md-5 d-flex justify-content-center align-items-center">
+            		    	                        			<input type="number" style="width: 33%;" class="form-control" id="ob-r-nr_spec_od_ax">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-2">
+            		    	                        			<input type="number" class="form-control" id="ob-r-nr_spec_os_ax">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2">Type of Lens:</div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-nr_type_of_lens">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2">Type of Frame:</div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-nr_type_of_frame">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-12" style="background-color: skyblue; text-align: left; font-weight: bold;">
+            		    	                        			Eyelid Evaluation
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-4">OD</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-4">OS</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2" style="text-align: left;">Straight</div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_od_straight">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_os_straight">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2" style="text-align: left;">Up</div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_od_up">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_os_up">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2" style="text-align: left;">Down</div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_od_down">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_os_down">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2" style="text-align: left;">MRD</div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_od_mrd">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_os_mrd">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2" style="text-align: left;">Lev Fxn</div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_od_lev_fxn">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_os_lev_fxn">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2" style="text-align: left;">Lid Crease</div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_od_lid_crease">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_os_lid_crease">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-2" style="text-align: left;">Lid Lag</div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_od_lid_lag">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2"></div>
+            		    	                        		<div class="col-md-4">
+            		    	                        			<input type="number" class="form-control" id="ob-r-ee_os_lid_lag">
             		    	                        		</div>
             		    	                        	</div>
 
@@ -1138,6 +1239,11 @@
 		    background: #ff4444;
 		    border-radius: 50%;
 		  }
+
+		#refraction .row{
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
 	</style>
 @endpush
 

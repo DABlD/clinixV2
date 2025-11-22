@@ -45,7 +45,14 @@ class SOAPRefraction extends Model
         "ee_od_mrd",
         "ee_od_lev_fxn",
         "ee_od_lid_crease",
-        "ee_od_lid_lag"
+        "ee_od_lid_lag",
+        "ee_os_straight",
+        "ee_os_up",
+        "ee_os_down",
+        "ee_os_mrd",
+        "ee_os_lev_fxn",
+        "ee_os_lid_crease",
+        "ee_os_lid_lag"
     ];
     
     protected $casts = [

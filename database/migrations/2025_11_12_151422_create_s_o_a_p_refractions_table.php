@@ -73,6 +73,14 @@ return new class extends Migration
             $table->float('ee_od_lid_crease', 8,2)->nullable();
             $table->float('ee_od_lid_lag', 8,2)->nullable();
 
+            $table->float('ee_os_straight', 8,2)->nullable();
+            $table->float('ee_os_up', 8,2)->nullable();
+            $table->float('ee_os_down', 8,2)->nullable();
+            $table->float('ee_os_mrd', 8,2)->nullable();
+            $table->float('ee_os_lev_fxn', 8,2)->nullable();
+            $table->float('ee_os_lid_crease', 8,2)->nullable();
+            $table->float('ee_os_lid_lag', 8,2)->nullable();
+
             $table->timestamps();
 
             $table->foreign('user_id')
