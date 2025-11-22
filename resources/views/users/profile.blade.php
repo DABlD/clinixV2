@@ -233,6 +233,11 @@
                                                     <option value="Ophthalmology">Ophthalmology</option>
                                                     <option value="ENT">ENT</option>
                                                     <option value="Psychiatry">Psychiatry</option>
+                                                    <option value="General Surgery">General Surgery</option>
+                                                    <option value="Radiology">Radiology</option>
+                                                    <option value="Anesthesiology">Anesthesiology</option>
+                                                    <option value="Endocrinology">Endocrinology</option>
+                                                    <option value="Urology">Urology</option>
                                                 </select>
                                             </div>
                                         </div>
