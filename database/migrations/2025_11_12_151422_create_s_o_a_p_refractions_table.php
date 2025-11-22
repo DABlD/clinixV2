@@ -49,11 +49,17 @@ return new class extends Migration
             $table->float('nr_spec_od_sp', 8,2)->nullable();
             $table->float('nr_spec_od_cy', 8,2)->nullable();
             $table->float('nr_spec_od_ax', 8,2)->nullable();
+            $table->float('nr_spec_od_va', 8,2)->nullable();
+            $table->float('nr_spec_od_pd', 8,2)->nullable();
+            $table->float('nr_spec_od_sh', 8,2)->nullable();
 
             $table->float('nr_spec_os', 8,2)->nullable();
             $table->float('nr_spec_os_sp', 8,2)->nullable();
             $table->float('nr_spec_os_cy', 8,2)->nullable();
             $table->float('nr_spec_os_ax', 8,2)->nullable();
+            $table->float('nr_spec_os_va', 8,2)->nullable();
+            $table->float('nr_spec_os_pd', 8,2)->nullable();
+            $table->float('nr_spec_os_sh', 8,2)->nullable();
 
             $table->float('nr_type_of_lens', 8,2)->nullable();
             $table->float('nr_type_of_frame', 8,2)->nullable();

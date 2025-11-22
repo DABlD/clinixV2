@@ -509,17 +509,26 @@
             		    	                    </div>
             	    					    </div>
 
-            	    					    <div class="chart tab-pane" id="refraction" style="position: relative;">
+            	    					    <div class="chart tab-pane" id="refraction" style="position: relative; text-align: center;">
             		    	                    <div class="card">
             		    	                        <div class="card-body">
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-12" style="background-color: skyblue; text-align: left; font-weight: bold;">
+            		    	                        			Visual Acuity
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<br>
                       	
                         	                    		<div class="row">
                         	                    			<div class="col-md-1"></div>
                         	                    			<div class="col-md-1">SC</div>
                         	                    			<div class="col-md-1">OD</div>
-                        	                    			<div class="col-md-3"></div>
-                        	                    			<div class="col-md-2">Spectacles</div>
-                        	                    			<div class="col-md-5"></div>
+                        	                    			<div class="col-md-2"></div>
+                        	                    			<div class="col-md-4">Spectacles</div>
+                        	                    			<div class="col-md-1"></div>
+                        	                    			<div class="col-md-2">AXIS</div>
                         	                    		</div>
 
                         	                    		<div class="row">
@@ -527,33 +536,171 @@
                         	                    				OD
                         	                    			</div>
                         	                    			<div class="col-md-1">
-                        	                    				<input type="text" class="form-control" id="ob-r-va_sc_od">
+                        	                    				<input type="number" class="form-control" id="ob-r-va_sc_od">
                         	                    			</div>
                         	                    			<div class="col-md-1">
-                        	                    				<input type="text" class="form-control" id="ob-r-va_ph_od">
+                        	                    				<input type="number" class="form-control" id="ob-r-va_ph_od">
                         	                    			</div>
                         	                    			<div class="col-md-1">
-                        	                    				<input type="text" class="form-control" id="ob-r-va_cc_od">
+                        	                    				<input type="number" class="form-control" id="ob-r-va_cc_od">
+                        	                    			</div>
+
+                        	                    			<div class="col-md-1"></div>
+
+                        	                    			<div class="col-md-4">
+                        	                    				<div class="input-group">
+		                    	                    				<input type="number" class="form-control" id="ob-r-va_spec_od">
+		                    	                    				<strong class="input-group-text">=</strong>
+		                    	                    				<input type="number" class="form-control" id="ob-r-va_spec_od_sp">
+		                    	                    				<strong class="input-group-text">X</strong>
+		                    	                    				<input type="number" class="form-control" id="ob-r-va_spec_od_cy">
+                        	                    				</div>
                         	                    			</div>
                         	                    			<div class="col-md-1">
-                        	                    				<input type="text" class="form-control" id="ob-r-va_spec_od">
-                        	                    			</div>
-                        	                    			<div class="col-md-1">
-                        	                    				=
-                        	                    			</div>
-                        	                    			<div class="col-md-1">
-                        	                    				<input type="text" class="form-control" id="ob-r-va_spec_od_sp">
                         	                    			</div>
                         	                    			<div class="col-md-2">
-                        	                    				<input type="text" class="form-control" id="ob-r-va_spec_od_cy">
-                        	                    			</div>
-                        	                    			<div class="col-md-1">
-                        	                    				X
-                        	                    			</div>
-                        	                    			<div class="col-md-1">
-                        	                    				<input type="text" class="form-control" id="ob-r-va_spec_od_ax">
+                        	                    				<input type="number" class="form-control" id="ob-r-va_spec_od_ax">
                         	                    			</div>
                         	                    		</div>
+
+                        	                    		<br>
+
+                        	                    		<div class="row">
+                        	                    			<div class="col-md-1">
+                        	                    				OS
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				<input type="number" class="form-control" id="ob-r-va_sc_os">
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				<input type="number" class="form-control" id="ob-r-va_ph_os">
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    				<input type="number" class="form-control" id="ob-r-va_cc_os">
+                        	                    			</div>
+
+                        	                    			<div class="col-md-1"></div>
+
+                        	                    			<div class="col-md-4">
+                        	                    				<div class="input-group">
+		                    	                    				<input type="number" class="form-control" id="ob-r-va_spec_os">
+		                    	                    				<strong class="input-group-text">=</strong>
+		                    	                    				<input type="number" class="form-control" id="ob-r-va_spec_os_sp">
+		                    	                    				<strong class="input-group-text">X</strong>
+		                    	                    				<input type="number" class="form-control" id="ob-r-va_spec_os_cy">
+                        	                    				</div>
+                        	                    			</div>
+                        	                    			<div class="col-md-1">
+                        	                    			</div>
+                        	                    			<div class="col-md-2">
+                        	                    				<input type="number" class="form-control" id="ob-r-va_spec_os_ax">
+                        	                    			</div>
+                        	                    		</div>
+
+            		    	                        	<br>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-12" style="background-color: skyblue; text-align: left; font-weight: bold;">
+            		    	                        			Auto Refract
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<br>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-12">Spectacles</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-1">OD</div>
+            		    	                        		<div class="col-md-3">
+                        	                    				<input type="number" class="form-control" id="ob-r-ar_spec_od">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-1">=</div>
+            		    	                        		<div class="col-md-3">
+                        	                    				<input type="number" class="form-control" id="ob-r-ar_spec_od_sp">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-1">X</div>
+            		    	                        		<div class="col-md-3">
+                        	                    				<input type="number" class="form-control" id="ob-r-ar_spec_od_cy">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-1">OS</div>
+            		    	                        		<div class="col-md-3">
+                        	                    				<input type="number" class="form-control" id="ob-r-ar_spec_os">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-1">=</div>
+            		    	                        		<div class="col-md-3">
+                        	                    				<input type="number" class="form-control" id="ob-r-ar_spec_os_sp">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-1">X</div>
+            		    	                        		<div class="col-md-3">
+                        	                    				<input type="number" class="form-control" id="ob-r-ar_spec_os_cy">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<br>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-12" style="background-color: skyblue; text-align: left; font-weight: bold;">
+            		    	                        			New Refract
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<br>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-6">Spectacles</div>
+            		    	                        		<div class="col-md-2">VA</div>
+            		    	                        		<div class="col-md-2">PD</div>
+            		    	                        		<div class="col-md-2">SH</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-1">OD</div>
+            		    	                        		<div class="col-md-5">
+            		    	                        			<div class="input-group">
+            		    	                        				<input type="number" class="form-control" id="ob-r-nr_spec_od">
+            		    	                        				<strong class="input-group-text">=</strong>
+            		    	                        				<input type="number" class="form-control" id="ob-r-va_spec_od_sp">
+            		    	                        				<strong class="input-group-text">X</strong>
+            		    	                        				<input type="number" class="form-control" id="ob-r-va_spec_od_cy">
+            		    	                        			</div>
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2">
+            		    	                        			<input type="number" class="form-control" id="ob-r-nr_spec_od_va">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2">
+            		    	                        			<input type="number" class="form-control" id="ob-r-nr_spec_od_pd">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2">
+            		    	                        			<input type="number" class="form-control" id="ob-r-nr_spec_od_sh">
+            		    	                        		</div>
+            		    	                        	</div>
+
+            		    	                        	<div class="row">
+            		    	                        		<div class="col-md-1">OS</div>
+            		    	                        		<div class="col-md-5">
+            		    	                        			<div class="input-group">
+            		    	                        				<input type="number" class="form-control" id="ob-r-nr_spec_os">
+            		    	                        				<strong class="input-group-text">=</strong>
+            		    	                        				<input type="number" class="form-control" id="ob-r-va_spec_os_sp">
+            		    	                        				<strong class="input-group-text">X</strong>
+            		    	                        				<input type="number" class="form-control" id="ob-r-va_spec_os_cy">
+            		    	                        			</div>
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2">
+            		    	                        			<input type="number" class="form-control" id="ob-r-nr_spec_os_va">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2">
+            		    	                        			<input type="number" class="form-control" id="ob-r-nr_spec_os_pd">
+            		    	                        		</div>
+            		    	                        		<div class="col-md-2">
+            		    	                        			<input type="number" class="form-control" id="ob-r-nr_spec_os_sh">
+            		    	                        		</div>
+            		    	                        	</div>
 
             				                    	</div>
             		    	                    </div>
