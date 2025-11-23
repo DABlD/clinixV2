@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{User, SOAP};
+use App\Models\{User, SOAP, SOAPBlood, SOAPObgyne, SOAPRefraction};
 use DB;
 use Image;
 
@@ -148,6 +148,90 @@ class SoapController extends Controller
         $soap->save();
 
         Helper::log(auth()->user()->id, "stored a SOAP. PID #$pid", $user->id);
+
+        $soapB = new SOAPBlood();
+        $soapB->user_id = $user->id;
+        $soapB->patient_id = $user->patient->id;
+        $soapB->value = $soapO->glucose->value;
+        $soapB->unit = $soapO->glucose->unit;
+        $soapB->remarks = $soapO->glucose->remarks;
+        $soapB->datetime = $soapO->glucose->datetime;
+        $soapB->save();
+
+        $soapOB = new SOAPObgyne();
+        $soapOB->user_id = $user->id;
+        $soapOB->patient_id = $user->patient->id;
+        $soapOB->lmp = $soapO->obgyne->lmp;
+        $soapOB->edc = $soapO->obgyne->edc;
+        $soapOB->edc_source = $soapO->obgyne->edc_source;
+        $soapOB->aog = $soapO->obgyne->aog;
+        $soapOB->fh = $soapO->obgyne->fh;
+        $soapOB->fht = $soapO->obgyne->fht;
+        $soapOB->ie = $soapO->obgyne->ie;
+        $soapOB->gravida = $soapO->obgyne->gravida != "" ? $soapO->obgyne->gravida : null;
+        $soapOB->para = $soapO->obgyne->para != "" ? $soapO->obgyne->para : null;
+        $soapOB->term = $soapO->obgyne->term != "" ? $soapO->obgyne->term : null;
+        $soapOB->preterm = $soapO->obgyne->preterm != "" ? $soapO->obgyne->preterm : null;
+        $soapOB->abortion = $soapO->obgyne->abortion != "" ? $soapO->obgyne->abortion : null;
+        $soapOB->living = $soapO->obgyne->living != "" ? $soapO->obgyne->living : null;
+        $soapOB->presentation = $soapO->obgyne->presentation;
+        $soapOB->remarks = $soapO->obgyne->remarks;
+        $soapOB->save();
+
+        $soapR = new SOAPRefraction();
+        $soapR->user_id = $user->id;
+        $soapR->patient_id = $user->patient->id;
+        $soapR->va_sc_od = $soapO->refractions->va_sc_od;
+        $soapR->va_sc_os = $soapO->refractions->va_sc_os;
+        $soapR->va_ph_od = $soapO->refractions->va_ph_od;
+        $soapR->va_ph_os = $soapO->refractions->va_ph_os;
+        $soapR->va_cc_od = $soapO->refractions->va_cc_od;
+        $soapR->va_cc_os = $soapO->refractions->va_cc_os;
+        $soapR->va_spec_od = $soapO->refractions->va_spec_od;
+        $soapR->va_spec_od_sp = $soapO->refractions->va_spec_od_sp;
+        $soapR->va_spec_od_cy = $soapO->refractions->va_spec_od_cy;
+        $soapR->va_spec_od_ax = $soapO->refractions->va_spec_od_ax;
+        $soapR->va_spec_os = $soapO->refractions->va_spec_os;
+        $soapR->va_spec_os_sp = $soapO->refractions->va_spec_os_sp;
+        $soapR->va_spec_os_cy = $soapO->refractions->va_spec_os_cy;
+        $soapR->va_spec_os_ax = $soapO->refractions->va_spec_os_ax;
+        $soapR->ar_spec_od = $soapO->refractions->ar_spec_od;
+        $soapR->ar_spec_od_sp = $soapO->refractions->ar_spec_od_sp;
+        $soapR->ar_spec_od_cy = $soapO->refractions->ar_spec_od_cy;
+        $soapR->ar_spec_os = $soapO->refractions->ar_spec_os;
+        $soapR->ar_spec_os_sp = $soapO->refractions->ar_spec_os_sp;
+        $soapR->ar_spec_os_cy = $soapO->refractions->ar_spec_os_cy;
+        $soapR->nr_spec_od = $soapO->refractions->nr_spec_od;
+        $soapR->nr_spec_od_sp = $soapO->refractions->nr_spec_od_sp;
+        $soapR->nr_spec_od_cy = $soapO->refractions->nr_spec_od_cy;
+        $soapR->nr_spec_od_ax = $soapO->refractions->nr_spec_od_ax;
+        $soapR->nr_spec_od_va = $soapO->refractions->nr_spec_od_va;
+        $soapR->nr_spec_od_pd = $soapO->refractions->nr_spec_od_pd;
+        $soapR->nr_spec_od_sh = $soapO->refractions->nr_spec_od_sh;
+        $soapR->nr_spec_os = $soapO->refractions->nr_spec_os;
+        $soapR->nr_spec_os_sp = $soapO->refractions->nr_spec_os_sp;
+        $soapR->nr_spec_os_cy = $soapO->refractions->nr_spec_os_cy;
+        $soapR->nr_spec_os_ax = $soapO->refractions->nr_spec_os_ax;
+        $soapR->nr_spec_os_va = $soapO->refractions->nr_spec_os_va;
+        $soapR->nr_spec_os_pd = $soapO->refractions->nr_spec_os_pd;
+        $soapR->nr_spec_os_sh = $soapO->refractions->nr_spec_os_sh;
+        $soapR->nr_type_of_lens = $soapO->refractions->nr_type_of_lens;
+        $soapR->nr_type_of_frame = $soapO->refractions->nr_type_of_frame;
+        $soapR->ee_od_straight = $soapO->refractions->ee_od_straight;
+        $soapR->ee_od_up = $soapO->refractions->ee_od_up;
+        $soapR->ee_od_down = $soapO->refractions->ee_od_down;
+        $soapR->ee_od_mrd = $soapO->refractions->ee_od_mrd;
+        $soapR->ee_od_lev_fxn = $soapO->refractions->ee_od_lev_fxn;
+        $soapR->ee_od_lid_crease = $soapO->refractions->ee_od_lid_crease;
+        $soapR->ee_od_lid_lag = $soapO->refractions->ee_od_lid_lag;
+        $soapR->ee_os_straight = $soapO->refractions->ee_os_straight;
+        $soapR->ee_os_up = $soapO->refractions->ee_os_up;
+        $soapR->ee_os_down = $soapO->refractions->ee_os_down;
+        $soapR->ee_os_mrd = $soapO->refractions->ee_os_mrd;
+        $soapR->ee_os_lev_fxn = $soapO->refractions->ee_os_lev_fxn;
+        $soapR->ee_os_lid_crease = $soapO->refractions->ee_os_lid_crease;
+        $soapR->ee_os_lid_lag = $soapO->refractions->ee_os_lid_lag;
+        $soapR->save();
 
         echo "success";
     }

@@ -495,7 +495,7 @@
                         	                    		<div class="row">
                         	                    			<div class="col-md-4">
                         										<label class="form-label" style="float: left;">Datetime</label>
-                        										<input type="text" class="form-control" id="ob-bg-date">
+                        										<input type="text" class="form-control" id="ob-bg-datetime">
                         	                    			</div>
                         	                    			<div class="col-md-4">
                         	                    				<label class="form-label" style="float: left;">Value</label>
@@ -658,9 +658,9 @@
             		    	                        			<div class="input-group">
             		    	                        				<input type="number" class="form-control" id="ob-r-nr_spec_od">
             		    	                        				<strong class="input-group-text">=</strong>
-            		    	                        				<input type="number" class="form-control" id="ob-r-va_spec_od_sp">
+            		    	                        				<input type="number" class="form-control" id="ob-r-nr_spec_od_sp">
             		    	                        				<strong class="input-group-text">X</strong>
-            		    	                        				<input type="number" class="form-control" id="ob-r-va_spec_od_cy">
+            		    	                        				<input type="number" class="form-control" id="ob-r-nr_spec_od_cy">
             		    	                        			</div>
             		    	                        		</div>
             		    	                        		<div class="col-md-2">
@@ -680,9 +680,9 @@
             		    	                        			<div class="input-group">
             		    	                        				<input type="number" class="form-control" id="ob-r-nr_spec_os">
             		    	                        				<strong class="input-group-text">=</strong>
-            		    	                        				<input type="number" class="form-control" id="ob-r-va_spec_os_sp">
+            		    	                        				<input type="number" class="form-control" id="ob-r-nr_spec_os_sp">
             		    	                        				<strong class="input-group-text">X</strong>
-            		    	                        				<input type="number" class="form-control" id="ob-r-va_spec_os_cy">
+            		    	                        				<input type="number" class="form-control" id="ob-r-nr_spec_os_cy">
             		    	                        			</div>
             		    	                        		</div>
             		    	                        		<div class="col-md-2">
@@ -1471,7 +1471,7 @@
 				};
 			});
 
-			$('#ob-bg-date').flatpickr({
+			$('#ob-bg-datetime').flatpickr({
 				altInput: true,
 				altFormat: "M j, Y H:i",
 				dateFormat: "Y-m-d H:i",
@@ -2319,6 +2319,84 @@
 				'o_o2_sat': $('#o2_sat').val(),
 				'o_drawing': (history.length ? canvas.toDataURL("image/png") : null),
 				'o_physical_examination': $('#physical_examination').val(),
+			};
+
+			soapO.refractions = {
+				va_sc_od: $('#ob-r-va_sc_od').val(),
+				va_sc_os: $('#ob-r-va_sc_os').val(),
+				va_ph_od: $('#ob-r-va_ph_od').val(),
+				va_ph_os: $('#ob-r-va_ph_os').val(),
+				va_cc_od: $('#ob-r-va_cc_od').val(),
+				va_cc_os: $('#ob-r-va_cc_os').val(),
+				va_spec_od: $('#ob-r-va_spec_od').val(),
+				va_spec_od_sp: $('#ob-r-va_spec_od_sp').val(),
+				va_spec_od_cy: $('#ob-r-va_spec_od_cy').val(),
+				va_spec_od_ax: $('#ob-r-va_spec_od_ax').val(),
+				va_spec_os: $('#ob-r-va_spec_os').val(),
+				va_spec_os_sp: $('#ob-r-va_spec_os_sp').val(),
+				va_spec_os_cy: $('#ob-r-va_spec_os_cy').val(),
+				va_spec_os_ax: $('#ob-r-va_spec_os_ax').val(),
+				ar_spec_od: $('#ob-r-ar_spec_od').val(),
+				ar_spec_od_sp: $('#ob-r-ar_spec_od_sp').val(),
+				ar_spec_od_cy: $('#ob-r-ar_spec_od_cy').val(),
+				ar_spec_os: $('#ob-r-ar_spec_os').val(),
+				ar_spec_os_sp: $('#ob-r-ar_spec_os_sp').val(),
+				ar_spec_os_cy: $('#ob-r-ar_spec_os_cy').val(),
+				nr_spec_od: $('#ob-r-nr_spec_od').val(),
+				nr_spec_od_sp: $('#ob-r-nr_spec_od_sp').val(),
+				nr_spec_od_cy: $('#ob-r-nr_spec_od_cy').val(),
+				nr_spec_od_ax: $('#ob-r-nr_spec_od_ax').val(),
+				nr_spec_od_va: $('#ob-r-nr_spec_od_va').val(),
+				nr_spec_od_pd: $('#ob-r-nr_spec_od_pd').val(),
+				nr_spec_od_sh: $('#ob-r-nr_spec_od_sh').val(),
+				nr_spec_os: $('#ob-r-nr_spec_os').val(),
+				nr_spec_os_sp: $('#ob-r-nr_spec_os_sp').val(),
+				nr_spec_os_cy: $('#ob-r-nr_spec_os_cy').val(),
+				nr_spec_os_ax: $('#ob-r-nr_spec_os_ax').val(),
+				nr_spec_os_va: $('#ob-r-nr_spec_os_va').val(),
+				nr_spec_os_pd: $('#ob-r-nr_spec_os_pd').val(),
+				nr_spec_os_sh: $('#ob-r-nr_spec_os_sh').val(),
+				nr_type_of_lens: $('#ob-r-nr_type_of_lens').val(),
+				nr_type_of_frame: $('#ob-r-nr_type_of_frame').val(),
+				ee_od_straight: $('#ob-r-ee_od_straight').val(),
+				ee_od_up: $('#ob-r-ee_od_up').val(),
+				ee_od_down: $('#ob-r-ee_od_down').val(),
+				ee_od_mrd: $('#ob-r-ee_od_mrd').val(),
+				ee_od_lev_fxn: $('#ob-r-ee_od_lev_fxn').val(),
+				ee_od_lid_crease: $('#ob-r-ee_od_lid_crease').val(),
+				ee_od_lid_lag: $('#ob-r-ee_od_lid_lag').val(),
+				ee_os_straight: $('#ob-r-ee_os_straight').val(),
+				ee_os_up: $('#ob-r-ee_os_up').val(),
+				ee_os_down: $('#ob-r-ee_os_down').val(),
+				ee_os_mrd: $('#ob-r-ee_os_mrd').val(),
+				ee_os_lev_fxn: $('#ob-r-ee_os_lev_fxn').val(),
+				ee_os_lid_crease: $('#ob-r-ee_os_lid_crease').val(),
+				ee_os_lid_lag: $('#ob-r-ee_os_lid_lag').val(),
+			};
+
+			soapO.obgyne = {
+				lmp: $('#ob-lmp').val(),
+				edc: $('#ob-edc').val(),
+				edc_source: $('[name="edc_source"]:checked').val(),
+				aog: $('#ob-aog').val(),
+				fh: $('#ob-fh').val(),
+				fht: $('#ob-fht').val(),
+				ie: $('#ob-ie').val(),
+				gravida: $('#ob-gravida').val(),
+				para: $('#ob-para').val(),
+				term: $('#ob-term').val(),
+				preterm: $('#ob-preterm').val(),
+				abortion: $('#ob-abortion').val(),
+				living: $('#ob-living').val(),
+				presentation: $('#ob-presentation').val(),
+				remarks: $('#ob-remarks').val()
+			};
+
+			soapO.glucose = {
+				value: $('#ob-bg-value').val(),
+				unit: $('#ob-bg-unit').val(),
+				remarks: $('#ob-bg-remarks').val(),
+				datetime: $('#ob-bg-datetime').val(),
 			};
 
 			let soapA = {
