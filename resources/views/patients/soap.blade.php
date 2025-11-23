@@ -17,7 +17,9 @@
 				    <div class="card shadow-sm mb-3">
 				        <div class="card-header bg-info text-white justify-content-between align-items-center">
 				            <span class="text-bold" style="font-size: 24px;">Px</span>
-				            <i class="fas fa-clipboard-prescription fa-2x" style="float: right;"></i>
+				            <a class="zoom-hover" onclick="createPrescription()" style="float: right;" data-toggle="tooltip" title="Create Prescription">
+				            	<i class="fas fa-clipboard-prescription fa-2x"></i>
+				            </a>
 				        </div>
 				        <div class="card-body text-center" id="patient-card">
 				            <img src="{{ asset('images/default_avatar.png') }}" class="rounded-circle mb-2" alt="Avatar" width="200px" height="200px">
@@ -1250,6 +1252,15 @@
 			margin-top: 10px;
 			margin-bottom: 10px;
 		}
+
+		.zoom-hover {
+		    transition: transform .2s ease-in-out;
+		    display: inline-block; /* IMPORTANT: allow transform */
+		    cursor: pointer;
+		}
+		.zoom-hover:hover {
+		    transform: scale(1.2);
+		}
 	</style>
 @endpush
 
@@ -1276,6 +1287,22 @@
 
 		const { Calendar } = window.VanillaCalendarPro;
 		var eventDates = [];
+		var prescriptions = [
+			{
+				generic_name: "test 1",
+				brand_name: "bname",
+				qty: 4,
+				form: "Capsule",
+				instruction: "3x a day",
+			},
+			{
+				generic_name: "test 2",
+				brand_name: "bname 2",
+				qty: 7,
+				form: "pack",
+				instruction: "8x a day",
+			},
+		];
 
 		$(document).ready(()=> {
 			$('#searchInput').select2({
@@ -2751,6 +2778,103 @@
 
 		function stringToNumeral(amount) {
 			return parseFloat(amount.replace(/[₱,]/g, '').trim());
+		}
+
+		function createPrescription(){
+			if(pDetails){
+				Swal.fire({
+					title: 'Prescription',
+					width: "50%",
+					html: `
+						<div class="row">
+							<div class="col-md-2">
+								<b>Patient ID</b>
+							</div>
+							<div class="col-md-10">
+								${pDetails.patient_id}
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-2">
+								<b>Name</b>
+							</div>
+							<div class="col-md-10">
+								${pDetails.user.lname}, ${pDetails.user.fname} ${pDetails.user.mname}
+							</div>
+						</div>
+
+						<br>
+
+						<div class="row">
+							<div class="col-md-3">
+								<h2>
+									<b>Rx Medication</b>
+								</h2>
+							</div>
+							<div class="col-md-9">
+								<button class="btn btn-primary btn-sm" style="float: right;" onclick="addRX()">Add RX</button>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card">
+									<div class="card-body" id="rxlist">
+									</div>
+								</div>
+							</div>
+						</div>
+					`,
+					didOpen: () => {
+						$('#swal2-html-container .row').css("text-align", 'left');
+						loadRXList();
+					}
+				})
+			}
+			else{
+				se('No patient selected');
+			}
+		}
+
+		function loadRXList(){
+			let rxString = "";
+
+			if(prescriptions.length){
+				prescriptions.forEach((prescription, index) => {
+					console.log(prescription, index);
+					rxString += `
+						<div class="row align-items-center" data-index="${index}" style="border-top: 1px solid #abaab4; padding-top: 10px; padding-bottom: 10px;">
+							<div class="col-md-5">
+								<h5 style="margin-bottom: 0px;"><b>${prescription.generic_name} / ${prescription.brand_name}</b></h6>
+								<span style="font-size: 14px;">
+									${prescription.instruction}
+								</span>
+							</div>
+							<div class="col-md-2" style="text-align: center;">
+								${prescription.qty} ${prescription.form}
+							</div>
+							<div class="col-md-5" style="text-align: right;">
+								<a class="btn btn-warning btn-sm" data-toggle="tooltip" title="Edit" onclick="editRX(${index})">
+									<i class="fas fa-pencil"></i>
+								</a>
+								<a class="btn btn-danger btn-sm" data-toggle="tooltip" title="Delete" onclick="deleteRX(${index})">
+									<i class="fas fa-trash"></i>
+								</a>
+							</div>
+						</div>
+					`;
+				});
+
+				rxString += "<hr>"
+			}
+			else{
+				rxString = `
+					<div class="col-md-12">No Record</div>
+				`;
+			}
+
+			$('#rxlist').html(rxString);
 		}
 	</script>
 @endpush
