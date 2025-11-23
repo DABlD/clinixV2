@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('edc')->nullable();
 
             // Source of EDC (lmp or ultrasound)
-            $table->enum('edc_source', ['lmp', 'ultrasound'])->nullable();
+            $table->enum('edc_source', ['LMP', 'Ultrasound'])->nullable();
 
             // Measurements & Computed Values
             $table->string('aog', 40)->nullable();      // Age of gestation (e.g., "32w3d")
