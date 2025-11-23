@@ -54,4 +54,16 @@ class SOAP extends Model
     public function patient(){
         return $this->belongsTo('App\Models\Patient');
     }
+
+    public function blood_glucose(){
+        return $this->hasOne('App\Models\SOAPBlood', 'soap_id');
+    }
+
+    public function obgyne(){
+        return $this->hasOne('App\Models\SOAPObgyne', 'soap_id');
+    }
+
+    public function refraction(){
+        return $this->hasOne('App\Models\SOAPRefraction', 'soap_id');
+    }
 }
