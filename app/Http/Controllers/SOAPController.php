@@ -150,8 +150,7 @@ class SoapController extends Controller
         Helper::log(auth()->user()->id, "stored a SOAP. PID #$pid", $user->id);
 
         $soapB = new SOAPBlood();
-        $soapB->user_id = $user->id;
-        $soapB->patient_id = $user->patient->id;
+        $soapB->soap_id = $soap->id;
         $soapB->value = $soapO->glucose->value;
         $soapB->unit = $soapO->glucose->unit;
         $soapB->remarks = $soapO->glucose->remarks;
@@ -159,8 +158,7 @@ class SoapController extends Controller
         $soapB->save();
 
         $soapOB = new SOAPObgyne();
-        $soapOB->user_id = $user->id;
-        $soapOB->patient_id = $user->patient->id;
+        $soapOB->soap_id = $soap->id;
         $soapOB->lmp = $soapO->obgyne->lmp;
         $soapOB->edc = $soapO->obgyne->edc;
         $soapOB->edc_source = $soapO->obgyne->edc_source;
@@ -179,8 +177,7 @@ class SoapController extends Controller
         $soapOB->save();
 
         $soapR = new SOAPRefraction();
-        $soapR->user_id = $user->id;
-        $soapR->patient_id = $user->patient->id;
+        $soapR->soap_id = $soap->id;
         $soapR->va_sc_od = $soapO->refractions->va_sc_od;
         $soapR->va_sc_os = $soapO->refractions->va_sc_os;
         $soapR->va_ph_od = $soapO->refractions->va_ph_od;

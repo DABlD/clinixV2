@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class SOAPRefraction extends Model
 {
     protected $fillable = [
-        "user_id",
-        "patient_id",
+        "soap_id",
         "va_sc_od",
         "va_sc_os",
         "va_ph_od",

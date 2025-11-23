@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('s_o_a_p_bloods', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedInteger("user_id");
-            $table->string('patient_id');
+            $table->unsignedInteger("soap_id");
 
             $table->string('value');
             $table->string('unit');
@@ -24,11 +23,6 @@ return new class extends Migration
             $table->datetime('datetime');
 
             $table->timestamps();
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
         });
     }
 

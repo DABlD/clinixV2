@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('s_o_a_p_obgynes', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedInteger("user_id");
-            $table->string('patient_id');
+            $table->unsignedInteger("soap_id");
 
             // Dates
             $table->date('lmp')->nullable();
@@ -43,11 +42,6 @@ return new class extends Migration
             $table->text('remarks')->nullable();
 
             $table->timestamps();
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
         });
     }
 

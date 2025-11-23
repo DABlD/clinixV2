@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class SOAPObgyne extends Model
 {
     protected $fillable = [
-        "user_id",
-        "patient_id",
+        "soap_id",
         "lmp",
         "edc",
         "edc_source",

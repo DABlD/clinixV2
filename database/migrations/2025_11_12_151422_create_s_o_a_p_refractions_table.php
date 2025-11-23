@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('s_o_a_p_refractions', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedInteger("user_id");
-            $table->string('patient_id');
+            $table->unsignedInteger("soap_id");
 
             // VISUAL ACTIVITY
             $table->float('va_sc_od', 8,2)->nullable();
@@ -82,11 +81,6 @@ return new class extends Migration
             $table->float('ee_os_lid_lag', 8,2)->nullable();
 
             $table->timestamps();
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
         });
     }
 
