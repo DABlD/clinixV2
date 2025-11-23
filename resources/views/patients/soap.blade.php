@@ -1487,6 +1487,12 @@
 				dateFormat: "Y-m-d",
 				maxDate: moment().format("YYYY-MM-DD")
 			});
+
+			$('#ob-edc').flatpickr({
+				altInput: true,
+				altFormat: "M j, Y",
+				dateFormat: "Y-m-d"
+			});
 		}
 
 		function initDrawingCanvas(){
@@ -1708,7 +1714,8 @@
 				data: {
 					select: "*",
 					where: ['user_id', uid],
-					where2: ['created_at', 'like', date + "%"]
+					where2: ['created_at', 'like', date + "%"],
+					load: ['refraction', 'obgyne', 'blood_glucose']
 				},
 				success: soapData => {
 					soapData = JSON.parse(soapData)[0];
@@ -1735,6 +1742,80 @@
 					$('#diagnosis_care_plan').val(soapData.p_diagnosis_care_plan);
 					$('#therapeutic_care_plan').val(soapData.p_therapeutic_care_plan);
 					$('#doctors_note').val(soapData.p_doctors_note);
+
+					$('#ob-r-va_sc_od').val(soapData.refraction.va_sc_od);
+					$('#ob-r-va_sc_os').val(soapData.refraction.va_sc_os);
+					$('#ob-r-va_ph_od').val(soapData.refraction.va_ph_od);
+					$('#ob-r-va_ph_os').val(soapData.refraction.va_ph_os);
+					$('#ob-r-va_cc_od').val(soapData.refraction.va_cc_od);
+					$('#ob-r-va_cc_os').val(soapData.refraction.va_cc_os);
+					$('#ob-r-va_spec_od').val(soapData.refraction.va_spec_od);
+					$('#ob-r-va_spec_od_sp').val(soapData.refraction.va_spec_od_sp);
+					$('#ob-r-va_spec_od_cy').val(soapData.refraction.va_spec_od_cy);
+					$('#ob-r-va_spec_od_ax').val(soapData.refraction.va_spec_od_ax);
+					$('#ob-r-va_spec_os').val(soapData.refraction.va_spec_os);
+					$('#ob-r-va_spec_os_sp').val(soapData.refraction.va_spec_os_sp);
+					$('#ob-r-va_spec_os_cy').val(soapData.refraction.va_spec_os_cy);
+					$('#ob-r-va_spec_os_ax').val(soapData.refraction.va_spec_os_ax);
+					$('#ob-r-ar_spec_od').val(soapData.refraction.ar_spec_od);
+					$('#ob-r-ar_spec_od_sp').val(soapData.refraction.ar_spec_od_sp);
+					$('#ob-r-ar_spec_od_cy').val(soapData.refraction.ar_spec_od_cy);
+					$('#ob-r-ar_spec_os').val(soapData.refraction.ar_spec_os);
+					$('#ob-r-ar_spec_os_sp').val(soapData.refraction.ar_spec_os_sp);
+					$('#ob-r-ar_spec_os_cy').val(soapData.refraction.ar_spec_os_cy);
+					$('#ob-r-nr_spec_od').val(soapData.refraction.nr_spec_od);
+					$('#ob-r-nr_spec_od_sp').val(soapData.refraction.nr_spec_od_sp);
+					$('#ob-r-nr_spec_od_cy').val(soapData.refraction.nr_spec_od_cy);
+					$('#ob-r-nr_spec_od_ax').val(soapData.refraction.nr_spec_od_ax);
+					$('#ob-r-nr_spec_od_va').val(soapData.refraction.nr_spec_od_va);
+					$('#ob-r-nr_spec_od_pd').val(soapData.refraction.nr_spec_od_pd);
+					$('#ob-r-nr_spec_od_sh').val(soapData.refraction.nr_spec_od_sh);
+					$('#ob-r-nr_spec_os').val(soapData.refraction.nr_spec_os);
+					$('#ob-r-nr_spec_os_sp').val(soapData.refraction.nr_spec_os_sp);
+					$('#ob-r-nr_spec_os_cy').val(soapData.refraction.nr_spec_os_cy);
+					$('#ob-r-nr_spec_os_ax').val(soapData.refraction.nr_spec_os_ax);
+					$('#ob-r-nr_spec_os_va').val(soapData.refraction.nr_spec_os_va);
+					$('#ob-r-nr_spec_os_pd').val(soapData.refraction.nr_spec_os_pd);
+					$('#ob-r-nr_spec_os_sh').val(soapData.refraction.nr_spec_os_sh);
+					$('#ob-r-nr_type_of_lens').val(soapData.refraction.nr_type_of_lens);
+					$('#ob-r-nr_type_of_frame').val(soapData.refraction.nr_type_of_frame);
+					$('#ob-r-ee_od_straight').val(soapData.refraction.ee_od_straight);
+					$('#ob-r-ee_od_up').val(soapData.refraction.ee_od_up);
+					$('#ob-r-ee_od_down').val(soapData.refraction.ee_od_down);
+					$('#ob-r-ee_od_mrd').val(soapData.refraction.ee_od_mrd);
+					$('#ob-r-ee_od_lev_fxn').val(soapData.refraction.ee_od_lev_fxn);
+					$('#ob-r-ee_od_lid_crease').val(soapData.refraction.ee_od_lid_crease);
+					$('#ob-r-ee_od_lid_lag').val(soapData.refraction.ee_od_lid_lag);
+					$('#ob-r-ee_os_straight').val(soapData.refraction.ee_os_straight);
+					$('#ob-r-ee_os_up').val(soapData.refraction.ee_os_up);
+					$('#ob-r-ee_os_down').val(soapData.refraction.ee_os_down);
+					$('#ob-r-ee_os_mrd').val(soapData.refraction.ee_os_mrd);
+					$('#ob-r-ee_os_lev_fxn').val(soapData.refraction.ee_os_lev_fxn);
+					$('#ob-r-ee_os_lid_crease').val(soapData.refraction.ee_os_lid_crease);
+					$('#ob-r-ee_os_lid_lag').val(soapData.refraction.ee_os_lid_lag);
+
+					$(`[name="edc_source"][value="${soapData.obgyne.edc_source}"]`).click();
+					{{-- $('#ob-lmp').val(soapData.obgyne.lmp); --}}
+					$("#ob-lmp").flatpickr().setDate(soapData.obgyne.lmp);
+					$("#ob-edc").flatpickr().setDate(soapData.obgyne.edc);
+
+					$('#ob-aog').val(soapData.obgyne.aog);
+					$('#ob-fh').val(soapData.obgyne.fh);
+					$('#ob-fht').val(soapData.obgyne.fht);
+					$('#ob-ie').val(soapData.obgyne.ie);
+					$('#ob-gravida').val(soapData.obgyne.gravida);
+					$('#ob-para').val(soapData.obgyne.para);
+					$('#ob-term').val(soapData.obgyne.term);
+					$('#ob-preterm').val(soapData.obgyne.preterm);
+					$('#ob-abortion').val(soapData.obgyne.abortion);
+					$('#ob-living').val(soapData.obgyne.living);
+					$('#ob-presentation').val(soapData.obgyne.presentation);
+					$('#ob-remarks').val(soapData.obgyne.remarks);
+
+					$('#ob-bg-value').val(soapData.blood_glucose.value);
+					$('#ob-bg-unit').val(soapData.blood_glucose.unit);
+					$('#ob-bg-remarks').val(soapData.blood_glucose.remarks);
+					$('#ob-bg-datetime').val(soapData.blood_glucose.datetime);
 
 					$('#type_of_visit').attr('disabled', 'disabled');
 					$('#chief_complaint').attr('disabled', 'disabled');
