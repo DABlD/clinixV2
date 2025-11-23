@@ -824,7 +824,7 @@
             	                			<div class="col-md-12">
             									<label class="form-label" style="float: left;">Previous Diagnosis</label>
             									
-            									<textarea class="form-control" rows="4" disabled></textarea>
+            									<textarea class="form-control" rows="4" disabled id="previousDiagnosis"></textarea>
             	                			</div>
             	                		</div>
 
@@ -1331,6 +1331,10 @@
 				tags: true
 			});
 
+			$('#callPreviousDiagnosis').on('click', e => {
+				$('#diagnosis').val(pDetails.latest_soap.a_diagnosis);
+			});
+
 			$('#callDiagnosis').on('click', e => {
 				modalOne = new bootstrap.Modal(document.getElementById('bs-diagnosis'), {
 					backdrop: 'true',
@@ -1648,6 +1652,7 @@
 
 						$('#pbirthday').html(moment(patient.birthday).format("MMM DD, YYYY"));
 						$('#page').html(moment().diff(moment(patient.user.birthday), 'years'));
+						$('#previousDiagnosis').val(pDetails.latest_soap.a_diagnosis);
 					}
 				});
 			}
