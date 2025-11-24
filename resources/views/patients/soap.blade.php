@@ -1287,7 +1287,8 @@
 
 		const { Calendar } = window.VanillaCalendarPro;
 		var eventDates = [];
-		var prescriptions = [
+		var prescriptions = []
+		{{-- var prescriptions = [
 			{
 				generic_name: "test 1",
 				brand_name: "bname",
@@ -1302,7 +1303,7 @@
 				form: "pack",
 				instruction: "8x a day",
 			},
-		];
+		]; --}}
 
 		$(document).ready(()=> {
 			$('#searchInput').select2({
@@ -2837,12 +2838,169 @@
 			}
 		}
 
+		function addRX(){
+			Swal.fire({
+				title: "Add Prescription",
+				html: `
+					<div class="text-align: left;">
+
+						<div class="row">
+							<div class="col-md-12">
+								<label class="form-label" style="float: left;">Generic Name</label>
+							    <input type="text" class="form-control" id="addRx_generic_name">
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<label class="form-label" style="float: left;">Brand Name</label>
+							    <input type="text" class="form-control" id="addRx_brand_name">
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<label class="form-label" style="float: left;">Qty</label>
+							    <input type="number" class="form-control" id="addRx_qty" min="0">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label" style="float: left;">Form</label>
+
+								<select class="form-control" id="addRx_form">
+									<option>Select One</option>
+									<option value="Tablet">Tablet</option>
+									<option value="Capsule">Capsule</option>
+									<option value="Pill">Pill</option>
+									<option value="Syrup">Syrup</option>
+									<option value="Suspension">Suspension</option>
+									<option value="Patch">Patch</option>
+									<option value="Vial">Vial</option>
+									<option value="Nebule">Nebule</option>
+									<option value="Suppository">Suppository</option>
+									<option value="Cream">Cream</option>
+									<option value="Gel">Gel</option>
+									<option value="Liniment">Liniment</option>
+									<option value="Ointment">Ointment</option>
+									<option value="Drops">Drops</option>
+								</select>
+							</div>
+						</div>
+						<br>
+
+						<div class="row">
+							<div class="col-md-12">
+								<label class="form-label" style="float: left;">Special Instruction</label>
+								<textarea class="form-control" id="addRx_instruction" rows="4"></textarea>
+							</div>
+						</div>
+					</div>
+				`,
+				showCancelButton: true,
+				cancelButtonColor: errorColor
+			}).then(result => {
+				if(result.value){
+					prescriptions.push({
+						generic_name: $('#addRx_generic_name').val(),
+						brand_name: $('#addRx_brand_name').val(),
+						qty: $('#addRx_qty').val(),
+						form: $('#addRx_form').val(),
+						instruction: $('#addRx_instruction').val(),
+					});
+				}
+
+				createPrescription();
+			})
+		}
+
+		function editRX(index){
+			let temp = prescriptions[index];
+
+			Swal.fire({
+				title: "Add Prescription",
+				html: `
+					<div class="text-align: left;">
+
+						<div class="row">
+							<div class="col-md-12">
+								<label class="form-label" style="float: left;">Generic Name</label>
+							    <input type="text" class="form-control" id="addRx_generic_name" value="${temp.generic_name}" disabled>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+								<label class="form-label" style="float: left;">Brand Name</label>
+							    <input type="text" class="form-control" id="addRx_brand_name" value="${temp.brand_name}" disabled>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6">
+								<label class="form-label" style="float: left;">Qty</label>
+							    <input type="number" class="form-control" id="addRx_qty" min="0" value="${temp.qty}">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label" style="float: left;">Form</label>
+
+								<select class="form-control" id="addRx_form">
+									<option>Select One</option>
+									<option value="Tablet">Tablet</option>
+									<option value="Capsule">Capsule</option>
+									<option value="Pill">Pill</option>
+									<option value="Syrup">Syrup</option>
+									<option value="Suspension">Suspension</option>
+									<option value="Patch">Patch</option>
+									<option value="Vial">Vial</option>
+									<option value="Nebule">Nebule</option>
+									<option value="Suppository">Suppository</option>
+									<option value="Cream">Cream</option>
+									<option value="Gel">Gel</option>
+									<option value="Liniment">Liniment</option>
+									<option value="Ointment">Ointment</option>
+									<option value="Drops">Drops</option>
+								</select>
+							</div>
+						</div>
+						<br>
+
+						<div class="row">
+							<div class="col-md-12">
+								<label class="form-label" style="float: left;">Special Instruction</label>
+								<textarea class="form-control" id="addRx_instruction" rows="4" value="${temp.instruction}">${temp.instruction}</textarea>
+							</div>
+						</div>
+					</div>
+				`,
+				showCancelButton: true,
+				didOpen: () => {
+					$('#addRx_form').val(temp.form).trigger('change');
+				},
+				cancelButtonColor: errorColor
+			}).then(result => {
+				if(result.value){
+					prescriptions[index] = {
+						generic_name: $('#addRx_generic_name').val(),
+						brand_name: $('#addRx_brand_name').val(),
+						qty: $('#addRx_qty').val(),
+						form: $('#addRx_form').val(),
+						instruction: $('#addRx_instruction').val(),
+					};
+				}
+
+				createPrescription();
+			})
+		}
+
+		function deleteRX(index){
+			prescriptions.splice(index,1);
+			createPrescription();
+		}
+
 		function loadRXList(){
 			let rxString = "";
 
 			if(prescriptions.length){
 				prescriptions.forEach((prescription, index) => {
-					console.log(prescription, index);
 					rxString += `
 						<div class="row align-items-center" data-index="${index}" style="border-top: 1px solid #abaab4; padding-top: 10px; padding-bottom: 10px;">
 							<div class="col-md-5">
