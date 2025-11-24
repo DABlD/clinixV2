@@ -1360,7 +1360,7 @@
 			});
 
 			$('#callPreviousDiagnosis').on('click', e => {
-				$('#diagnosis').val(pDetails.latest_soap.a_diagnosis);
+				$('#diagnosis').val(pDetails.latest_soap ? pDetails.latest_soap.a_diagnosis : null);
 			});
 
 			$('#callDiagnosis').on('click', e => {
@@ -1680,7 +1680,7 @@
 
 						$('#pbirthday').html(moment(patient.birthday).format("MMM DD, YYYY"));
 						$('#page').html(moment().diff(moment(patient.user.birthday), 'years'));
-						$('#previousDiagnosis').val(pDetails.latest_soap.a_diagnosis);
+						$('#previousDiagnosis').val(pDetails.latest_soap ? pDetails.latest_soap.a_diagnosis : null);
 					}
 				});
 			}
