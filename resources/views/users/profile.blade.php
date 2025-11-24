@@ -238,6 +238,7 @@
                                                     <option value="Anesthesiology">Anesthesiology</option>
                                                     <option value="Endocrinology">Endocrinology</option>
                                                     <option value="Urology">Urology</option>
+                                                    <option value="Geriatrics">Geriatrics</option>
                                                 </select>
                                             </div>
                                         </div>
