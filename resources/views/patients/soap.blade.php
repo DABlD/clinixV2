@@ -2808,12 +2808,12 @@
 						<br>
 
 						<div class="row">
-							<div class="col-md-3">
+							<div class="col-md-6">
 								<h2>
 									<b>Rx Medication</b>
 								</h2>
 							</div>
-							<div class="col-md-9">
+							<div class="col-md-6">
 								<button class="btn btn-primary btn-sm" style="float: right;" onclick="addRX()">Add RX</button>
 							</div>
 						</div>
