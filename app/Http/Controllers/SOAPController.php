@@ -7,6 +7,8 @@ use App\Models\{User, SOAP, SOAPBlood, SOAPObgyne, SOAPRefraction};
 use DB;
 use Image;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+
 use App\Helpers\Helper;
 
 class SoapController extends Controller
@@ -267,6 +269,12 @@ class SoapController extends Controller
         $result = Patient::where('id', $req->id)->update($req->except(['id', 'imageData', '_token']));
 
         echo Helper::log(auth()->user()->id, 'updated patient', $req->id);
+    }
+
+    public function printPrescription(Request $req){
+        $patient = User::find($req->uid)->load('patient');
+        $pdf = Pdf::loadView('exports.prescription', ["prescriptions" => json_decode($req->data), "clinic" => auth()->user()->clinic, "patient" => $patient]);
+        return $pdf->stream();
     }
 
     public function delete(Request $req){

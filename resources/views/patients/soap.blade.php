@@ -2830,6 +2830,21 @@
 					didOpen: () => {
 						$('#swal2-html-container .row').css("text-align", 'left');
 						loadRXList();
+					},
+					showCloseButton: true,
+					showCancelButton: true,
+					cancelButtonColor: errorColor,
+					confirmButtonText: "Print",
+					showDenyButton: true,
+					denyButtonColor: successColor,
+					denyButtonText: "Sent to Portal",
+				}).then(result => {
+					if(result.isConfirmed){
+						let json = encodeURIComponent(JSON.stringify(prescriptions));
+						window.open("{{ route('soap.printPrescription') }}?data=" + json + "&uid=" + pDetails.user.id, "_blank");
+					}
+					else if(result.isDenied){
+						{{-- SENT TO PORTAL --}}
 					}
 				})
 			}

@@ -152,6 +152,7 @@ Route::group([
 
                 Route::get("get/", ucfirst($cname) . "Controller@get")->name('get');
                 Route::get("print/", ucfirst($cname) . "Controller@print")->name('print');
+                Route::get("printPrescription/", ucfirst($cname) . "Controller@printPrescription")->name('printPrescription');
                 Route::post("store/", ucfirst($cname) . "Controller@store")->name('store');
                 Route::post("delete/", ucfirst($cname) . "Controller@delete")->name('delete');
                 Route::post("update/", ucfirst($cname) . "Controller@update")->name('update');
