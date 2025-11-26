@@ -61,7 +61,8 @@ class DoctorController extends Controller
     }
 
     public function update(Request $req){
-        $id = auth()->user()->clinic->id;
+        // $id = auth()->user()->clinic->id;
+        $id = $req->id;
 
         if($req->hasFile('signature')){
             $doctor = Doctor::find($id);
@@ -69,7 +70,7 @@ class DoctorController extends Controller
             $cname = $doctor->user->clinic->name;
             $folder = $doctor->user->lname . ', ' . $doctor->user->fname . ' ' . substr($doctor->user->mname, 0, 1);
             $path = public_path("uploads/$cname/Doctors/$folder/");
-            
+
             if (!is_dir($path)) {
                 mkdir($path, 0775, true);
             }
