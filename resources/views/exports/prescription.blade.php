@@ -45,7 +45,7 @@
 <table style="width: 100%; border-collapse: collapse; text-align: center; font-family: 'Roboto';">
     <tr>
         <td style="width: 25%; text-align: center; vertical-align: middle;">
-            <img src="file://{{ public_path($clinic->logo) }}" alt="Clinic Logo" height="70px">
+            <img src="{{ public_path($clinic->logo) }}" alt="Clinic Logo" height="50px">
         </td>
 
         <td style="width: 50%; text-align: center; vertical-align: middle; font-size: 12px; line-height: 1.4;">
@@ -58,7 +58,7 @@
         </td>
 
         <td style="width: 25%; text-align: center; vertical-align: middle;">
-            <img src="file://{{ public_path('images/logo.png') }}" alt="OHN Logo" height="70px">
+            <img src="{{ public_path('images/ohn_logo.png') }}" alt="OHN Logo" height="50px">
         </td>
     </tr>
 </table>
@@ -143,13 +143,6 @@
 					</tr>
 
 				</table>
-				<pre>
-					
-					<br>
-					<br>
-					<br>
-					
-				</pre>
 			</td>
 		</tr>
 	@endforeach
