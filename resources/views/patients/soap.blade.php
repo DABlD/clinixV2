@@ -2844,7 +2844,7 @@
 						window.open("{{ route('soap.printPrescription') }}?data=" + json + "&uid=" + pDetails.user.id, "_blank");
 					}
 					else if(result.isDenied){
-						{{-- SENT TO PORTAL --}}
+						window.open("{{ route('soap.sendPrescriptionToPortal') }}?data=" + json + "&uid=" + pDetails.user.id, "_blank");
 					}
 				})
 			}

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{User, SOAP, SOAPBlood, SOAPObgyne, SOAPRefraction};
+use App\Models\{User, SOAP, SOAPBlood, SOAPObgyne, SOAPRefraction, Prescription};
 use DB;
 use Image;
 
@@ -273,8 +273,38 @@ class SoapController extends Controller
 
     public function printPrescription(Request $req){
         $patient = User::find($req->uid)->load('patient');
-        $pdf = Pdf::loadView('exports.prescription', ["prescriptions" => json_decode($req->data), "clinic" => auth()->user()->clinic, "patient" => $patient]);
-        return $pdf->stream();
+        $pid = $patient->patient->patient_id;
+
+        $prescriptions = json_decode($req->data);
+
+        $pdf = Pdf::loadView('exports.prescription', ["prescriptions" => $prescriptions, "clinic" => auth()->user()->clinic, "patient" => $patient]);
+
+        $cname = auth()->user()->clinic->name;
+        $folder = $patient->lname . ', ' . $patient->fname . " ($pid)";
+        $path = public_path("uploads/$cname/Patients/$folder/");
+
+        if (!is_dir($path)) {
+            mkdir($path, 0775, true);
+        }
+
+        $batch = str()->random(8);
+        $fn = "RX-$batch.pdf";
+        $pdf->save($path . $fn);
+
+        foreach($prescriptions as $prescription){
+            $temp = new Prescription();
+            $temp->user_id = $patient->id;
+            $temp->patient_id = $patient->patient->id;
+            $temp->batch = $batch;
+            $temp->generic_name = $prescription->generic_name;
+            $temp->brand_name = $prescription->brand_name;
+            $temp->form = $prescription->form;
+            $temp->qty = $prescription->qty;
+            $temp->instruction = $prescription->instruction;
+            $temp->save();
+        }
+
+        return $pdf->stream($fn);
     }
 
     public function delete(Request $req){
