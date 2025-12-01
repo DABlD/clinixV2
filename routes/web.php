@@ -153,6 +153,7 @@ Route::group([
                 Route::get("get/", ucfirst($cname) . "Controller@get")->name('get');
                 Route::get("print/", ucfirst($cname) . "Controller@print")->name('print');
                 Route::get("printPrescription/", ucfirst($cname) . "Controller@printPrescription")->name('printPrescription');
+                Route::get("sendPrescriptionToPortal/", ucfirst($cname) . "Controller@sendPrescriptionToPortal")->name('sendPrescriptionToPortal');
                 Route::post("store/", ucfirst($cname) . "Controller@store")->name('store');
                 Route::post("delete/", ucfirst($cname) . "Controller@delete")->name('delete');
                 Route::post("update/", ucfirst($cname) . "Controller@update")->name('update');
@@ -193,6 +194,17 @@ Route::group([
                 Route::post("store/", ucfirst($cname) . "Controller@store")->name('store');
                 Route::post("delete/", ucfirst($cname) . "Controller@delete")->name('delete');
                 Route::post("update/", ucfirst($cname) . "Controller@update")->name('update');
+            }
+        );
+
+        // PRESCRIPTION ROUTES
+        $cname = "prescription";
+        Route::group([
+                'as' => "$cname.",
+                'prefix' => "$cname/"
+            ], function () use($cname){
+
+                Route::get("get/", ucfirst($cname) . "Controller@get")->name('get');
             }
         );
 
