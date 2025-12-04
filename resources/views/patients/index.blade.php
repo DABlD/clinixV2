@@ -435,59 +435,65 @@
 		}
 
 		function prescriptionChart(uid){
-			$.ajax({
-				url: "{{ route('prescription.get') }}",
-				data: {
-					select: "*",
-					where: ['user_id', uid],
-					group: ['batch']
-				}, 
-				success: result => {
-					result = JSON.parse(result);
+			if(uid){
+				$.ajax({
+					url: "{{ route('prescription.get') }}",
+					data: {
+						select: "*",
+						where: ['user_id', uid],
+						group: ['batch']
+					}, 
+					success: result => {
+						result = JSON.parse(result);
 
-					let string = `
-						<div id="prescriptions">
-					`;
+						let string = `
+							<div id="prescriptions">
+						`;
 
-					if(result.length){
-						Object.keys(result).forEach(batch => {
-							string += `
-									<div style="background-color: #d5f4e6; text-align: left; font-weight: bold;">${moment(batch.created_at).format('MMM DD, YYYY')} - #${batch}</div>
-										<div style="margin-left: 20px; text-align: left; margin-bottom: 10px;">
-									<br>
-								`;
-
-							result[batch].forEach(prescription => {
+						if(Object.keys(result).length){
+							Object.keys(result).forEach(batch => {
 								string += `
-									<u><b>${prescription.generic_name}</b> ${prescription.form} (${prescription.brand_name}) #${prescription.qty}</u>
+										<div style="background-color: #d5f4e6; text-align: left; font-weight: bold;">${moment(result[batch][0].created_at).format('MMM DD, YYYY hh:MM:SS A')} - #${batch}</div>
+											<div style="margin-left: 20px; text-align: left; margin-bottom: 10px;">
+										<br>
+									`;
+
+								result[batch].forEach(prescription => {
+									string += `
+										<u><b>${prescription.generic_name}</b> ${prescription.form} (${prescription.brand_name}) #${prescription.qty}</u>
+										<br>
+									`;
+								});
+
+								string += `
+									</div>
 									<br>
 								`;
-							});
+							});	
+						}
+						else{
+							string += `<h3>No record of prescriptions</h3>`;
+						}
 
-							string += `
-								</div>
-								<br>
-							`;
-						});
+						string += `
+							</div>
+						`;
+
+						$('#prescriptions').html(string);
+
+						Swal.fire({
+							title: "Prescriptions",
+							html: `<hr>${string}`,
+							showClass: { popup: '' },
+							hideClass: { popup: '' },
+							width: '1000px',
+						})
 					}
-					else{
-						string += `<h3>No record of prescriptions</h3>`;
-					}
-
-					string += `
-						</div>
-					`;
-					$('#prescriptions').html(string);
-
-					Swal.fire({
-						title: "Prescriptions",
-						html: `<hr>${string}`,
-						showClass: { popup: '' },
-						hideClass: { popup: '' },
-						width: '1000px',
-					})
-				}
-			})
+				})
+			}
+			else{
+				se('No selected patient');
+			}
 		}
 
 		function clinicHistoryChart(uid){
