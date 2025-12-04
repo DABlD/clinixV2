@@ -2159,10 +2159,10 @@
 							<div id="prescriptions">
 						`;
 
-						if(result.length){
+						if(Object.keys(result).length){
 							Object.keys(result).forEach(batch => {
 								string += `
-										<div style="background-color: #d5f4e6; text-align: left; font-weight: bold;">${moment(batch.created_at).format('MMM DD, YYYY')} - #${batch}</div>
+										<div style="background-color: #d5f4e6; text-align: left; font-weight: bold;">${moment(result[batch][0].created_at).format('MMM DD, YYYY hh:MM:SS A')} - #${batch}</div>
 											<div style="margin-left: 20px; text-align: left; margin-bottom: 10px;">
 										<br>
 									`;
