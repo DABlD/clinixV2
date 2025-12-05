@@ -369,10 +369,14 @@ class SoapController extends Controller
 
         // Now call the API using $token
         $base = 'https://membership.onehealthnetwork.com.ph';
-        $apiUrl = $base . '/api/prescriptions'; // example
+        $apiUrl = $base . '/api/v2/send-notif'; // example
 
         $payload = [
-            // ... build prescription payload ...
+            "user_id" => "2022000039",
+            "type" => "rx",
+            "link" => "http://127.0.0.1:8002/uploads/Medhealth Diagnostics/Patients/MENDOZA, DAVID ANGELO (P25070100001)/RX-7uIXzaGn.pdf",
+            "doctor_name" , "Test Doctor",
+            "from_clinic" => 1
         ];
 
         $apiResp = Http::withToken($token)->post($apiUrl, $payload);
@@ -406,7 +410,7 @@ class SoapController extends Controller
     private function getSessionAccessToken(Request $request): string
     {
         $token = $request->session()->get('oauth_token');
-        $expiresAt = $request->session()->get('oauth_token_expires_at', 0);
+        $expiresAt = $request->session()->get('oauth_token_expires_at', 86400);
 
         if (!empty($token) && $expiresAt > time()) {
             return $token;
@@ -420,7 +424,7 @@ class SoapController extends Controller
         }
 
         $accessToken = $tokenData['access_token'];
-        $expiresIn = isset($tokenData['expires_in']) ? (int)$tokenData['expires_in'] : 3600;
+        $expiresIn = isset($tokenData['expires_in']) ? (int)$tokenData['expires_in'] : 86400;
 
         // store in session (expires_at = now + expires_in)
         // we set expiry slightly earlier (buffer 60s) to avoid race
@@ -441,7 +445,7 @@ class SoapController extends Controller
      */
     private function requestNewAccessToken(): array
     {
-        $base = env('OAUTH_BASE_URL', 'https://membership.onehealthnetwork.com.ph');
+        $base = 'https://membership.onehealthnetwork.com.ph';
 
         // read client id/secret from env - use your actual keys
         $clientId = env('OAUTH_CLIENT_ID', env('client_id'));
