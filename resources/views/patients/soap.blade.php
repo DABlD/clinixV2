@@ -2847,7 +2847,7 @@
 			if(pDetails){
 				Swal.fire({
 					title: 'Prescription',
-					width: "50%",
+					width: "70%",
 					html: `
 						<div class="row">
 							<div class="col-md-2">
@@ -2906,6 +2906,7 @@
 						window.open("{{ route('soap.printPrescription') }}?data=" + json + "&uid=" + pDetails.user.id, "_blank");
 					}
 					else if(result.isDenied){
+						let json = encodeURIComponent(JSON.stringify(prescriptions));
 						window.open("{{ route('soap.sendPrescriptionToPortal') }}?data=" + json + "&uid=" + pDetails.user.id, "_blank");
 					}
 				})

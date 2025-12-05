@@ -8,6 +8,7 @@ use DB;
 use Image;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Http;
 
 use App\Helpers\Helper;
 
@@ -331,5 +332,148 @@ class SoapController extends Controller
 
     private function _view($view, $data = array()){
         return view("$view", $data);
+    }
+
+    // public function sendPrescriptionToPortal(){
+    //     $this->checkToken();
+    // }
+
+    // private function checkToken(){
+    //     $response = Http::asForm()->post("https://membership.onehealthnetwork.com.ph" . '/oauth/token', [
+    //         'grant_type'    => 'client_credentials',
+    //         'scope'         => '*',
+    //         'client_id'     => env('client_id'),
+    //         'client_secret' => env('client_secret'),
+    //     ]);
+
+    //     if ($response->failed()) {
+    //         return [
+    //             'status' => 'error',
+    //             'message' => $response->body()
+    //         ];
+    //     }
+
+    //     dd($response->json()['access_token'], $response->json()['expires_in']);
+    // }
+
+
+    // Example entry point
+    public function sendPrescriptionToPortal(Request $request)
+    {   
+        // get token (from session or request new)
+        try {
+            $token = $this->getSessionAccessToken($request);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => 'auth_failed', 'message' => $e->getMessage()], 500);
+        }
+
+        // Now call the API using $token
+        $base = 'https://membership.onehealthnetwork.com.ph';
+        $apiUrl = $base . '/api/prescriptions'; // example
+
+        $payload = [
+            // ... build prescription payload ...
+        ];
+
+        $apiResp = Http::withToken($token)->post($apiUrl, $payload);
+
+        // Optional: if token expired/invalid (401) -> clear and retry once
+        if ($apiResp->status() === 401) {
+            $this->clearSessionToken($request);
+            try {
+                $token = $this->getSessionAccessToken($request);
+            } catch (\Throwable $e) {
+                return response()->json(['error' => 'auth_failed', 'message' => $e->getMessage()], 500);
+            }
+            $apiResp = Http::withToken($token)->post($apiUrl, $payload);
+        }
+
+        if ($apiResp->successful()) {
+            return response()->json($apiResp->json());
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'code' => $apiResp->status(),
+            'body' => $apiResp->body()
+        ], $apiResp->status());
+    }
+
+    /**
+     * Get token from session or request a new one and store it in session.
+     * Returns the raw access token string.
+     */
+    private function getSessionAccessToken(Request $request): string
+    {
+        $token = $request->session()->get('oauth_token');
+        $expiresAt = $request->session()->get('oauth_token_expires_at', 0);
+
+        if (!empty($token) && $expiresAt > time()) {
+            return $token;
+        }
+
+        // request new token
+        $tokenData = $this->requestNewAccessToken();
+
+        if (empty($tokenData['access_token'])) {
+            throw new \RuntimeException('No access_token in response: ' . json_encode($tokenData));
+        }
+
+        $accessToken = $tokenData['access_token'];
+        $expiresIn = isset($tokenData['expires_in']) ? (int)$tokenData['expires_in'] : 3600;
+
+        // store in session (expires_at = now + expires_in)
+        // we set expiry slightly earlier (buffer 60s) to avoid race
+        $request->session()->put('oauth_token', $accessToken);
+        $request->session()->put('oauth_token_expires_at', time() + $expiresIn - 60);
+
+        return $accessToken;
+    }
+
+    private function clearSessionToken(Request $request): void
+    {
+        $request->session()->forget(['oauth_token', 'oauth_token_expires_at']);
+    }
+
+    /**
+     * Perform token request. Preferred: Basic auth + grant_type.
+     * Falls back to client_id/secret in body if Basic fails.
+     */
+    private function requestNewAccessToken(): array
+    {
+        $base = env('OAUTH_BASE_URL', 'https://membership.onehealthnetwork.com.ph');
+
+        // read client id/secret from env - use your actual keys
+        $clientId = env('OAUTH_CLIENT_ID', env('client_id'));
+        $clientSecret = env('OAUTH_CLIENT_SECRET', env('client_secret'));
+
+        if (empty($clientId) || empty($clientSecret)) {
+            throw new \RuntimeException('OAuth client id/secret not configured.');
+        }
+
+        // Preferred: Basic auth
+        $resp = Http::withBasicAuth($clientId, $clientSecret)
+            ->asForm()
+            ->post($base . '/oauth/token', [
+                'grant_type' => 'client_credentials',
+                'scope' => '*',
+            ]);
+
+        // fallback if provider rejects Basic auth
+        if ($resp->status() === 400 || $resp->status() === 401) {
+            $resp = Http::asForm()->post($base . '/oauth/token', [
+                'grant_type' => 'client_credentials',
+                'scope' => '*',
+                'client_id' => $clientId,
+                'client_secret' => $clientSecret,
+            ]);
+        }
+
+        if ($resp->failed()) {
+            Log::error('OAuth token request failed', ['status' => $resp->status(), 'body' => $resp->body()]);
+            throw new \RuntimeException('Token request failed: ' . $resp->body());
+        }
+
+        return $resp->json();
     }
 }
