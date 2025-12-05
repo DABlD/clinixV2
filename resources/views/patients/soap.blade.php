@@ -2899,7 +2899,7 @@
 					confirmButtonText: "Print",
 					showDenyButton: true,
 					denyButtonColor: successColor,
-					denyButtonText: "Sent to Portal",
+					denyButtonText: "Send to Portal",
 				}).then(result => {
 					if(result.isConfirmed){
 						let json = encodeURIComponent(JSON.stringify(prescriptions));
