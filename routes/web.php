@@ -180,6 +180,9 @@ Route::group([
                 Route::post("store/", ucfirst($cname) . "Controller@store")->name('store');
                 Route::post("delete/", ucfirst($cname) . "Controller@delete")->name('delete');
                 Route::post("update/", ucfirst($cname) . "Controller@update")->name('update');
+                
+                Route::get("viewSubjective/", ucfirst($cname) . "Controller@viewSubjective")->name('viewSubjective');
+                Route::post("updateSubjective/", ucfirst($cname) . "Controller@updateSubjective")->name('updateSubjective');
             }
         );
 

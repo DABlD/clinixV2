@@ -229,6 +229,38 @@ class PatientController extends Controller
         echo Helper::log(auth()->user()->id, 'updated patient', $req->id);
     }
 
+    public function viewSubjective(Request $req){
+        $user = User::find($req->id);
+        $user->load('patient');
+
+        return $this->_view('subjective', [
+            'title' => "Fill-up Info",
+            'user' => $user,
+            'logo' => $user->clinic->logo
+        ]);
+    }
+
+    public function updateSubjective(Request $req){
+        $mhr = MHR::where('user_id', $req->uid)->first();
+        $mhr->qwa = $req->question_with_answers;
+
+        if($mhr->backup){
+            $temp = json_decode($mhr->backup, true);
+            array_push($temp, $req->question_with_answers);
+
+            if (count($temp) > 5) {
+                array_shift($temp); // removes FIRST (oldest)
+            }
+
+            $mhr->backup = $temp;
+        }
+
+        $mhr->updated_at = now();
+        $mhr->save();
+
+        echo Helper::log(auth()->user()->id, 'updated subjective of patient', $req->uid);
+    }
+
     public function delete(Request $req){
         User::find($req->id)->delete();
         Helper::log(auth()->user()->id, 'deleted patient', $req->id);
