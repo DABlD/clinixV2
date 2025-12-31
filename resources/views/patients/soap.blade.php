@@ -1909,59 +1909,174 @@
 					},
 					success: result => {
 						result = JSON.parse(result)[0];
-						let mhr = result.patient.mhr;
-						let qwa = JSON.parse(mhr.qwa);
 
-						let string = "";
-						let bool = false;
+						$.ajax({
+			                url: "{{ route('question.get') }}",
+			                data: {
+			                    select: "*",
+			                    group: ['category_id']
+			                },
+							success: questions => {
+								questions = JSON.parse(questions);
 
-						qwa.forEach(row => {
-							if(row.type == "Category"){
-								if(bool){
-									string += `
-										</tbody>
-										</table>
-									`;
-								}
+								let mhr = result.patient.mhr;
+								let qwa = JSON.parse(mhr.qwa);
 
-								string += `
-									<div class="row ">
-	                                    <div class="col-md-12" style="text-align: left;">
-	                                        <b style="font-size: 1.5rem;">${row.question}</b>
-	                                    </div>
-	                                </div>
+								let keys = Object.keys(questions);
+				                let categories = questions[keys[keys.length-1]];
 
-									<table class="table table-hover">
-										<thead>
-											<tr>
-												<th style="width: 40%;">Name</th>
-												<th style="width: 30%;">Answer</th>
-												<th style="width: 30%;">Remark</th>
-											</tr>
-										</thead>
-										<tbody>
-								`;
+				                let string = "";
 
-								bool = true;
-							}
-							else{
-								string += `
-									<tr>
-										<td style="text-align: left;">${row.question}</td>
-										<td>${row.answer ?? "-"}</td>
-										<td>${row.remark ?? "-"}</td>
-									</tr>
-								`;
+				                for (let [k, v] of Object.entries(questions[""])) {
+				                    let hide = "";
+				                    // if(["Obstetrical History", "Vital Signs", "Anthropometrics", "Visual Acuity", "Systemic Examination", "Diagnostic Examination", 'Menstrual History'].includes(v.name)){
+				                    //     hide = "d-none";
+				                    // }
+
+				                    if(v.name == "Medication History"){
+				                        string += `
+				                            <div class="row ${hide}">
+				                                <div class="col-md-12" style="text-align: left;">
+				                                    <b style="font-size: 1.5rem;">${v.name}</b>
+				                                </div>
+				                            </div>
+
+				                            <table class="table table-hover qtd ${hide}" style="width: 100%; margin-top: 5px; text-align: left;">
+				                                <thead>
+				                                    <tr>
+				                                        <th style="width: 100%;">Medication/Dosage/Frequency</th>
+				                                    </tr>
+				                                </thead>
+				                                <tbody id="medications">
+				                                    <tr>
+				                                        <td>
+				                                            <textarea class="medication-all form-control" disabled></textarea>
+				                                        </td>
+				                                    </tr>
+				                        `;
+				                    }
+				                    else{
+				                        string += `
+				                            <div class="row ${hide}">
+				                                <div class="col-md-12" style="text-align: left;">
+				                                    <b style="font-size: 1.5rem;">${v.name}</b>
+				                                </div>
+				                            </div>
+
+				                            <table class="table table-hover qtd ${hide}" style="width: 100%; margin-top: 5px; text-align: left;">
+				                                <thead>
+				                                    <tr>
+				                                        <th style="width: 40%;">Name</th>
+				                                        <th style="width: 30%;" class="answer">Answer</th>
+				                                        <th style="width: 30%;" class="remark">Remark</th>
+				                                    </tr>
+				                                </thead>
+				                                <tbody>
+				                        `;
+
+				                        let temp = questions[v.id];
+
+				                        if(temp){
+				                            for(let i = 0; i < temp.length; i++){
+				                                let answer = "";
+				                                let hide2 = null;
+
+				                                // HIDE PACK YEARS COMPUTATION
+				                                // if(temp[i].id == 301){
+				                                //     hide2 = "d-none";
+				                                // }
+
+				                                let remark = `
+				                                    <td>
+				                                        <input type="text" class="form-control remark" data-id="${temp[i].id}" disabled>
+				                                    </td>
+				                                `;
+
+				                                // TEXTAREA FOR BLOOD CHEMISTRY=276, 283 = OTHERS
+				                                // if(temp[i].id == 276 || temp[i].id == 283){
+				                                //     answer = `
+				                                //         <textarea class="form-control" data-id="${temp[i].id}"></textarea>
+				                                //     `;
+				                                //     remark = "";
+				                                // }
+				                                // else if(temp[i].type == "Text"){
+				                                if(temp[i].type == "Text"){
+				                                    answer = `
+				                                        <input type="text" class="form-control" data-id="${temp[i].id}" disabled>
+				                                    `;
+				                                    remark = "";
+				                                }
+				                                else if(temp[i].type == "Dichotomous"){
+				                                    answer = `
+				                                        <input type="radio" name="rb${temp[i].id}" value="1">Yes
+				                                        &nbsp;
+				                                        <input type="radio" name="rb${temp[i].id}" value="0">No
+				                                    `;
+				                                }
+
+				                                string += `
+				                                    <tr class="${hide2}">
+				                                        <td>${temp[i].name}</td>
+				                                        <td class="answer" data-type="${temp[i].type}" data-id="${temp[i].id}">${answer}</td>
+				                                        ${remark}
+				                                    </tr>
+				                                `;
+				                            }
+				                        }
+				                    }
+
+				                    string += "</tbody></table>";
+				                }
+
+								Swal.fire({
+									title: "Personal Medical History",
+									html: `
+										<hr>
+										<div style="width: 100%; text-align: right;">
+											<a class="btn btn-success" onclick="viewSubjective(${result.id})">
+												Update Medical History
+											</a>
+										</div>
+										${string}
+									`,
+									showClass: { popup: '' },
+									hideClass: { popup: '' },
+									width: '1000px',
+									didOpen: () => {
+										if(qwa){
+										    qwa.forEach(qwa => {
+										        // IF MEDICATION HISTORY
+										        if(qwa.id == 20 && qwa.answer){
+										            let medication = qwa.answer;
+
+										            $(`.medication-all`).val(medication.all);
+										        }
+										        else{
+										            let type = $(`.answer[data-id="${qwa.id}"]`).data('type');
+
+										            if(type == "Dichotomous"){
+										                $(`[name="rb${qwa.id}"][value="${qwa.answer}"]`).click();
+										                $(`.remark[data-id="${qwa.id}"]`).val(qwa.remark);
+										            }
+										            else if(type == "Text"){
+										                // {{-- FOR TEXTAREA LIKE BLOOD CHEMIMSTRY AND OTHERS 276/283 --}}
+										                // if(qwa.id == 276 || qwa.id == 283){
+										                //     $(`.answer [data-id="${qwa.id}"]`).val(qwa.answer);
+										                // }
+										                // else{
+										                //     $(`.answer input[data-id="${qwa.id}"]`).val(qwa.answer);
+										                // }
+										                $(`.answer input[data-id="${qwa.id}"]`).val(qwa.answer);
+										            }
+										        }
+										    });
+										}
+
+										$('.answer input[type="radio"]:not(:checked)').prop('disabled', 'disabled')
+									}
+								});
 							}
 						});
-
-						Swal.fire({
-							title: "Personal Medical History",
-							html: `<hr>${string}`,
-							showClass: { popup: '' },
-							hideClass: { popup: '' },
-							width: '1000px',
-						})
 					}
 				});
 			}
